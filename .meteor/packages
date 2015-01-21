@@ -10,11 +10,14 @@ twbs:bootstrap
 
 alethes:pages
 
+mrt:moment
+
 iron:router
 multiply:iron-router-progress
 
-aldeed:collection2
-aldeed:autoform
+manuel:viewmodel@1.2.6
 
-# accounts-password
-# ian:accounts-ui-bootstrap-3
+aldeed:collection2
+
+# удалить sha когда будет оформлен ввиде модуля lib/smslogin
+sha
