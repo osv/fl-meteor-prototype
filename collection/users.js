@@ -12,9 +12,12 @@ Schema.UserProfile = new SimpleSchema({
 });
 
 Schema.User = new SimpleSchema({
-  username: {
+  fullName: {
     type: String,
-    regEx: /^[a-z0-9A-Z_]{3,15}$/
+    optional: true
+  },
+  password: {
+    type: String
   },
   phone: {
     type: String,
