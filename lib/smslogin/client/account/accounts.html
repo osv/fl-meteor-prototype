@@ -3,7 +3,7 @@
   {{#if currentUser}}
     {{#unless loggingIn}}
       <li class="dropdown">
-        <a href="#" class="dropdown-toggle" data-toggle="dropdown">{{! displayName}}TODO: имья<b class="caret"></b></a>
+        <a href="#" class="dropdown-toggle" data-toggle="dropdown">{{ displayName}}<b class="caret"></b></a>
         <ul class="dropdown-menu" role="dropdown" aria-labelledby="dropdownMenu" >
           <li><a id="logout" class="logout" href="#" tabindex="-1">Выйти...</a></li>
         </ul>
@@ -56,9 +56,9 @@
   <form id="login-sign-in-form" class="form-horizontal" role="form">
     <div style="margin-bottom: 25px" class="input-group">
       <span class="input-group-addon"><i class="glyphicon glyphicon-phone"></i></span>
-      <input id="login-phone" type="tel" class="form-control"
-             name="phone"
-             placeholder="Телефон: +380">
+      <input id="login-phone"
+             class="form-control bfh-phone" data-format="+d (ddd) ddd-dd-dd"
+             type="text" value="7" name="phone" placeholder="Телефон: +7">
     </div>
 
     <div style="margin-bottom: 25px" class="input-group">
@@ -96,11 +96,13 @@
   <form id="login-sign-up-form" class="form-horizontal" role="form">
     <div style="margin-bottom: 25px" class="input-group">
       <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
-      <input id="login-create-name" type="text" class="form-control" name="phone" value="" placeholder="Контактное лицо">
+      <input id="login-create-name" type="text" class="form-control" value="" placeholder="Контактное лицо">
     </div>
     <div style="margin-bottom: 25px" class="input-group">
       <span class="input-group-addon"><i class="glyphicon glyphicon-phone"></i></span>
-      <input id="login-create-phone" type="tel" class="form-control" name="password" placeholder="Телефон: +380">
+      <input id="login-create-phone"
+             class="form-control bfh-phone" data-format="+d (ddd) ddd-dd-dd" 
+             type="text" value="7" name="phone" placeholder="Телефон: +7">
     </div>
     <div style="margin-top:10px" class="form-group">
       <!-- Button -->
@@ -125,7 +127,9 @@
   <form id="login-reset-form" class="form-horizontal" role="form">
     <div style="margin-bottom: 25px" class="input-group">
       <span class="input-group-addon"><i class="glyphicon glyphicon-phone"></i></span>
-      <input id="login-restore-password" type="tel" class="form-control" name="password" placeholder="Телефон: +380">
+      <input id="login-restore-password"
+             class="form-control bfh-phone" data-format="+d (ddd) ddd-dd-dd" 
+             type="text" value="7" name="phone" placeholder="Телефон: +7">
     </div>
     <div style="margin-top:10px" class="form-group">
       <!-- Button -->

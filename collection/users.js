@@ -1,27 +1,19 @@
 Schema = {};
 
 Schema.UserProfile = new SimpleSchema({
-  name: {
+  completeName: {
     type: String,
     optional: true
   },
-  organization : {
+  phone: {
     type: String,
-    optional: true
+    regEx: /^\d{11,12}$/
   },
 });
 
 Schema.User = new SimpleSchema({
-  fullName: {
-    type: String,
-    optional: true
-  },
   password: {
     type: String
-  },
-  phone: {
-    type: String,
-    regEx: /^\d{12}$/
   },
   emails: {
     type: [Object],
