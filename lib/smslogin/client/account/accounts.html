@@ -5,7 +5,9 @@
       <li class="dropdown">
         <a href="#" class="dropdown-toggle" data-toggle="dropdown">{{ displayName}}<b class="caret"></b></a>
         <ul class="dropdown-menu" role="dropdown" aria-labelledby="dropdownMenu" >
-          <li><a id="logout" class="logout" href="#" tabindex="-1">Выйти...</a></li>
+          <li><a id="logout" class="logout" href="#" tabindex="-1">
+            <i class="glyphicon glyphicon-log-out"></i>
+            Выйти...</a></li>
         </ul>
       </li>
     {{/unless}}
@@ -32,19 +34,25 @@
       <div class="modal-content">
         <div class="modal-header">
           <button type="button" class="close" data-dismiss="modal">x</button>
-          <h3>Войти</h3>
+          <h3>{{ loginFormTitle }}</h3>
         </div>
         {{! ниже логин форма, }}
         <div class="modal-body" id="loginbox">
-          {{ #if infoMessage }}
-          <span class="text-success" id="login-info">{{ infoMessage }}</span>
-          {{ /if }}
-          {{ #if alertMessage }}
-          <span class="text-danger" id="login-info">{{ alertMessage }}</span>
-          {{ /if }}
-
           {{! в зависимости от сессионной переменны Session.get('loginForm') выбор формочки логина }}
           {{ > loginForm }}
+
+          {{ #if infoMessage }}
+          <div class="alert alert-success">
+            {{ infoMessage }}
+          </div>
+          {{ /if }}
+          {{ #if alertMessage }}
+          <div class="alert alert-danger">
+            <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+            {{ alertMessage }}
+          </div>
+          {{ /if }}
+
         </div>
         
       </div>
@@ -54,22 +62,15 @@
 
 <template name="loginSignIn">
   <form id="login-sign-in-form" class="form-horizontal" role="form">
-    <div style="margin-bottom: 25px" class="input-group">
-      <span class="input-group-addon"><i class="glyphicon glyphicon-phone"></i></span>
-      <input id="login-phone"
-             class="form-control bfh-phone" data-format="+d (ddd) ddd-dd-dd"
-             type="text" value="7" name="phone" placeholder="Телефон: +7">
-    </div>
 
-    <div style="margin-bottom: 25px" class="input-group">
-      <span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
-      <input id="login-password" type="password" class="form-control"
-             name="password"
-             placeholder="Пароль что был выслан СМС">
-    </div>
+    {{ > bsInputHelperPhone id="login-phone" label="Телефон"}}
+    {{ > bsInputHelper id="login-password" label="Пароль"
+                       icon="glyphicon glyphicon-lock" type="password"
+                       placeholder="Пароль что был выслан СМС"}}
+
     <div style="margin-top:10px" class="form-group">
       <!-- Button -->
-      <div class="col-sm-12 controls">
+      <div class="col-sm-12">
         <button class="btn btn-success" type="submit">
           Войти
         </button>
@@ -77,7 +78,7 @@
     </div>
 
     <div class="form-group">
-      <div class="col-md-12 control">
+      <div class="col-sm-12 control">
         <div style="border-top: 1px solid#888; padding-top:15px; font-size:85%" >
           <a href="#" id="reg">
             Зарегистрироваться
@@ -94,16 +95,9 @@
 
 <template name="loginSignUp">
   <form id="login-sign-up-form" class="form-horizontal" role="form">
-    <div style="margin-bottom: 25px" class="input-group">
-      <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
-      <input id="login-create-name" type="text" class="form-control" value="" placeholder="Контактное лицо">
-    </div>
-    <div style="margin-bottom: 25px" class="input-group">
-      <span class="input-group-addon"><i class="glyphicon glyphicon-phone"></i></span>
-      <input id="login-create-phone"
-             class="form-control bfh-phone" data-format="+d (ddd) ddd-dd-dd" 
-             type="text" value="7" name="phone" placeholder="Телефон: +7">
-    </div>
+    {{ > bsInputHelperPhone id="login-phone" label="Телефон"}}
+    {{ > bsInputHelper id="login-name" label="Контактное лицо"
+                       icon="glyphicon glyphicon-user" placeholder="Иванов"}}
     <div style="margin-top:10px" class="form-group">
       <!-- Button -->
       <div class="col-sm-12 controls">
@@ -114,9 +108,9 @@
     </div>
 
     <div class="form-group">
-      <div class="col-md-12 control">
+      <div class="col-sm-12 control">
         <div style="border-top: 1px solid#888; padding-top:15px; font-size:85%" >
-          Здесь бы линк на оферту показать...
+          Здесь будет линк на оферту...
         </div>
       </div>
     </div>
@@ -124,25 +118,56 @@
 </template>
 
 <template name="loginResend">
-  <form id="login-reset-form" class="form-horizontal" role="form">
-    <div style="margin-bottom: 25px" class="input-group">
-      <span class="input-group-addon"><i class="glyphicon glyphicon-phone"></i></span>
-      <input id="login-restore-password"
-             class="form-control bfh-phone" data-format="+d (ddd) ddd-dd-dd" 
-             type="text" value="7" name="phone" placeholder="Телефон: +7">
+  <form id="login-resetToken" class="form-horizontal">
+    {{ > bsInputHelperPhone id="login-phone" label="Номер телефона"}}
+    <div id="resetFormTokenSend" style="margin-top:10px" class="form-group">
+      <!-- Button -->
+      <div class="col-sm-12 controls">
+        <button class="btn btn-success" type="submit">
+          Отправить код подтверждения
+        </button>
+      </div>
     </div>
+  </form>
+  <form id="login-resetPassword" style="display:none" class="form-horizontal">
+    {{ > bsInputHelper id="login-token" label="Код подтверждения"
+      icon="glyphicon glyphicon-lock" placeholder="СМС код"}}
     <div style="margin-top:10px" class="form-group">
       <!-- Button -->
       <div class="col-sm-12 controls">
         <button class="btn btn-success" type="submit">
-          Отправить пароль
+          Подтвердить изменение пароля
         </button>
-      </div>
-    </div>
-    <div class="form-group">
-      <div class="col-md-12 control">
-        Пароль отправится..
       </div>
     </div>
   </form>
 </template>
+
+<!-- helpers -->
+<template name="bsInputHelperPhone">
+  <div class="form-group" style="margin-bottom: 25px">
+    <label class="col-md-4" for="inputSuccess3">{{ label }}</label>
+    <div class="col-md-8">
+      <div class="input-group">
+        <span class="input-group-addon"><i class="glyphicon glyphicon-phone"></i></span>
+        <input id="{{ id }}"
+               class="form-control bfh-phone" data-format="+d (ddd) ddd-dd-ddd" 
+               type="text" value="7937" name="phone" placeholder="Телефон: +7">
+      </div>
+    </div>
+  </div>
+</template>
+
+<template name="bsInputHelper">
+  <div class="form-group" style="margin-bottom: 25px">
+    <label class="col-md-4" for="inputSuccess3">{{ label }}</label>
+    <div class="col-md-8">
+      <div class="input-group">
+        <span class="input-group-addon"><i class="{{ icon }}"></i></span>
+        <input id="{{ id }}"
+               class="form-control" type="{{ type }}"  placeholder="{{ placeholder }}">
+      </div>
+    </div>
+  </div>
+</template>
+
