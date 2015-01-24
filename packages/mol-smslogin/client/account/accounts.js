@@ -155,9 +155,8 @@ Template.loginButton.events({
     phone = cleanPhoneNumber(phone);
     if (!phone.match(/^\d{11,12}$/))
       return false;
-    $('fieldset').prop('disabled', true);
-
     if (isNotEmpty(resetToken)) {
+      $('fieldset').prop('disabled', true);
       Meteor.call('resendPasswordSMS', phone, resetToken, function(err) {
         $('fieldset').prop('disabled', false);
         if (err) {
@@ -174,7 +173,7 @@ Template.loginButton.events({
   'focus #login-phone, focus #login-password, focus #login-name': function(e, t) {
     clrAlerts();
   },
-  'focus #login-restore-password': function(e, t) {
+  'focus #login-restore-password, focus #login-token': function(e, t) {
     clrAlerts();
   },
   'click #logout' : function() {
