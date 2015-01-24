@@ -22,6 +22,14 @@ Accounts.registerLoginHandler(function(loginRequest) {
   return undefined;
 });
 
+var sendSMS = function (message, phone) {
+  if (typeof Accounts.sendSMS === 'function')
+    Accounts.sendSMS(message, phone);
+  else {
+    throw new Meteor.Error(400, "Account.sendSMS must be defined as function");
+  }
+}
+
 var createUserPhone = function (phone, fullName) {
   console.log('ok, try create new account ' + fullName);
   check(fullName, String);
@@ -34,10 +42,13 @@ var createUserPhone = function (phone, fullName) {
     // create user
     if (!user) {
       var password = Random.id(6); 
-      password = 'newuser'; // временная заглушка
-      console.log("Create new user: " + fullName + ' password: ' + password + ' phone: ' + phone);
-      // TODO: send sms
-      
+      var message =
+            "Регистрация на молдавстройбат\n" +
+            "Ваш пароль: " + password + "\n" +
+            "Добро пожаловать!";
+
+      sendSMS(message, phone);
+
       return Accounts.insertUserDoc(
         {},
         { profile: {phone: phone,
@@ -48,7 +59,7 @@ var createUserPhone = function (phone, fullName) {
       throw new Meteor.Error(403, "Пользователь с этим телефоном уже зарегистрирован");
     }
   } else
-    throw new Meteor.Error (403, 'phone and fullName required for createUserPhone');
+    throw new Meteor.Error (400, 'phone and fullName required for createUserPhone');
 };
 
 Meteor.methods({registerUserPhone: function (phone, fullName) {
@@ -56,32 +67,31 @@ Meteor.methods({registerUserPhone: function (phone, fullName) {
 }});
 
 // send reset token if @resetToken not defined
-Meteor.methods({resendPasswordSMS: function (phone, resetToken) {
+Meteor.methods({resendPasswordSMS: function (phone, confirmToken) {
   check(phone, String);
 
   var user = Meteor.users.findOne({"profile.phone": phone});
   if (!user) {
     throw new Meteor.Error(403, "Никто не зарегестрирован с таким номером, проверьте номер.");
   } else {
-    if (!resetToken) {
+    if (!confirmToken) {
       var resetToken = Random.id(6);
-      resetToken = 'resettoken';
-      // TODO: send reset token sms
+
       Meteor.users.update(user._id,
                           {$set: {'services.reset.pwd': resetToken}});
-      console.log("Send token: " + user.profile.completeName + ' token: ' + resetToken + ' phone: ' + phone);
-    } else {
-      if (user.services.reset.pwd === resetToken) {
-        var newPassword = Random.id(6);
-        newPassword = 'newpassword';
+      var message =
+            "Вы подтверждаете сброс пароля.\n" +
+            "Код подтверждения: " + resetToken;
+      sendSMS(message, phone);
 
-        console.log("Reset password for user: " + user.profile.completeName +
-                    ' password: ' + newPassword +
-                    ' phone: ' + phone);
-        // TODO: send newPassword via sms
-        
+    } else {
+      if (user.services.reset.pwd === confirmToken) {
+        var newPassword = Random.id(6);
+      
         Meteor.users.update(user._id,
                             {$set: {password: SHA256(newPassword)}});
+        sendSMS("Пароль сброшен.\nНовый пароль: " + newPassword,
+                phone);
       }
     }
   }

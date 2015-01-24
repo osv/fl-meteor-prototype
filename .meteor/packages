@@ -7,7 +7,7 @@
 meteor-platform
 accounts-base
 twbs:bootstrap
-
+email
 alethes:pages
 
 mrt:moment
