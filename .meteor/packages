@@ -19,5 +19,4 @@ manuel:viewmodel@1.2.6
 
 aldeed:collection2
 
-# удалить sha когда будет оформлен ввиде модуля lib/smslogin
-sha
+mol-smslogin
