@@ -12,6 +12,7 @@ Accounts.sendSMS = function(message, phone) {
      */
     Email.send({
       to: 'send@send.smsc.ru',
+      from: 'anonym107@gmail.com',
       subject: '',
       text: process.env.SMSC_AUTH + ":::1,,,:" + phone +":" + message,
     }); 
