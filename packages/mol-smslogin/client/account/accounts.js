@@ -78,7 +78,9 @@ Template.loginButton.events({
     if (isNotEmpty(phone) &&
         isNotEmpty(password))
     {
+      $('fieldset').prop('disabled', true);
       Meteor.loginWithPhone(phone, password, function(err){
+        $('fieldset').prop('disabled', false);
         if (err) {
           Session.set('alertMessage', err.reason);
           console.warn("login fail " + err.reason);
@@ -106,7 +108,9 @@ Template.loginButton.events({
     }
     if (isNotEmpty(phone))
     {
+      $('fieldset').prop('disabled', true);
       Meteor.call('registerUserPhone', phone, fullName, function(err, id) {
+        $('fieldset').prop('disabled', false);
         if (err) {
           Session.set('alertMessage', err.reason);
           console.warn("fail create user: " + err.reason);
@@ -129,13 +133,13 @@ Template.loginButton.events({
       Session.set('alertMessage', 'Телефон должен содержать цифры: "+79.."');
       return false;
     }
-    $('#login-phone').attr('disabled', true);
+    $('#login-phone').prop('disabled', true);
     $('#resetFormTokenSend').hide();
     Meteor.call('resendPasswordSMS', phone, function (err) {
       if (err) {
         console.log(err);
         Session.set('alertMessage', err.reason);
-        $('#login-phone').attr('disabled', false);
+        $('#login-phone').prop('disabled', false);
         $('#resetFormTokenSend').show();
       } else {
         $('#login-resetPassword').show();
@@ -151,8 +155,11 @@ Template.loginButton.events({
     phone = cleanPhoneNumber(phone);
     if (!phone.match(/^\d{11,12}$/))
       return false;
+    $('fieldset').prop('disabled', true);
+
     if (isNotEmpty(resetToken)) {
       Meteor.call('resendPasswordSMS', phone, resetToken, function(err) {
+        $('fieldset').prop('disabled', false);
         if (err) {
           Session.set('alertMessage', err.reason);
         } else {

@@ -62,84 +62,90 @@
 
 <template name="loginSignIn">
   <form id="login-sign-in-form" class="form-horizontal" role="form">
+    <fieldset>
+      {{ > bsInputHelperPhone id="login-phone" label="Телефон"}}
+      {{ > bsInputHelper id="login-password" label="Пароль"
+        icon="glyphicon glyphicon-lock" type="password"
+        placeholder="Пароль что был выслан СМС"}}
 
-    {{ > bsInputHelperPhone id="login-phone" label="Телефон"}}
-    {{ > bsInputHelper id="login-password" label="Пароль"
-                       icon="glyphicon glyphicon-lock" type="password"
-                       placeholder="Пароль что был выслан СМС"}}
-
-    <div style="margin-top:10px" class="form-group">
-      <!-- Button -->
-      <div class="col-sm-12">
-        <button class="btn btn-success" type="submit">
-          Войти
-        </button>
-      </div>
-    </div>
-
-    <div class="form-group">
-      <div class="col-sm-12 control">
-        <div style="border-top: 1px solid#888; padding-top:15px; font-size:85%" >
-          <a href="#" id="reg">
-            Зарегистрироваться
-          </a>
-          /
-          <a href="#" id="restore">
-            Востановить пароль
-          </a>
+      <div style="margin-top:10px" class="form-group">
+        <!-- Button -->
+        <div class="col-sm-12">
+          <button class="btn btn-success" type="submit">
+            Войти
+          </button>
         </div>
       </div>
-    </div>
+
+      <div class="form-group">
+        <div class="col-sm-12 control">
+          <div style="border-top: 1px solid#888; padding-top:15px; font-size:85%" >
+            <a href="#" id="reg">
+              Зарегистрироваться
+            </a>
+            /
+            <a href="#" id="restore">
+              Востановить пароль
+            </a>
+          </div>
+        </div>
+      </div>
+    </fieldset>
   </form>
 </template>
 
 <template name="loginSignUp">
   <form id="login-sign-up-form" class="form-horizontal" role="form">
-    {{ > bsInputHelperPhone id="login-phone" label="Телефон"}}
-    {{ > bsInputHelper id="login-name" label="Контактное лицо"
-                       icon="glyphicon glyphicon-user" placeholder="Иванов"}}
-    <div style="margin-top:10px" class="form-group">
-      <!-- Button -->
-      <div class="col-sm-12 controls">
-        <button class="btn btn-success" type="submit">
-          Зарегестрироватся
-        </button>
-      </div>
-    </div>
-
-    <div class="form-group">
-      <div class="col-sm-12 control">
-        <div style="border-top: 1px solid#888; padding-top:15px; font-size:85%" >
-          Здесь будет линк на оферту...
+    <fieldset>
+      {{ > bsInputHelperPhone id="login-phone" label="Телефон"}}
+      {{ > bsInputHelper id="login-name" label="Контактное лицо"
+        icon="glyphicon glyphicon-user" placeholder="Иванов"}}
+      <div style="margin-top:10px" class="form-group">
+        <!-- Button -->
+        <div class="col-sm-12 controls">
+          <button class="btn btn-success" type="submit">
+            Зарегестрироватся
+          </button>
         </div>
       </div>
-    </div>
+      <div class="form-group">
+        <div class="col-sm-12 control">
+          <div style="border-top: 1px solid#888; padding-top:15px; font-size:85%" >
+            Здесь будет линк на оферту...
+          </div>
+        </div>
+      </div>
+    </fieldset>
   </form>
 </template>
 
 <template name="loginResend">
   <form id="login-resetToken" class="form-horizontal">
-    {{ > bsInputHelperPhone id="login-phone" label="Номер телефона"}}
-    <div id="resetFormTokenSend" style="margin-top:10px" class="form-group">
-      <!-- Button -->
-      <div class="col-sm-12 controls">
-        <button class="btn btn-success" type="submit">
-          Отправить код подтверждения
-        </button>
+    <fieldset>
+      {{ > bsInputHelperPhone id="login-phone" label="Номер телефона"}}
+      <div id="resetFormTokenSend" style="margin-top:10px" class="form-group">
+        <!-- Button -->
+        <div class="col-sm-12 controls">
+          <button class="btn btn-success" type="submit">
+            Отправить код подтверждения
+          </button>
+        </div>
       </div>
-    </div>
+    </fieldset>
   </form>
   <form id="login-resetPassword" style="display:none" class="form-horizontal">
-    {{ > bsInputHelper id="login-token" label="Код подтверждения"
-      icon="glyphicon glyphicon-lock" placeholder="СМС код"}}
-    <div style="margin-top:10px" class="form-group">
-      <!-- Button -->
-      <div class="col-sm-12 controls">
-        <button class="btn btn-success" type="submit">
-          Подтвердить изменение пароля
-        </button>
+    <fieldset>
+      {{ > bsInputHelper id="login-token" label="Код подтверждения"
+        icon="glyphicon glyphicon-lock" placeholder="СМС код"}}
+      <div style="margin-top:10px" class="form-group">
+        <!-- Button -->
+        <div class="col-sm-12 controls">
+          <button class="btn btn-success" type="submit">
+            Подтвердить изменение пароля
+          </button>
+        </div>
       </div>
-    </div>
+    </fieldset>
   </form>
 </template>
 
