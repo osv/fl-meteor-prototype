@@ -92,6 +92,8 @@ Meteor.methods({resendPasswordSMS: function (phone, confirmToken) {
                             {$set: {password: SHA256(newPassword)}});
         sendSMS("Пароль сброшен.\nНовый пароль: " + newPassword,
                 phone);
+      } else {
+        throw new Meteor.Error(403, "Не правильный код проверки");
       }
     }
   }
