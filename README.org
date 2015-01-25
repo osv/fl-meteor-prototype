@@ -32,7 +32,7 @@ SMSC_AUTH=foo:bar meteor
 ** Продакшн
 
 #+begin_example
-SMSC_AUTH=ononos:mycoolemail \
+SMSC_AUTH=ononos:mypassword \
 MAIL_URL=smtp://olexandr.syd%40gmail.com:emailpasswordhere@smtp.gmail.com:465/ \
 meteor
 #+end_example
