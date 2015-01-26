@@ -7,7 +7,7 @@ function isNotEmpty(val) {
 
 function cleanPhoneNumber(phone) {
   console.log('Phone before: ' + phone);
-  console.log('Phone after : ' + phone.replace(/[+ -()]/g, ''));
+  console.log('Phone after : ' + phone.replace(/[-+ ()]/g, ''));
   return phone.replace(/[-+ ()]/g, '');
 }
 
@@ -96,9 +96,9 @@ Template.loginButton.events({
     e.preventDefault();
     var phone = t.find('#login-phone').value,
         fullName = t.find('#login-name').value;
-    phone = cleanPhoneNumber(phone);
+    var clearPhone = cleanPhoneNumber(phone); //телефон без пробелов, минусов, плюсов, скобок
     clrAlerts();
-    if (!phone.match(/^\d{11,12}$/)) { // 11 или 12 цифр, (в укр 12)
+    if (!clearPhone.match(/^\d{11,12}$/)) { // 11 или 12 цифр, (в укр 12)
       Session.set('alertMessage', 'Телефон должен содержать цифры: "+79.."');
       return false;
     }
@@ -106,10 +106,10 @@ Template.loginButton.events({
       Session.set('alertMessage', 'Пожалуйста, укажите как к вам могут обращаться');
       return false;
     }
-    if (isNotEmpty(phone))
+    if (isNotEmpty(clearPhone))
     {
       $('fieldset').prop('disabled', true);
-      Meteor.call('registerUserPhone', phone, fullName, function(err, id) {
+      Meteor.call('registerUserPhone', clearPhone, fullName, function(err, id) {
         $('fieldset').prop('disabled', false);
         if (err) {
           Session.set('alertMessage', err.reason);
