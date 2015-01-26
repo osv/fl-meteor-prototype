@@ -45,7 +45,7 @@ var createUserPhone = function (phone, fullName) {
       var message =
             "Регистрация на молдавстройбат\n" +
             "Ваш пароль: " + password + "\n" +
-            "Добро пожаловать!";
+            "Телефон: " + phone + "\n";
 
       sendSMS(message, phone);
 
