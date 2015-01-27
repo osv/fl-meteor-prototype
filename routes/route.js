@@ -9,8 +9,15 @@ Router.configure({
   progressSpinner : false,      // смотри multiply:iron-router-progress
 });
 
-Router.map( function () {
-  this.route('home', {
-    path: '/',
+Meteor.startup(function () {
+
+  Router.route('/', {
+    name: 'home',
   });
+
+  Router.route('/profile', {
+    name: 'profile',
+    template: 'myProfile',
+  });
+
 });
