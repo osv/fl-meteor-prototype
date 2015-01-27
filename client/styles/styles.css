@@ -1,0 +1,3 @@
+#signUp:focus, #signIn:focus, button {
+    outline: none !important;
+}

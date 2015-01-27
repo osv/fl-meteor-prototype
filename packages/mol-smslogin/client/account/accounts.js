@@ -71,6 +71,12 @@ Template.loginButton.events({
     console.log('click4');
     Session.set('loginForm', 'loginResend');
   },
+  'click #login-phone':function(){
+    $('#login-phone').css('box-shadow', 'none');
+  },
+  'click #login-name':function(){
+    $('#login-name').css('box-shadow', 'none');
+  },
   'submit #login-sign-in-form': function(e, t) {
     e.preventDefault();
     console.log("Signin");
@@ -103,12 +109,16 @@ Template.loginButton.events({
     clrAlerts();
     if (!clearPhone.match(/^\d{11,12}$/)) { // 11 или 12 цифр, (в укр 12)
       Session.set('alertMessage', 'Телефон должен содержать цифры: "+79.."');
+      $('#login-phone').css('box-shadow', 'inset 0 0 0 1px #ff0000');
       return false;
     }
+    $('#login-phone').css('box-shadow', 'none');
     if (!isNotEmpty(fullName)) {
       Session.set('alertMessage', 'Пожалуйста, укажите как к вам могут обращаться');
+      $('#login-name').css('box-shadow', 'inset 0 0 0 1px #ff0000');
       return false;
     }
+    $('#login-name').css('box-shadow', 'none');
     if (isNotEmpty(clearPhone))
     {
       $('fieldset').prop('disabled', true);
@@ -133,7 +143,7 @@ Template.loginButton.events({
     phone = cleanPhoneNumber(phone);
     clrAlerts();
     if (!phone.match(/^\d{11,12}$/)) {
-      Session.set('alertMessage', 'Телефон должен содержать цифры: "+79.."');
+      Session.set('alertMessage', 'Неверный формат номера');
       return false;
     }
     $('#login-phone').prop('disabled', true);
