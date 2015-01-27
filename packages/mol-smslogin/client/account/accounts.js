@@ -12,6 +12,9 @@ function cleanPhoneNumber(phone) {
 }
 
 Template.loginButton.helpers({
+  dropDownMenus: function(){
+    return Accounts.dropDownMenus;
+  },
   displayName: function(){
     
     var user = Meteor.user();

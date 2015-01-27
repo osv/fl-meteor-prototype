@@ -20,7 +20,12 @@ Accounts.sendSMS = function(message, phone) {
   }
 };
 
-
 ```
-  
+* Добаваление итемов в менюшку дропдавн (будут выше менюшки "Выйти..."):
+
+```js
+// можно и масив
+Accounts.addDropMenus({text: 'Ваш профиль', icon: 'glyphicon glyphicon-cog', url: '/profile', id: 'profile'});
+// хеш ключи: text, icon, url, id, class
+```
 

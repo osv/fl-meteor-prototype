@@ -1,3 +1,8 @@
+Accounts.dropDownMenus = [];
+Accounts.addDropMenus = function (menus) {
+  Accounts.dropDownMenus = Accounts.dropDownMenus.concat(menus);
+};
+
 Meteor.loginWithPhone = function(phone, password, callback) {
   console.log("Login " + phone + ', ' + password);
   var loginRequest = {phone: phone, pwd: SHA256(password)};
