@@ -6,8 +6,6 @@ function isNotEmpty(val) {
 }
 
 function cleanPhoneNumber(phone) {
-  console.log('Phone before: ' + phone);
-  console.log('Phone after : ' + phone.replace(/[-+ ()]/g, ''));
   return phone.replace(/[-+ ()]/g, '');
 }
 
@@ -16,9 +14,7 @@ Template.loginButton.helpers({
     return Accounts.dropDownMenus;
   },
   displayName: function(){
-    
     var user = Meteor.user();
-    console.log(JSON.stringify(user));
     return (user.profile && user.profile.completeName) || (user.profile && user.profile.phone);
   },
   alertMessage: function(){
@@ -53,22 +49,18 @@ function clrAlerts() {
 // Login Form Events
 Template.loginButton.events({
   'click #signIn': function(){
-    console.log('click1');
     clrAlerts();
     Session.set('loginForm', 'loginSignIn');
   },
   'click #signUp': function(){
-    console.log('click2');
     clrAlerts();
     Session.set('loginForm', 'loginSignUp');
   },
   'click #reg': function(){
-    console.log('click3');
     clrAlerts();
     Session.set('loginForm', 'loginSignUp');
   },
   'click #restore': function(){
-    console.log('click4');
     Session.set('loginForm', 'loginResend');
   },
   'click #login-phone':function(){
@@ -79,7 +71,6 @@ Template.loginButton.events({
   },
   'submit #login-sign-in-form': function(e, t) {
     e.preventDefault();
-    console.log("Signin");
     var phone = t.find('#login-phone').value,
         password = t.find('#login-password').value;
     phone = cleanPhoneNumber(phone);
@@ -92,8 +83,6 @@ Template.loginButton.events({
         $('fieldset').prop('disabled', false);
         if (err) {
           Session.set('alertMessage', err.reason);
-          console.warn("login fail " + err.reason);
-          console.log("session: " + Session.get('infoMessage'));
         } else {
           $('#loginModal').modal('hide'); //скрываем модальное окно, залогинились уже
         }
@@ -126,7 +115,6 @@ Template.loginButton.events({
         $('fieldset').prop('disabled', false);
         if (err) {
           Session.set('alertMessage', err.reason);
-          console.warn("fail create user: " + err.reason);
         } else {
           clrAlerts();
           Session.set('infoMessage', "SMS отправлен с паролем");
@@ -150,7 +138,6 @@ Template.loginButton.events({
     $('#resetFormTokenSend').hide();
     Meteor.call('resendPasswordSMS', phone, function (err) {
       if (err) {
-        console.log(err);
         Session.set('alertMessage', err.reason);
         $('#login-phone').prop('disabled', false);
         $('#resetFormTokenSend').show();
@@ -210,5 +197,4 @@ Template.loginSignIn.rendered = function () {
   if (isNotEmpty(phone)) {
     $('#login-phone').val(phone);
   }
-  console.log('set phone ' + phone);
 };
