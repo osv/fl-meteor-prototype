@@ -9,10 +9,22 @@ Router.configure({
   progressSpinner : false,      // смотри multiply:iron-router-progress
 });
 
+// Custom options
+Router.plugin('auth', {
+  authenticate: {
+    route: 'login'
+  },
+  except: ['home', 'login'],
+});
+
 Meteor.startup(function () {
 
   Router.route('/', {
     name: 'home',
+  });
+
+  Router.route('/login', {
+    name: 'login',
   });
 
   Router.route('/profile', {
