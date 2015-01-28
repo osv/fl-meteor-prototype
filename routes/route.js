@@ -16,8 +16,11 @@ Meteor.startup(function () {
   });
 
   Router.route('/profile', {
-    name: 'profile',
-    template: 'myProfile',
+    name: 'myProfile',
+  });
+
+  Router.route('/profile/personal', {
+    name: 'myPersonal',
   });
 
 });

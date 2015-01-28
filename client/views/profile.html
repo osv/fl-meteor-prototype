@@ -1,3 +1,22 @@
-<template name="myProfile">
-Здеся профиль
+<template name="profileMenu">
+  <ul class="nav nav-tabs">
+    <li class="{{ifActiveRoute "/profile"}}">            <a href="/profile">Объявления, фото</a></li>
+    <li class="{{ifActiveRoute "/profile/personal"}}">   <a href="/profile/personal">Личные данные</a></li>
+    <li class="{{ifActiveRoute "/profile/messages"}}">
+      <a href="/profile2">Сообщения <span class="badge">0</span></a></li>
+  </ul>
 </template>
+
+<template name="myProfile">
+  {{>profileMenu}}
+  
+  Тут будует мои 
+</template>
+
+
+<template name="myPersonal">
+  {{>profileMenu}}
+
+  Тут Регистрационные данные, Публикуемые данные
+</template>
+
