@@ -159,8 +159,8 @@
 
 <!-- helpers -->
 <template name="bsInputHelperPhone">
-  <div class="form-group" style="margin-bottom: 25px">
-    <label class="col-md-4" for="inputSuccess3">{{ label }}</label>
+  <div id="{{ id }}-fgrp" class="form-group has-feedback" style="margin-bottom: 25px">
+    <label class="col-md-4 control-label" for="inputSuccess3">{{ label }}</label>
     <div class="col-md-8">
       <div class="input-group">
         <span class="input-group-addon"><i class="fa fa-mobile"></i></span>
@@ -172,8 +172,8 @@
 </template>
 
 <template name="bsInputHelper">
-  <div class="form-group" style="margin-bottom: 25px">
-    <label class="col-md-4" for="inputSuccess3">{{ label }}</label>
+  <div id="{{ id }}-fgrp" class="form-group has-feedback" style="margin-bottom: 25px">
+    <label class="col-md-4 control-label" for="inputSuccess3">{{ label }}</label>
     <div class="col-md-8">
       <div class="input-group">
         <span class="input-group-addon"><i class="{{ icon }}"></i></span>

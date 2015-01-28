@@ -64,10 +64,10 @@ Template.loginButton.events({
     Session.set('loginForm', 'loginResend');
   },
   'click #login-phone':function(){
-    $('#login-phone').css('box-shadow', 'none');
+    $('#login-phone-fgrp').removeClass("has-error");
   },
   'click #login-name':function(){
-    $('#login-name').css('box-shadow', 'none');
+    $('#login-name-fgrp').removeClass("has-error");
   },
   'submit #login-sign-in-form': function(e, t) {
     e.preventDefault();
@@ -98,16 +98,16 @@ Template.loginButton.events({
     clrAlerts();
     if (!clearPhone.match(/^\d{11,12}$/)) { // 11 или 12 цифр, (в укр 12)
       Session.set('alertMessage', 'Телефон должен содержать цифры: "+79.."');
-      $('#login-phone').css('box-shadow', 'inset 0 0 0 1px #ff0000');
+      $('#login-phone-fgrp').addClass("has-error");
       return false;
     }
     $('#login-phone').css('box-shadow', 'none');
     if (!isNotEmpty(fullName)) {
       Session.set('alertMessage', 'Пожалуйста, укажите как к вам могут обращаться');
-      $('#login-name').css('box-shadow', 'inset 0 0 0 1px #ff0000');
+      $('#login-name-fgrp').addClass("has-error");
       return false;
     }
-    $('#login-name').css('box-shadow', 'none');
+    $('#login-name-fgrp').removeClass("has-error");
     if (isNotEmpty(clearPhone))
     {
       $('fieldset').prop('disabled', true);
