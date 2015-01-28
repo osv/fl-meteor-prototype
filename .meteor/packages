@@ -6,9 +6,15 @@
 
 meteor-platform
 accounts-base
-twbs:bootstrap
+nemo64:bootstrap
+less
 email
 alethes:pages
+
+# cfs:standard-packages
+# cfs:filesystem
+# cfs:graphicsmagick
+# cfs:ui
 
 mrt:moment
 
