@@ -14,7 +14,7 @@
             </li>
           {{/each}}
           <li><a id="logout" class="logout" href="#" tabindex="-1">
-            <i class="glyphicon glyphicon-log-out"></i>
+            <i class="fa fa-sign-out"></i>
             Выйти...</a></li>
         </ul>
       </li>
@@ -56,7 +56,7 @@
           {{ /if }}
           {{ #if alertMessage }}
           <div class="alert alert-danger">
-            <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+            <span class="fa fa-exclamation-circle" aria-hidden="true"></span>
             {{ alertMessage }}
           </div>
           {{ /if }}
@@ -73,7 +73,7 @@
     <fieldset>
       {{ > bsInputHelperPhone id="login-phone" label="Телефон"}}
       {{ > bsInputHelper id="login-password" label="Пароль"
-        icon="glyphicon glyphicon-lock" type="password"
+        icon="fa fa-lock" type="password"
         placeholder="Пароль что был выслан СМС"}}
 
       <div style="margin-top:10px" class="form-group">
@@ -107,7 +107,7 @@
     <fieldset>
       {{ > bsInputHelperPhone id="login-phone" label="Телефон"}}
       {{ > bsInputHelper id="login-name" label="Контактное лицо"
-        icon="glyphicon glyphicon-user" placeholder="Иванов"}}
+        icon="fa fa-user" placeholder="Иванов"}}
       <div style="margin-top:10px" class="form-group">
         <!-- Button -->
         <div class="col-sm-12 controls">
@@ -144,7 +144,7 @@
   <form id="login-resetPassword" style="display:none" class="form-horizontal">
     <fieldset>
       {{ > bsInputHelper id="login-token" label="Код подтверждения"
-        icon="glyphicon glyphicon-lock" placeholder="СМС код"}}
+        icon="fa fa-lock" placeholder="СМС код"}}
       <div style="margin-top:10px" class="form-group">
         <!-- Button -->
         <div class="col-sm-12 controls">
@@ -163,7 +163,7 @@
     <label class="col-md-4" for="inputSuccess3">{{ label }}</label>
     <div class="col-md-8">
       <div class="input-group">
-        <span class="input-group-addon"><i class="glyphicon glyphicon-phone"></i></span>
+        <span class="input-group-addon"><i class="fa fa-mobile"></i></span>
         <input id="{{ id }}"
                class="form-control bfh-phone" data-format="+d (ddd) ddd-dd-ddd" value="7" type="text">
       </div>

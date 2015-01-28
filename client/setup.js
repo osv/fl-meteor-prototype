@@ -1,3 +1,3 @@
 // кастомизация менюшки дропдавн
-Accounts.addDropMenus([{text: 'Ваш профиль', icon: 'glyphicon glyphicon-cog', url: '/profile', id: 'profile'},
+Accounts.addDropMenus([{text: 'Ваш профиль', icon: 'fa fa-cogs', url: '/profile', id: 'profile'},
                       ]);

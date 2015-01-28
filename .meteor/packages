@@ -7,6 +7,7 @@
 meteor-platform
 accounts-base
 nemo64:bootstrap
+fortawesome:fontawesome
 less
 email
 alethes:pages
