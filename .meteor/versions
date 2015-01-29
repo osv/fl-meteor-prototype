@@ -72,4 +72,5 @@ underscore@1.0.2
 url@1.0.3
 webapp@1.1.5
 webapp-hashing@1.0.2
+zeroasterisk:throttle@0.2.1
 zimme:iron-router-auth@3.0.0

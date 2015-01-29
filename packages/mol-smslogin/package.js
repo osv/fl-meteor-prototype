@@ -9,6 +9,7 @@ Package.onUse(function(api) {
   api.imply('accounts-base', ['client', 'server']);
   api.use('sha', ['client', 'server']);
   api.use('random', ['server']);
+  api.use('zeroasterisk:throttle', 'server');
   api.use('check');
   api.use(['templating'], 'client');
 
