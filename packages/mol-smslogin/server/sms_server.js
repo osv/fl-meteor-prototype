@@ -72,7 +72,7 @@ Meteor.methods({resendPasswordSMS: function (phone, confirmToken) {
 
   var user = Meteor.users.findOne({"profile.phone": phone});
   if (!user) {
-    throw new Meteor.Error(403, "");
+    throw new Meteor.Error(403, "Проверьте правильность ввода номера.");
   } else {
     if (!confirmToken) {
       var resetToken = Random.id(6);
