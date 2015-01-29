@@ -33,7 +33,7 @@ Template.loginButton.helpers({
   },
   loginFormTitle: function() {
     switch (Session.get('loginForm')) {
-      case 'loginResend': return 'Востановление пароля';
+      case 'loginResend': return 'Восстановление пароля';
       case 'loginSignUp': return 'Регистрация';
       default: return 'Вход';
     }
@@ -97,13 +97,13 @@ Template.loginButton.events({
     var clearPhone = cleanPhoneNumber(phone); //телефон без пробелов, минусов, плюсов, скобок
     clrAlerts();
     if (!clearPhone.match(/^\d{11,12}$/)) { // 11 или 12 цифр, (в укр 12)
-      Session.set('alertMessage', 'Телефон должен содержать цифры: "+79.."');
+      Session.set('alertMessage', 'Проверьте правильность ввода номера.');
       $('#login-phone-fgrp').addClass("has-error");
       return false;
     }
     $('#login-phone').css('box-shadow', 'none');
     if (!isNotEmpty(fullName)) {
-      Session.set('alertMessage', 'Пожалуйста, укажите как к вам могут обращаться');
+      Session.set('alertMessage', 'Укажите как к Вам можно обращаться');
       $('#login-name-fgrp').addClass("has-error");
       return false;
     }
@@ -117,7 +117,7 @@ Template.loginButton.events({
           Session.set('alertMessage', err.reason);
         } else {
           clrAlerts();
-          Session.set('infoMessage', "SMS отправлен с паролем");
+          Session.set('infoMessage', "На Ваш номер отправлено сообщение с паролем.");
           Session.set('loginForm', 'loginSignIn');
           Session.set('currenPhone', phone);
         }
@@ -131,7 +131,7 @@ Template.loginButton.events({
     phone = cleanPhoneNumber(phone);
     clrAlerts();
     if (!phone.match(/^\d{11,12}$/)) {
-      Session.set('alertMessage', 'Неверный формат номера');
+      Session.set('alertMessage', 'Проверьте правильность введенного номера.');
       return false;
     }
     $('#login-phone').prop('disabled', true);
@@ -143,7 +143,7 @@ Template.loginButton.events({
         $('#resetFormTokenSend').show();
       } else {
         $('#login-resetPassword').show();
-        Session.set('infoMessage', 'Отправлен SMS с кодом, введите его ниже');
+        Session.set('infoMessage', 'На Ваш номер отправлено сообщение с кодом для сброса пароля.');
       }
     });
     return false;
@@ -162,7 +162,7 @@ Template.loginButton.events({
         if (err) {
           Session.set('alertMessage', err.reason);
         } else {
-          Session.set('infoMessage', 'Отправлен SMS с новым паролем');
+          Session.set('infoMessage', 'На Ваш номер отправлено сообщение с новым паролем.');
           Session.set('loginForm', 'loginSignIn');
           Session.set('currenPhone', phone);
         }

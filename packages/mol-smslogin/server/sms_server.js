@@ -4,13 +4,13 @@ Accounts.registerLoginHandler(function(loginRequest) {
     var user = Meteor.users.findOne({"profile.phone": loginRequest.phone});
     if(!user) {
       return {
-        error: new Meteor.Error(403, "Никто не зарегестрирован с таким номером, проверьте номер.")
+        error: new Meteor.Error(403, "Войти не удалось. Проверьте правильность логина и пароля.")
       };
     } else {
       if (user.password !== loginRequest.pwd) {
         return {
           userId: user._id,
-          error: new Meteor.Error(403, "Не правильный пароль")
+          error: new Meteor.Error(403, "Войти не удалось. Проверьте правильность логина и пароля.")
         };
       } else {
         return {
@@ -43,9 +43,9 @@ var createUserPhone = function (phone, fullName) {
     if (!user) {
       var password = Random.id(6); 
       var message =
-            "Регистрация на молдавстройбат\n" +
-            "Ваш пароль: " + password + "\n" +
-            "Телефон: " + phone + "\n";
+          "Регистрация на молдавстройбат\n" +
+          "Логин: " + phone + "\n" +
+          "Пароль: " + password;
 
       sendSMS(message, phone);
 
@@ -56,7 +56,7 @@ var createUserPhone = function (phone, fullName) {
           password: SHA256(password)
         });
     } else {
-      throw new Meteor.Error(403, "Пользователь с этим телефоном уже зарегистрирован");
+      throw new Meteor.Error(403, "Этот номер уже используется. Если это ваш номер, Вы можете восстановить пароль");
     }
   } else
     throw new Meteor.Error (400, 'phone and fullName required for createUserPhone');
@@ -72,7 +72,7 @@ Meteor.methods({resendPasswordSMS: function (phone, confirmToken) {
 
   var user = Meteor.users.findOne({"profile.phone": phone});
   if (!user) {
-    throw new Meteor.Error(403, "Никто не зарегестрирован с таким номером, проверьте номер.");
+    throw new Meteor.Error(403, "");
   } else {
     if (!confirmToken) {
       var resetToken = Random.id(6);
@@ -80,8 +80,7 @@ Meteor.methods({resendPasswordSMS: function (phone, confirmToken) {
       Meteor.users.update(user._id,
                           {$set: {'services.reset.pwd': resetToken}});
       var message =
-            "Вы подтверждаете сброс пароля.\n" +
-            "Код подтверждения: " + resetToken;
+            "Для получения нового пароля введите этот код на сайте: " + resetToken;
       sendSMS(message, phone);
 
     } else {
@@ -93,7 +92,7 @@ Meteor.methods({resendPasswordSMS: function (phone, confirmToken) {
         sendSMS("Пароль сброшен.\nНовый пароль: " + newPassword,
                 phone);
       } else {
-        throw new Meteor.Error(403, "Не правильный код проверки");
+        throw new Meteor.Error(403, "Проверочный код введён неверно.");
       }
     }
   }
