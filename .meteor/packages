@@ -27,4 +27,5 @@ manuel:viewmodel@1.2.6
 aldeed:collection2
 
 mol-smslogin
+mol-messages
 zimme:iron-router-auth
