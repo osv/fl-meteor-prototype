@@ -22,7 +22,14 @@
 
 Нужно установить SMSC_AUTH (cmsc.ru логин и пароль) и MAIL_URL переменные:
 
+Чтобы определение айпи работало нужно также установить HTTP_FORWARDED_COUNT
+в зависимости от количеста проксей/лоадбалансеров (например, если метеор
+за nginx то HTTP_FORWARDED_COUNT=1).
+
+Итого пример:
+
 #+begin_example
+HTTP_FORWARDED_COUNT=1
 SMSC_AUTH=ononos:mypassword \
 MAIL_URL=smtp://olexandr.syd%40gmail.com:emailpasswordhere@smtp.gmail.com:465/ \
 meteor
