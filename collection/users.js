@@ -13,7 +13,8 @@ Schema.UserProfile = new SimpleSchema({
 
 Schema.User = new SimpleSchema({
   password: {
-    type: /\w{6,}/     // минимум 6 символов пароль
+    type: String,
+    regEx: /\w{6,}/     // минимум 6 символов пароль
   },
   emails: {
     type: [Object],
