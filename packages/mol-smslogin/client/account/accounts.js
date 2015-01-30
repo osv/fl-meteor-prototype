@@ -75,8 +75,12 @@ Template.loginButton.events({
         password = t.find('#login-password').value;
     phone = cleanPhoneNumber(phone);
     clrAlerts();
-    if (isNotEmpty(phone) &&
-        isNotEmpty(password))
+    if (!phone.match(/^\d{11,12}$/)) { // 11 или 12 цифр, (в укр 12)
+      Session.set('alertMessage', 'Проверьте правильность ввода номера.');
+      $('#login-phone-fgrp').addClass("has-error");
+      return false;
+    }
+    if (isNotEmpty(password))
     {
       $('fieldset').prop('disabled', true);
       Meteor.loginWithPhone(phone, password, function(err){
