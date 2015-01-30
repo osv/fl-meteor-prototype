@@ -18,6 +18,9 @@ Accounts.sendSMS = function(message, phone) {
     }); 
   } else {
     console.warn("please, set SMSC_AUTH=login:password to your smsc.ru ");
-    throw new Meteor.Error(503, 'SMS gateway not configured');
+    if (process.env.MAIL_URL)
+      throw new Meteor.Error(503, 'SMS gateway not configured');
+    else
+      console.log("SMS to: %s\n  text: %s", phone, message);
   }
 };
