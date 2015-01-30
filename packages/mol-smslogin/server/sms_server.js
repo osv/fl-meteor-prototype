@@ -8,7 +8,7 @@ Accounts.registerLoginHandler(function(loginRequest) {
 
     // 10ть попыток в 60 секунд
     if (!Throttle.checkThenSet('signIn.' + 
-                               this.connection.clientAddress, 10, 60000))
+                               headers.methodClientIP(this), 10, 60000))
       return {
         error: new Meteor.Error(500,
                                 '<strong>Превышено количество попыток входа.</strong>' +
@@ -27,7 +27,7 @@ Accounts.registerLoginHandler(function(loginRequest) {
           error: new Meteor.Error(403, ERRMSG)
         };
       } else {
-        console.log('User logged %s IP: %s', loginRequest.phone, this.connection.clientAddress);
+        console.log('User logged %s IP: %s', loginRequest.phone, headers.methodClientIP(this));
         return {
           userId: user._id,
         };
@@ -79,7 +79,7 @@ var createUserPhone = function (phone, fullName) {
 Meteor.methods({registerUserPhone: function (phone, fullName) {
   // 3 попыток в 60 секунд, этого должно хватить чтобы вспомнить и таки ввести тот самый телефон
   if (!Throttle.checkThenSet('signUp.' + 
-                             this.connection.clientAddress, 3, 60000))
+                             headers.methodClientIP(this), 3, 60000))
     throw new Meteor.Error(500, '<strong>Превышено количество.</strong> Попробуйте позже.');
 
   return createUserPhone(phone, fullName);
@@ -91,7 +91,7 @@ Meteor.methods({resendPasswordSMS: function (phone, confirmToken) {
 
   // 5ть попыток в минуту только
   if (!Throttle.checkThenSet('resendPwd.' + 
-                             this.connection.clientAddress, 5, 60000))
+                             headers.methodClientIP(this), 5, 60000))
     throw new Meteor.Error(500, 'Похоже вы не можете вспомнить свой телефон, подождите немного, и попробуйте снова :)');
 
   var user = Meteor.users.findOne({"profile.phone": phone});
