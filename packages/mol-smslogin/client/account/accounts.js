@@ -197,8 +197,20 @@ Template.bsInputHelper.helpers({
 });
 
 Template.loginSignIn.rendered = function () {
+  // Установим телефон в форме логина с формы регистрации, он в currenPhone
   var phone = Session.get('currenPhone');
   if (isNotEmpty(phone)) {
     $('#login-phone').val(phone);
   }
+};
+
+Template.loginSignUp.rendered = function () {
+  // автоскрытие поповера после 6сек
+  $('#login-phone').popover({content: 'Ваш телефон будет использован только для входа на сайт. При желании вы можете указать его как контактный.',
+                             placement: 'top'});
+  $('#login-phone').on('shown.bs.popover', function () {
+    setTimeout(function () {
+      $('#login-phone').popover('hide');
+    }, 6500);
+  });
 };
