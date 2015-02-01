@@ -7,3 +7,7 @@ UI.registerHelper('ifActiveRoute', function (routeName) {
   else
     return 'false';
 });
+
+UI.registerHelper('isAdmin', function() {
+  return isAdmin(Meteor.user());
+});

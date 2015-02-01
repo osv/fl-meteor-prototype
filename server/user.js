@@ -1,4 +1,13 @@
 
+Meteor.publish('currentUser', function() {
+  var user = Meteor.users.find({_id: this.userId},
+                               {fields: {
+                                 isMaster: true,
+                                 isAdmin: true,
+                                 phone: true}});
+  return user;
+});
+
 Meteor.startup(function() {
 
   /*  Создадим админа если его нет с паролем admin */
