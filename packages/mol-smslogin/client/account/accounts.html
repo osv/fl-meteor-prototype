@@ -106,6 +106,7 @@
   <form id="login-sign-up-form" class="form-horizontal" role="form">
     <fieldset>
       {{ > bsInputHelperPhone id="login-phone" label="Телефон"}}
+      {{ > bsSwitchMaster }}
       {{ > bsInputHelper id="login-name" label="Контактное лицо"
         icon="fa fa-user" placeholder="Иванов"}}
       <div style="margin-top:10px" class="form-group">
@@ -184,3 +185,20 @@
   </div>
 </template>
 
+<template name="bsSwitchMaster">
+  <div id="switch-fgrp" class="form-group has-feedback" style="margin-bottom: 25px">
+    <label class="col-md-4 control-label" for="inputSuccess3">Вид регистрации</label>
+    <div class="col-md-8">
+      <div class="input-group">
+        <div class="btn-group" data-toggle="buttons">
+          <label class="btn btn-default">
+            <input type="radio" name="status" id="customer" autocomplete="off"> Заказчик
+          </label>
+          <label class="btn btn-default">
+            <input type="radio" name="status" id="master" autocomplete="off"> Исполнитель
+          </label>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>
