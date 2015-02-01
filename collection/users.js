@@ -5,13 +5,13 @@ Schema.UserProfile = new SimpleSchema({
     type: String,
     optional: true
   },
+});
+
+Schema.User = new SimpleSchema({
   phone: {
     type: String,
     regEx: /^\d{11,12}$/
   },
-});
-
-Schema.User = new SimpleSchema({
   password: {
     type: String,
     regEx: /\w{6,}/     // минимум 6 символов пароль
@@ -39,17 +39,35 @@ Schema.User = new SimpleSchema({
     optional: true,
     blackbox: true
   },
-  // Add `roles` to your schema if you use the meteor-roles package.
-  // Note that when using this package, you must also specify the
-  // `Roles.GLOBAL_GROUP` group whenever you add a user to a role.
-  // Roles.addUsersToRoles(userId, ["admin"], Roles.GLOBAL_GROUP);
-  // You can't mix and match adding with and without a group since
-  // you will fail validation in some cases.
-  roles: {
-    type: Object,
+  isAdmin: {
+    type: String,
     optional: true,
-    blackbox: true
+  },
+  isMaster: {
+    type: String,
+    optional: true,
   }
 });
 
 Meteor.users.attachSchema(Schema.User);
+
+/*
+ Role base permisssion
+ */
+
+can = {};
+
+can.edit = function(user, item) {
+  user = (typeof user === 'undefined') ? Meteor.user() : user;
+  // если юзер админ или овнер item
+  if (!user || !item || (user._id !== item.userId && !user.isAdmin)) {
+    return false;
+  } else {
+    return true;
+  }
+};
+
+can.editById = function(userId, item) {
+  var user = Meteor.users.findOne(userId);
+  return can.edit(user, item);
+};

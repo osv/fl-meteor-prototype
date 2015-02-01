@@ -105,7 +105,18 @@ Template.loginButton.events({
       $('#login-phone-fgrp').addClass("has-error");
       return false;
     }
-    $('#login-phone').css('box-shadow', 'none');
+    // подсветим ошибку если не выделено заказчик или исполнитель
+    if (! $('#customer').prop('checked') &&
+        ! $('#master').prop('checked') ) {
+      $('#switch-fgrp').addClass("has-error");
+      $('#switch-fgrp .btn').removeClass("btn-default");
+      $('#switch-fgrp .btn').addClass("btn-danger");
+      Session.set('alertMessage', 'Вы должны выбрать вашу роль');
+      return false;
+    }
+
+    var masterOrCustomer = $('#master').prop('checked');
+
     if (!isNotEmpty(fullName)) {
       Session.set('alertMessage', 'Укажите как к Вам можно обращаться');
       $('#login-name-fgrp').addClass("has-error");
@@ -115,13 +126,15 @@ Template.loginButton.events({
     if (isNotEmpty(clearPhone))
     {
       $('fieldset').prop('disabled', true);
-      Meteor.call('registerUserPhone', clearPhone, fullName, function(err, id) {
+      Meteor.call('registerUserPhone', clearPhone, fullName, masterOrCustomer, function(err, id) {
         $('fieldset').prop('disabled', false);
         if (err) {
           Session.set('alertMessage', err.reason);
         } else {
           clrAlerts();
-          Session.set('infoMessage', "На Ваш номер отправлено сообщение с паролем.");
+          Session.set('infoMessage', "Вы зарегистрированы как <strong>" +
+                      (masterOrCustomer ? "исполнитель" : "заказчик") +
+                      "</strong> На Ваш номер отправлено сообщение с паролем.");
           Session.set('loginForm', 'loginSignIn');
           Session.set('currenPhone', phone);
         }
@@ -184,6 +197,15 @@ Template.loginButton.events({
     Meteor.logout();
     return false;
   }
+});
+
+Template.bsSwitchMaster.events({
+  'click .input-group':function(){
+    $('#switch-fgrp').removeClass("has-error");
+    $('#switch-fgrp .btn').addClass("btn-default");
+    $('#switch-fgrp .btn').removeClass("btn-danger");
+    clrAlerts();
+  },
 });
 
 Template.bsInputHelperPhone.rendered = function () {

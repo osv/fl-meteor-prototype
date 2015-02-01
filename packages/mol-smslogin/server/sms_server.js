@@ -15,7 +15,7 @@ Accounts.registerLoginHandler(function(loginRequest) {
                                 'Возможно вам следует восстановить пароль или попробуйте позже') };
 
     var ERRMSG = "<strong>Войти не удалось.</strong> Проверьте правильность логина и пароля.";
-    var user = Meteor.users.findOne({"profile.phone": loginRequest.phone});
+    var user = Meteor.users.findOne({phone: loginRequest.phone});
     if(!user) {
       return {
         error: new Meteor.Error(403, ERRMSG)
@@ -45,14 +45,15 @@ var sendSMS = function (message, phone) {
   }
 }
 
-var createUserPhone = function (phone, fullName) {
+var createUserPhone = function (phone, fullName, masterOrCustomer) {
   check(fullName, String);
+  check(masterOrCustomer, Boolean);
 
   if (!fullName && !phone)
     throw new Meteor.Error(400, "Need to set a fullName or phone");
 
   if (phone && fullName) {
-    var user = Meteor.users.findOne({"profile.phone": phone});
+    var user = Meteor.users.findOne({"phone": phone});
     // create user
     if (!user) {
       var password = Random.id(6); 
@@ -63,12 +64,14 @@ var createUserPhone = function (phone, fullName) {
 
       sendSMS(message, phone);
 
-      return Accounts.insertUserDoc(
+      var id = Accounts.insertUserDoc(
         {},
-        { profile: {phone: phone,
-                    completeName: fullName},
-          password: SHA256(password)
+        { profile: { completeName: fullName },
+          phone: phone,
+          password: SHA256(password),
+          isMaster: masterOrCustomer,
         });
+      return id;
     } else {
       throw new Meteor.Error(403, "Этот номер уже используется. Если это ваш номер, Вы можете восстановить пароль");
     }
@@ -76,13 +79,13 @@ var createUserPhone = function (phone, fullName) {
     throw new Meteor.Error (400, 'phone and fullName required for createUserPhone');
 };
 
-Meteor.methods({registerUserPhone: function (phone, fullName) {
-  // 3 попыток в 60 секунд, этого должно хватить чтобы вспомнить и таки ввести тот самый телефон
+Meteor.methods({registerUserPhone: function (phone, fullName, masterOrCustomer) {
+  // 5 попыток в 60 секунд, этого должно хватить чтобы вспомнить и таки ввести тот самый телефон
   if (!Throttle.checkThenSet('signUp.' + 
-                             headers.methodClientIP(this), 3, 60000))
-    throw new Meteor.Error(500, '<strong>Превышено количество.</strong> Попробуйте позже.');
+                             headers.methodClientIP(this), 5, 60000))
+    throw new Meteor.Error(500, '<strong>Превышено количество попыток регистрации.</strong> Попробуйте позже.');
 
-  return createUserPhone(phone, fullName);
+  return createUserPhone(phone, fullName, masterOrCustomer);
 }});
 
 // send reset token if @resetToken not defined
@@ -92,9 +95,9 @@ Meteor.methods({resendPasswordSMS: function (phone, confirmToken) {
   // 5ть попыток в минуту только
   if (!Throttle.checkThenSet('resendPwd.' + 
                              headers.methodClientIP(this), 5, 60000))
-    throw new Meteor.Error(500, 'Похоже вы не можете вспомнить свой телефон, подождите немного, и попробуйте снова :)');
+    throw new Meteor.Error(500, 'Превышено количество попыток ввода, подождите немного.');
 
-  var user = Meteor.users.findOne({"profile.phone": phone});
+  var user = Meteor.users.findOne({phone: phone});
   if (!user) {
     throw new Meteor.Error(403, "Проверьте правильность ввода номера.");
   } else {
@@ -123,4 +126,4 @@ Meteor.methods({resendPasswordSMS: function (phone, confirmToken) {
 }});
 
 // дополнительный индекс в базе
-Meteor.users._ensureIndex('profile.phone', {unique: 1, sparse: 1});
+Meteor.users._ensureIndex('phone', {unique: 1, sparse: 1});
