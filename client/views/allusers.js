@@ -8,13 +8,13 @@ Template.usersadmin.events({
         filters["phone"] = {$regex: mkRegexp(phone), $options: 'i'};
       if (contact)
         filters["profile.completeName"] = {$regex: mkRegexp(contact), $options: 'i'};
-      Meteor.usersPages.set("filters", filters);
+      Paginations.usersPages.set("filters", filters);
     }
   }
 });
 
 Template.usersadmin.rendered = function() {
-  Meteor.usersPages.set("filters", {});
+  Paginations.usersPages.set("filters", {});
 };
 
 Template.userInfoForAdmin.helpers({
@@ -40,7 +40,7 @@ Template.usersAdminSorter.events({
   'click': function(){
     // значение this.sort указано в шаблоне например {{> usersAdminSorter sort="phone" label="Телефон"}}
     var sort = {};
-    sort[this.sort] = Meteor.usersPages.sort.hasOwnProperty(this.sort) ? - Meteor.usersPages.sort[this.sort] : 1;
-    Meteor.usersPages.set("sort", sort);
+    sort[this.sort] = Paginations.usersPages.sort.hasOwnProperty(this.sort) ? - Paginations.usersPages.sort[this.sort] : 1;
+    Paginations.usersPages.set("sort", sort);
   }
 });

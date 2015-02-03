@@ -17,25 +17,39 @@ Router.plugin('auth', {
   except: ['home', 'login'],
 });
 
+ApplicationController = RouteController.extend({
+  onBeforeAction: function() {
+    Paginations.usersPages.unsubscribe();
+    return this.next();
+  }
+});
+
+Paginations = {};               // здесь будут все Meteor.Pagination для доступа с других мест клиента
+
 Meteor.startup(function () {
 
   Router.route('/', {
     name: 'home',
+    controller: 'ApplicationController'
   });
 
   Router.route('/login', {
     name: 'login',
+    controller: 'ApplicationController'
   });
 
   Router.route('/profile', {
     name: 'myProfile',
+    controller: 'ApplicationController'
   });
 
   Router.route('/profile/personal', {
     name: 'myPersonal',
+    controller: 'ApplicationController'
   });
 
-  Meteor.usersPages = new Meteor.Pagination(Meteor.users, {
+  // all users for admins
+  Paginations.usersPages = new Meteor.Pagination(Meteor.users, {
     auth: Meteor.isClient ? function(){} : function(skip, subscription) {
       return isAdminById(subscription.userId);
     },
