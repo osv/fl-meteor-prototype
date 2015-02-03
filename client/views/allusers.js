@@ -1,4 +1,4 @@
-Template.usersadmin.events({
+Template.usersAdmin.events({
   'keypress th input': function(e, t){
     if (e.which === 13) {
       var phone = t.find("#searchPhone").value,
@@ -13,7 +13,7 @@ Template.usersadmin.events({
   }
 });
 
-Template.usersadmin.rendered = function() {
+Template.usersAdmin.rendered = function() {
   Paginations.usersPages.set("filters", {});
 };
 

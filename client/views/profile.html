@@ -5,7 +5,7 @@
     <li class="{{ifActiveRoute "/profile/messages"}}">
       <a href="/profile2">Сообщения <span class="badge">0</span></a></li>
     {{#if isAdmin}}
-    <li class="{{ifActiveRoute "/users"}}">            <a href="/users">Пользователя</a></li>
+    <li class="{{ifActiveRouteRE "users"}}">             <a href="/users">Пользователи</a></li>
     {{/if}}
   </ul>
 </template>

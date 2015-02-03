@@ -54,11 +54,11 @@ Meteor.startup(function () {
       return isAdminById(subscription.userId);
     },
     perPage: 10,
-    templateName: "usersadmin",
+    templateName: "usersAdmin",
     router: "iron-router",
     homeRoute: "/users",
     route: "/users/:group?/",
-    routerTemplate: "usersadmin",
+    routerTemplate: "usersAdmin",
     routerLayout: "appLayout",
     itemTemplate: "userInfoForAdmin",
     divWrapper: "",
