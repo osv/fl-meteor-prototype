@@ -2,17 +2,25 @@
   {{> profileMenu }}
 
   <h1>Список пользователей в системе</h1>
-
-  {{> pagesNav}}
-
+  
+  <div class="pull-right">
+    {{> pagesNav}}
+  </div>
   <table class="table table-bordered table-striped">
     <thead>
       <tr>
         <th>{{> usersAdminSorter sort="phone" label="Телефон"}}</th>
-        <th>{{> usersAdminSorter sort="profile.Completename" label="Контактое лиц"}}</th>
+        <th>{{> usersAdminSorter sort="profile.completeName" label="Контактое лицо"}}</th>
         <th>{{> usersAdminSorter sort="createdAt" label="Создан"}}</th>
         <th>{{> usersAdminSorter sort="isMaster" label="Роль"}}</th>
         <th>{{> usersAdminSorter sort="isAdmin" label="Админ"}}</th>
+      </tr>
+      <tr>
+        <th><input id="searchPhone"   type="text" class="form-control" placeholder="Фильтровать"></th>
+        <th><input id="searchContact" type="text" class="form-control" placeholder="Фильтровать"></th>
+        <th></th>
+        <th></th>
+        <th></th>
       </tr>
     </thead>
     <tbody class="table-striped">

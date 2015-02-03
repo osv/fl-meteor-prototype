@@ -1,3 +1,22 @@
+Template.usersadmin.events({
+  'keypress th input': function(e, t){
+    if (e.which === 13) {
+      var phone = t.find("#searchPhone").value,
+          contact = t.find("#searchContact").value,
+          filters = {};
+      if (phone)
+        filters["phone"] = {$regex: mkRegexp(phone), $options: 'i'};
+      if (contact)
+        filters["profile.completeName"] = {$regex: mkRegexp(contact), $options: 'i'};
+      Meteor.usersPages.set("filters", filters);
+    }
+  }
+});
+
+Template.usersadmin.rendered = function() {
+  Meteor.usersPages.set("filters", {});
+};
+
 Template.userInfoForAdmin.helpers({
   formatedPhone: function() {
     return formatPhone( this.phone );

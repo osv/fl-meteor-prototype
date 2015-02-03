@@ -39,7 +39,7 @@ Meteor.startup(function () {
     auth: Meteor.isClient ? function(){} : function(skip, subscription) {
       return isAdminById(subscription.userId);
     },
-    perPage: 3,
+    perPage: 10,
     templateName: "usersadmin",
     router: "iron-router",
     homeRoute: "/users",
@@ -52,9 +52,9 @@ Meteor.startup(function () {
     availableSettings: {
       sort: true,
       perPage: true,
-      filter: true,
+      filters: true,
     },
-    sort: {createdAt: 1},
+    sort: {isAdmin: 1, createdAt: 1},
   });
 
 });
