@@ -1,0 +1,36 @@
+<template name="usersadmin">
+  {{> profileMenu }}
+
+  <h1>Список пользователей в системе</h1>
+
+  {{> pagesNav}}
+
+  <table class="table table-bordered table-striped">
+    <thead>
+      <tr>
+        <th>{{> usersAdminSorter sort="phone" label="Телефон"}}</th>
+        <th>{{> usersAdminSorter sort="profile.Completename" label="Контактое лиц"}}</th>
+        <th>{{> usersAdminSorter sort="createdAt" label="Создан"}}</th>
+        <th>{{> usersAdminSorter sort="isMaster" label="Роль"}}</th>
+        <th>{{> usersAdminSorter sort="isAdmin" label="Админ"}}</th>
+      </tr>
+    </thead>
+    <tbody class="table-striped">
+      {{> pages}}
+    </tbody>
+  </table>
+</template>
+
+<template name="userInfoForAdmin">
+  <tr>
+    <td>{{formatedPhone}}</td>
+    <td>{{ profile.completeName }}</td>
+    <td>{{created}}</td>
+    <td>{{role}}</td>
+    <td>{{isAdmin}}</td>
+  </tr>
+</template>
+
+<template name="usersAdminSorter">
+  {{ label }}<a href="#" ><i class="fa fa-sort fa-fw"></i></a>
+</template>

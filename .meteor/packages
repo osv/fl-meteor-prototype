@@ -10,7 +10,6 @@ nemo64:bootstrap
 fortawesome:fontawesome
 less
 email
-alethes:pages
 sha
 
 # cfs:standard-packages
@@ -20,14 +19,18 @@ sha
 
 mrt:moment
 
+alethes:pages
+
+# routers
 iron:router
 multiply:iron-router-progress
+zimme:iron-router-auth
 
-manuel:viewmodel@1.2.6
+# manuel:viewmodel@1.2.6
 
 aldeed:collection2
 
 mol-smslogin
 mol-messages
-zimme:iron-router-auth
+
 gadicohen:headers

@@ -35,4 +35,26 @@ Meteor.startup(function () {
     name: 'myPersonal',
   });
 
+  Meteor.usersPages = new Meteor.Pagination(Meteor.users, {
+    auth: Meteor.isClient ? function(){} : function(skip, subscription) {
+      return isAdminById(subscription.userId);
+    },
+    perPage: 3,
+    templateName: "usersadmin",
+    router: "iron-router",
+    homeRoute: "/users",
+    route: "/users/:group?/",
+    routerTemplate: "usersadmin",
+    routerLayout: "appLayout",
+    itemTemplate: "userInfoForAdmin",
+    divWrapper: "",
+    pageSizeLimit: 100,
+    availableSettings: {
+      sort: true,
+      perPage: true,
+      filter: true,
+    },
+    sort: {createdAt: 1},
+  });
+
 });

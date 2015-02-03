@@ -4,6 +4,9 @@
     <li class="{{ifActiveRoute "/profile/personal"}}">   <a href="/profile/personal">Личные данные</a></li>
     <li class="{{ifActiveRoute "/profile/messages"}}">
       <a href="/profile2">Сообщения <span class="badge">0</span></a></li>
+    {{#if isAdmin}}
+    <li class="{{ifActiveRoute "/users"}}">            <a href="/users">Пользователя</a></li>
+    {{/if}}
   </ul>
 </template>
 
