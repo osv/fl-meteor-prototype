@@ -1,4 +1,10 @@
 Template.events.events({
+  'click #refresh': function (){
+    // отправляем ентер в инпут и таким образом обновляем
+    var keyVal = 13;
+    $('#searchUser').val(this.userId).trigger({
+      type: 'keypress', keyCode: keyVal, which: keyVal, charCode: keyVal });
+  },
   'keypress th input': function(e, t){
     if (e.which === 13) {
       var name = t.find("#searchName").value,
