@@ -63,6 +63,7 @@ Meteor.startup(function () {
     routerLayout: "appLayout",
     itemTemplate: "userInfoForAdmin",
     divWrapper: "",
+    resetOnReload: true,
     pageSizeLimit: 100,
     availableSettings: {
       sort: true,
@@ -77,7 +78,7 @@ Meteor.startup(function () {
     auth: Meteor.isClient ? function(){} : function(skip, subscription) {
       return isAdminById(subscription.userId);
     },
-    perPage: 10,
+    perPage: 50,
     templateName: "events",
     router: "iron-router",
     homeRoute: "/events",
@@ -86,7 +87,8 @@ Meteor.startup(function () {
     routerLayout: "appLayout",
     itemTemplate: "eventItem",
     divWrapper: "",
-    pageSizeLimit: 100,
+    resetOnReload: true,
+    pageSizeLimit: 500,
     availableSettings: {
       sort: true,
       perPage: true,
