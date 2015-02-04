@@ -9,6 +9,10 @@ var eventSchema = new SimpleSchema({
     type: String,
     optional: true
   },
+  userId: {                      // к кому относиться этот ивент
+    type: String,
+    optional: true,
+  },
   important: { // true - значит не может быть удалено
     type: Boolean,
     optional: true

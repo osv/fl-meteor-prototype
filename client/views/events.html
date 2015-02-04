@@ -11,12 +11,14 @@
         <th>{{> eventsSorter sort="name" label="Название"}}</th>
         <th class="col-md-6">{{> eventsSorter sort="description" label="Описание"}}</th>
         <th>{{> eventsSorter sort="createdAt" label="Время"}}</th>
+        <th>{{> eventsSorter sort="userID" label="Юзер ID"}}</th>
         <th>{{> eventsSorter sort="important" label="Важное"}}</th>
       </tr>
       <tr>
         <th><input id="searchName"   type="text" class="form-control" placeholder="Фильтровать"></th>
         <th><input id="searchDescr"  type="text" class="form-control" placeholder="Фильтровать"></th>
         <th></th>
+        <th><input id="searchUser"   type="text" class="form-control" placeholder="Фильтр" size=8 ></th>
         <th></th>
       </tr>
     </thead>
@@ -31,6 +33,10 @@
     <td>{{name}}</td>
     <td>{{description}}</td>
     <td><span data-toggle="tooltip" data-placement="top" title="{{created}}">{{fromNow}}</span></td>
+    <td>
+      <a href="#" class="filter-by-user" data-toggle="tooltip" data-placement="top" title="Филтр">
+        <code>{{shortId}}</code>
+      </a></td>
     <td>{{imp}}</td>
   </tr>
 </template>
