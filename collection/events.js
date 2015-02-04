@@ -9,7 +9,7 @@ var eventSchema = new SimpleSchema({
     type: String,
     optional: true
   },
-  important: { // значит не может быть удалено
+  important: { // true - значит не может быть удалено
     type: Boolean,
     optional: true
   }
@@ -18,10 +18,11 @@ var eventSchema = new SimpleSchema({
 Events = new Meteor.Collection('events');
 Events.attachSchema(eventSchema);
 
-Events._ensureIndex('createdAt');
-Events._ensureIndex('name');
-
 if (Meteor.isServer) {
+
+  Events._ensureIndex('createdAt');
+  Events._ensureIndex('name');
+
   logEvent = function (event) {
     if (!_.has(event, 'name')) {
       throw new Meteor.Error(403, "logEvent without name");

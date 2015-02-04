@@ -20,6 +20,7 @@ Router.plugin('auth', {
 ApplicationController = RouteController.extend({
   onBeforeAction: function() {
     Paginations.usersPages.unsubscribe();
+    Paginations.eventsPages.unsubscribe();
     return this.next();
   }
 });
@@ -69,6 +70,29 @@ Meteor.startup(function () {
       filters: true,
     },
     sort: {isAdmin: 1, createdAt: 1},
+  });
+
+  // events viewer for admins
+  Paginations.eventsPages = new Meteor.Pagination(Events, {
+    auth: Meteor.isClient ? function(){} : function(skip, subscription) {
+      return isAdminById(subscription.userId);
+    },
+    perPage: 10,
+    templateName: "events",
+    router: "iron-router",
+    homeRoute: "/events",
+    route: "/events/",
+    routerTemplate: "events",
+    routerLayout: "appLayout",
+    itemTemplate: "eventItem",
+    divWrapper: "",
+    pageSizeLimit: 100,
+    availableSettings: {
+      sort: true,
+      perPage: true,
+      filters: true,
+    },
+    sort: {createdAt: 1},
   });
 
 });

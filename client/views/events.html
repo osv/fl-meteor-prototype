@@ -1,0 +1,40 @@
+<template name="events">
+  {{> profileMenu }}
+
+  <h1>Системные события</h1>
+  <div class="pull-right">
+    {{> pagesNav}}
+  </div>
+  <table class="table table-bordered table-striped">
+    <thead>
+      <tr>
+        <th>{{> eventsSorter sort="name" label="Название"}}</th>
+        <th class="col-md-6">{{> eventsSorter sort="description" label="Описание"}}</th>
+        <th>{{> eventsSorter sort="createdAt" label="Время"}}</th>
+        <th>{{> eventsSorter sort="important" label="Важное"}}</th>
+      </tr>
+      <tr>
+        <th><input id="searchName"   type="text" class="form-control" placeholder="Фильтровать"></th>
+        <th><input id="searchDescr"  type="text" class="form-control" placeholder="Фильтровать"></th>
+        <th></th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody class="table-striped">
+      {{> pages}}
+    </tbody>
+  </table>
+</template>
+
+<template name="eventItem">
+  <tr>
+    <td>{{name}}</td>
+    <td>{{description}}</td>
+    <td><span data-toggle="tooltip" data-placement="top" title="{{created}}">{{fromNow}}</span></td>
+    <td>{{imp}}</td>
+  </tr>
+</template>
+
+<template name="eventsSorter">
+  {{ label }}<a href="#" ><i class="fa fa-sort fa-fw"></i></a>
+</template>
