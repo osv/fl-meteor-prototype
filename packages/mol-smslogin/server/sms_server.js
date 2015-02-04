@@ -3,6 +3,11 @@ Meteor.startup(function () {
     Throttle.debug = false;
 });
 
+Accounts.registerHook = [];
+Accounts.loginHook = [];
+Accounts.resetPasswordHook = [];
+Accounts.resettedPasswordHook = [];
+
 Accounts.registerLoginHandler(function(loginRequest) {
   if(loginRequest.pwd && loginRequest.phone) {
 
@@ -27,7 +32,11 @@ Accounts.registerLoginHandler(function(loginRequest) {
           error: new Meteor.Error(403, ERRMSG)
         };
       } else {
-        console.log('User logged %s IP: %s', loginRequest.phone, headers.methodClientIP(this));
+        var ip = headers.methodClientIP(this);
+        console.log('User logged %s IP: %s', loginRequest.phone, ip);
+        Accounts.loginHook.map(function(currentFunction) {
+          currentFunction(user, ip);
+        });
         return {
           userId: user._id,
         };
@@ -64,13 +73,16 @@ var createUserPhone = function (phone, fullName, masterOrCustomer) {
 
       sendSMS(message, phone);
 
-      var id = Accounts.insertUserDoc(
-        {},
-        { profile: { completeName: fullName },
-          phone: phone,
-          password: SHA256(password),
-          isMaster: masterOrCustomer,
-        });
+      user = {
+        profile: { completeName: fullName },
+        phone: phone,
+        password: SHA256(password),
+        isMaster: masterOrCustomer,
+      };
+      var id = Accounts.insertUserDoc({}, user);
+
+      Accounts.registerHook.map(function(currentFunction) { currentFunction(user, id); });
+
       return id;
     } else {
       throw new Meteor.Error(403, "Этот номер уже используется. Если это ваш номер, Вы можете восстановить пароль");
@@ -110,6 +122,7 @@ Meteor.methods({resendPasswordSMS: function (phone, confirmToken) {
             "Для получения нового пароля введите этот код на сайте: " + resetToken;
       sendSMS(message, phone);
 
+      Accounts.resetPasswordHook.map(function(currentFunction) { currentFunction(user); });
     } else {
       if (user.services.reset.pwd === confirmToken) {
         var newPassword = Random.id(6);
@@ -118,6 +131,8 @@ Meteor.methods({resendPasswordSMS: function (phone, confirmToken) {
                             {$set: {password: SHA256(newPassword)}});
         sendSMS("Пароль сброшен.\nНовый пароль: " + newPassword,
                 phone);
+
+        Accounts.resettedPasswordHook.map(function(currentFunction) { currentFunction(user); });
       } else {
         throw new Meteor.Error(403, "Проверочный код введён неверно.");
       }

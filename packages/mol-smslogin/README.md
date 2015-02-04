@@ -2,7 +2,7 @@
 ---------------------------------
 
 * В шаблон добавить `{{ >loginButton }}` это добавит дропдавн бутстрап кнопку.
-* Определить функцию `Account.sendSMS` для отправки, например для smsc.ru
+* Определить функцию `Account.sendSMS` (Server) для отправки, например для smsc.ru
 
 ```js
 Accounts.sendSMS = function(message, phone) {
@@ -24,8 +24,21 @@ Accounts.sendSMS = function(message, phone) {
 * Добаваление итемов в менюшку дропдавн (будут выше менюшки "Выйти..."):
 
 ```js
-// можно и масив
+// можно и масив (Client)
 Accounts.addDropMenus({text: 'Ваш профиль', icon: 'glyphicon glyphicon-cog', url: '/profile', id: 'profile'});
 // хеш ключи: text, icon, url, id, class
 ```
 
+## Хуки (Server)
+
+Нмже примеры как использовать
+
+```js
+Accounts.registerHook.push(function(user, id) {...})
+Accounts.loginHook.push(function(user, ip) {...})
+// хук на запрос ресет пароля
+Accounts.resetPasswordHook.push(function(user) {...})
+// хук после успешного востановления пароля
+Accounts.resettedPasswordHook.push(function(user) {...})
+
+```
