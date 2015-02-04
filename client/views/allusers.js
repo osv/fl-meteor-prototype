@@ -5,7 +5,7 @@ Template.usersAdmin.events({
           contact = t.find("#searchContact").value,
           filters = {};
       if (phone)
-        filters["phone"] = {$regex: mkRegexp(phone), $options: 'i'};
+        filters.phone = {$regex: mkRegexp(phone)};
       if (contact)
         filters["profile.completeName"] = {$regex: mkRegexp(contact), $options: 'i'};
       Paginations.usersPages.set("filters", filters);
@@ -14,7 +14,8 @@ Template.usersAdmin.events({
 });
 
 Template.usersAdmin.rendered = function() {
-  Paginations.usersPages.set("filters", {});
+  Paginations.usersPages.set("filters", {createdAt: {$lt: new Date()}});
+  Paginations.usersPages.set("sort", {createdAt: -1});
 };
 
 Template.userInfoForAdmin.helpers({
@@ -30,7 +31,8 @@ Template.userInfoForAdmin.helpers({
   created: function() {
     if (typeof this.createdAt !== 'undefined') {
       return moment(this.createdAt).format("YYYY/MM/DD hh:mm");
-    }
+    } else
+      return '';
   },
   fromNow: function() {
     if (typeof this.createdAt !== 'undefined') {

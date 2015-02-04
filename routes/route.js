@@ -70,7 +70,7 @@ Meteor.startup(function () {
       perPage: true,
       filters: true,
     },
-    sort: {isAdmin: 1, createdAt: 1},
+    sort: {createdAt: -1},
   });
 
   // events viewer for admins
@@ -94,7 +94,7 @@ Meteor.startup(function () {
       perPage: true,
       filters: true,
     },
-    sort: {createdAt: 1},
+    sort: {createdAt: -1},
   });
 
 });

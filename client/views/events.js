@@ -11,16 +11,16 @@ Template.events.events({
         filters.userId = {$regex: mkRegexp(user)};
       if (desc)
         filters.description = {$regex: mkRegexp(desc), $options: 'i'};
+      filters.createdAt = {$lt: new Date()};
       Paginations.eventsPages.set("filters", filters);
     }
   }
 });
 
 Template.events.rendered = function() {
-  console.log(Paginations.eventsPages);
-  Paginations.eventsPages.set( "filters", {} );
+  Paginations.eventsPages.set( "filters", {createdAt: {$lt: new Date()}} );
   Paginations.eventsPages.set( "sort", {createdAt: -1});
-}
+};
 
 Template.eventItem.helpers({
   created: function() {
