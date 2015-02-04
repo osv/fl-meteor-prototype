@@ -29,12 +29,22 @@ Template.userInfoForAdmin.helpers({
   },
   created: function() {
     if (typeof this.createdAt !== 'undefined') {
-      return this.createdAt.toLocaleString();
+      return moment(this.createdAt).format("YYYY/MM/DD hh:mm");
+    }
+  },
+  fromNow: function() {
+    if (typeof this.createdAt !== 'undefined') {
+      return moment(this.createdAt).fromNow();
     } else {
       return "Неизвестно";
     }
-  }
+  },
 });
+
+Template.userInfoForAdmin.rendered = function() {
+  //initialize tooltip
+  $('[data-toggle=tooltip]').tooltip();
+};
 
 Template.usersAdminSorter.events({
   'click': function(){

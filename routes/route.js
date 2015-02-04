@@ -57,7 +57,7 @@ Meteor.startup(function () {
     templateName: "usersAdmin",
     router: "iron-router",
     homeRoute: "/users",
-    route: "/users/:group?/",
+    route: "/users/",
     routerTemplate: "usersAdmin",
     routerLayout: "appLayout",
     itemTemplate: "userInfoForAdmin",

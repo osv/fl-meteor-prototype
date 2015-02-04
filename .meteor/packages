@@ -17,7 +17,8 @@ sha
 # cfs:graphicsmagick
 # cfs:ui
 
-mrt:moment
+# better than momentjs:moment :)
+rzymek:moment-locale-ru
 
 alethes:pages
 
