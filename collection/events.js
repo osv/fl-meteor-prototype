@@ -5,6 +5,9 @@ var eventSchema = new SimpleSchema({
   name: {
     type: String
   },
+  type: {
+    type: Number
+  },
   description: {
     type: String,
     optional: true
@@ -22,10 +25,16 @@ var eventSchema = new SimpleSchema({
 Events = new Meteor.Collection('events');
 Events.attachSchema(eventSchema);
 
+// типы событий
+
+Events.EV_BOOT = 1;
+Events.EV_USERLOGIN = 2;
+
 if (Meteor.isServer) {
 
   Events._ensureIndex('createdAt');
   Events._ensureIndex('name');
+  Events._ensureIndex('type');
 
   logEvent = function (event) {
     if (!_.has(event, 'name')) {
@@ -35,7 +44,7 @@ if (Meteor.isServer) {
     if (!!event.unique && !!Events.findOne({name: event.name})) {
       return;
     }
-
+    event.type |= 0;
     event.createdAt = new Date();
 
     Events.insert(event);
@@ -44,9 +53,16 @@ if (Meteor.isServer) {
 
   Meteor.startup(function () {
     logEvent({
+      type: Events.EV_BOOT,
       name: "First run",
       unique: true, // will only get logged a single time 
       important: true
     });
+
+    logEvent({
+      type: Events.EV_BOOT,
+      name: "Start meteor",
+    });
+
   });
 }

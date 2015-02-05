@@ -10,7 +10,16 @@ Template.events.events({
       var name = t.find("#searchName").value,
           desc = t.find("#searchDescr").value,
           user = t.find("#searchUser").value,
+          ev_filer = [],        // фильтрация по нажатым checkbox
           filters = {};
+
+      if (t.find("#ev_boot").checked)
+        ev_filer.push(Events.EV_BOOT);
+      if (t.find("#ev_userlogin").checked)
+        ev_filer.push(Events.EV_USERLOGIN);
+      if (!_.isEmpty(ev_filer))
+        filters.type = {$in: ev_filer};
+
       if (name)
         filters.name = {$regex: mkRegexp(name), $options: 'i'};
       if (user)
@@ -55,7 +64,7 @@ Template.eventItem.events({
 
 Template.eventItem.rendered = function() {
   //initialize tooltip
-  $('[data-toggle=tooltip]').tooltip();
+  $('[data-toggle=tooltip]').tooltip({delay: {show: 300, hide: 0}});
 };
 
 

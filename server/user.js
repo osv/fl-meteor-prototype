@@ -1,15 +1,19 @@
 // устанавливаем хуки от sms-login
 Accounts.registerHook.push(function(user, id) {
-  logEvent({name: 'User register', userId: id, description: 'Телефон: ' + user.phone});
+  logEvent({type: Events.EV_USERLOGIN, name: 'User register',
+            userId: id, description: 'Телефон: ' + user.phone});
 });
 Accounts.loginHook.push(function(user, ip) {
-  logEvent({name: 'User logged', userId: user._id, description: 'IP address: ' + ip + '\nName: ' + user.profile.completeName});
+  logEvent({type: Events.EV_USERLOGIN, name: 'User logged',
+            userId: user._id, description: 'IP address: ' + ip + '\nName: ' + user.profile.completeName});
 });
 Accounts.resetPasswordHook.push(function(user) {
-  logEvent({name: 'User reset pwd request', userId: user._id});
+  logEvent({type: Events.EV_USERLOGIN, name: 'User reset pwd request',
+            userId: user._id});
 });
 Accounts.resettedPasswordHook.push(function(user) {
-  logEvent({name: 'User reset pwd request done', userId: user._id });
+  logEvent({type: Events.EV_USERLOGIN, name: 'User reset pwd request done',
+            userId: user._id });
 });
 
 Meteor.publish('currentUser', function() {
