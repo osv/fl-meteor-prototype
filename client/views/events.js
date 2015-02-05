@@ -25,7 +25,7 @@ Template.events.events({
       if (user)
         filters.userId = {$regex: mkRegexp(user)};
       if (desc)
-        filters.description = {$regex: mkRegexp(desc), $options: 'i'};
+        filters.desc = {$regex: mkRegexp(desc), $options: 'i'};
       filters.createdAt = {$lt: new Date()};
       Paginations.eventsPages.set("filters", filters);
     }

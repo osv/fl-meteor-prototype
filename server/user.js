@@ -1,11 +1,11 @@
 // устанавливаем хуки от sms-login
 Accounts.registerHook.push(function(user, id) {
   logEvent({type: Events.EV_USERLOGIN, name: 'User register',
-            userId: id, description: 'Телефон: ' + user.phone});
+            userId: id, desc: 'Телефон: ' + user.phone});
 });
 Accounts.loginHook.push(function(user, ip) {
   logEvent({type: Events.EV_USERLOGIN, name: 'User logged',
-            userId: user._id, description: 'IP address: ' + ip + '\nName: ' + user.profile.completeName});
+            userId: user._id, desc: 'IP address: ' + ip + '\nName: ' + user.profile.completeName});
 });
 Accounts.resetPasswordHook.push(function(user) {
   logEvent({type: Events.EV_USERLOGIN, name: 'User reset pwd request',

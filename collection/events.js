@@ -8,7 +8,7 @@ var eventSchema = new SimpleSchema({
   type: {
     type: Number
   },
-  description: {
+  desc: {
     type: String,
     optional: true
   },

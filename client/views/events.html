@@ -37,7 +37,7 @@
     <thead>
       <tr>
         <th>{{> eventsSorter sort="name" label="Название"}}</th>
-        <th class="col-md-6">{{> eventsSorter sort="description" label="Описание"}}</th>
+        <th class="col-md-6">{{> eventsSorter sort="desc" label="Описание"}}</th>
         <th>{{> eventsSorter sort="createdAt" label="Время"}}</th>
         <th>{{> eventsSorter sort="userID" label="Юзер ID"}}</th>
         <th>{{> eventsSorter sort="important" label="Важное"}}</th>
@@ -61,7 +61,7 @@
 <template name="eventItem">
   <tr>
     <td>{{name}}</td>
-    <td>{{description}}</td>
+    <td>{{desc}}</td>
     <td><span data-toggle="tooltip" data-placement="top" title="{{created}}">{{fromNow}}</span></td>
     <td>
       <a href="#" class="filter-by-user" data-toggle="tooltip" data-placement="top" title="Филтр">
