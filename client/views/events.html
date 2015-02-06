@@ -36,7 +36,7 @@
   <table class="table table-bordered table-striped">
     <thead>
       <tr>
-        <th>{{> eventsSorter sort="name" label="Название"}}</th>
+        <th class="col-md-2">{{> eventsSorter sort="name" label="Название"}}</th>
         <th class="col-md-6">{{> eventsSorter sort="desc" label="Описание"}}</th>
         <th>{{> eventsSorter sort="createdAt" label="Время"}}</th>
         <th>{{> eventsSorter sort="userID" label="Юзер ID"}}</th>
@@ -68,7 +68,7 @@
         <code>{{shortId}}</code>
       </a></td>
     <td>{{imp}}</td>
-    <td>{{type}}</td>
+    <td>{{typeName}}</td>
   </tr>
 </template>
 

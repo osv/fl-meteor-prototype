@@ -50,6 +50,13 @@ Template.eventItem.helpers({
   shortId: function() {
     return this.userId ? this.userId.substr(0, 8) : '';
   },
+  typeName: function(){
+    switch (this.type) {
+      case Events.EV_BOOT: return "Boot";
+      case Events.EV_USERLOGIN: return "Login";
+      default: return "-";
+    }
+  }
 });
 
 Template.eventItem.events({
