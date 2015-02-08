@@ -1,4 +1,7 @@
 var eventSchema = new SimpleSchema({
+  _id: {
+    type: String,
+  },
   createdAt: {
     type: Date
   },
@@ -46,7 +49,7 @@ if (Meteor.isServer) {
     }
     event.type |= 0;
     event.createdAt = new Date();
-
+    event._id = incrementCounter('counters', 'event'), // konecty:mongo-counterv
     Events.insert(event);
 
   };
