@@ -47,7 +47,7 @@
         {{! ниже логин форма, }}
         <div class="modal-body" id="loginbox">
           {{! в зависимости от сессионной переменны Session.get('loginForm') выбор формочки логина }}
-          {{ > loginForm }}
+          {{ > Template.dynamic template=curLoginForm }}
 
           {{ #if infoMessage }}
           <div class="alert alert-success">

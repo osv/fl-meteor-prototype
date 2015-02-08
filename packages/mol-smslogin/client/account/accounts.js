@@ -24,12 +24,8 @@ Template.loginButton.helpers({
     return Session.get('infoMessage');
   },
   // выбор формочки в зависимости от сессионой перем. loginForm
-  loginForm: function(){
-    switch (Session.get('loginForm')) {
-      case 'loginResend': return Template.loginResend;
-      case 'loginSignUp': return Template.loginSignUp;
-      default: return Template.loginSignIn;
-    }
+  curLoginForm: function(){
+    return Session.get('loginForm') || 'loginSignIn';
   },
   loginFormTitle: function() {
     switch (Session.get('loginForm')) {
