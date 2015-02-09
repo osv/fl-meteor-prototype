@@ -164,13 +164,13 @@ Template.loginButton.events({
   'submit #login-resetPassword': function(e, t) {
     e.preventDefault();
     var phone = t.find('#login-phone').value,
+        cleanPhone = cleanPhoneNumber(phone),
         resetToken = t.find('#login-token').value;
-    phone = cleanPhoneNumber(phone);
-    if (!phone.match(/^\d{11,12}$/))
+    if (!cleanPhone.match(/^\d{11,12}$/))
       return false;
     if (isNotEmpty(resetToken)) {
       $('fieldset').prop('disabled', true);
-      Meteor.call('resendPasswordSMS', phone, resetToken, function(err) {
+      Meteor.call('resendPasswordSMS', cleanPhone, resetToken, function(err) {
         $('fieldset').prop('disabled', false);
         if (err) {
           Session.set('alertMessage', err.reason);
