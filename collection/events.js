@@ -32,6 +32,7 @@ Events.attachSchema(eventSchema);
 
 Events.EV_BOOT = 1;
 Events.EV_USERLOGIN = 2;
+Events.EV_PROFILE = 3;          // user profile changed
 
 if (Meteor.isServer) {
 

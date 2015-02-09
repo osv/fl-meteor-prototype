@@ -17,6 +17,8 @@ Template.events.events({
         ev_filer.push(Events.EV_BOOT);
       if (t.find("#ev_userlogin").checked)
         ev_filer.push(Events.EV_USERLOGIN);
+      if (t.find("#ev_userprofile").checked)
+        ev_filer.push(Events.EV_PROFILE);
       if (!_.isEmpty(ev_filer))
         filters.type = {$in: ev_filer};
 
@@ -54,6 +56,7 @@ Template.eventItem.helpers({
     switch (this.type) {
       case Events.EV_BOOT: return "Boot";
       case Events.EV_USERLOGIN: return "Login";
+      case Events.EV_PROFILE: return "Profile";
       default: return "-";
     }
   }
