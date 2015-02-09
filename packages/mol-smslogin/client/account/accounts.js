@@ -205,9 +205,10 @@ Template.bsSwitchMaster.events({
 });
 
 Template.bsInputHelperPhone.rendered = function () {
-  // this.data это дата контекст теплейта {{ > bsInputHelper id=foo }} this.data.id='foo'
-  var $phone = $('#' + this.data.id + '.bfh-phone');
-  $phone.bfhphone($phone.data()); // Инициализация bootstrap-phone-helper
+  // Инициализация bootstrap-phone-helper
+  // здесь this.$ это jquery  селектор, но только в пределах шаблона
+  var $phone = this.$('.bfh-phone');
+  $phone.bfhphone($phone.data());
 };
 
 Template.bsInputHelper.helpers({
@@ -224,7 +225,7 @@ Template.loginSignIn.rendered = function () {
 
 Template.loginSignUp.rendered = function () {
   // автоскрытие поповера после 6сек
-  $('#login-phone').popover({content: 'Ваш телефон будет использован только для входа на сайт. При желании вы можете указать его как контактный.',
+  $('#login-phone').popover({content: 'Ваш телефон будет использован только для входа на сайт. При желании вы можете указать его как контактный позже.',
                              placement: 'top'});
   $('#login-phone').on('shown.bs.popover', function () {
     setTimeout(function () {
