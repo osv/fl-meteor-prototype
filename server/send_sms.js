@@ -1,5 +1,7 @@
 // SMSC_AUTH переменная окружения для логина и пароля с smsc.ru
-Accounts.sendSMS = function(message, phone) {
+
+// global func for sending SMS
+sendSMS = function(message, phone) {
   check(phone, String);
   check(message, String);
   if (process.env.SMSC_AUTH) {
@@ -17,10 +19,15 @@ Accounts.sendSMS = function(message, phone) {
       text: process.env.SMSC_AUTH + ":::1,,,:" + phone +":" + message,
     }); 
   } else {
-    console.warn("please, set SMSC_AUTH=login:password to your smsc.ru ");
+    _.once(function() {
+      console.warn("please, set SMSC_AUTH=login:password to your smsc.ru ")
+    });
+
     if (process.env.MAIL_URL)
       throw new Meteor.Error(503, 'SMS gateway not configured');
     else
       console.log("SMS to: %s\n  text: %s", phone, message);
   }
 };
+
+Accounts.sendSMS = sendSMS;
