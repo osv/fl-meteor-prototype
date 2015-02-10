@@ -1,0 +1,156 @@
+<template name="profilePersonal">
+  {{>profileMenu}}
+  <h1>Личные данные</h1>
+  <div class="row">
+    <form class="form-horizontal">
+        <fieldset>
+          <legend>Регистрационные данные</legend>
+          {{>profileLoginPhone}}
+          {{>profileChangePassword}}
+        </fieldset>
+        <fieldset>
+          <legend>Публикуемые данные</legend>
+        </fieldset>
+    </form>
+  </div>
+  <div id="profileModal" class="modal" role="dialog" arria-hidden="true">
+    {{ > Template.dynamic template=currentModal }}
+  </div>
+</template>
+
+<!-- Ниже шаблоны полей профиля -->
+
+<template name="profileLoginPhone">
+  <div class="form-group">
+    <label class="col-sm-3 control-label">
+      Телефон (вход)
+    </label>
+    <div class="col-sm-4" data-content="Этот телефон используется для входа на сайт, другие не видят его если не указан как контактной."
+       data-title="Телефон входа" data-placement="auto right" data-trigger="hover" data-toggle="popover" data-delay="{show: 500, hide: 100}">
+      {{ currentPhone }} <a href="#" class="btn btn-default" id="changeLoginPhone">Изменить</a>
+    </div>
+  </div>
+</template>
+
+<template name="profileChangePassword">
+  <div class="form-group">
+    <label class="col-sm-3 control-label">
+      Пароль
+    </label>
+    <div class="col-sm-4" data-content="Ваш первый пароль был отправлен SMS на ваш телефон. Вы можете сменить его здесь."
+         data-title="Пароль" data-placement="auto right" data-trigger="hover" data-toggle="popover" data-delay="{show: 500, hide: 100}">
+      <a href="#" class="btn btn-default" id="changePassword">Изменить пароль</a>
+    </div>
+  </div>
+</template>
+
+<!-- Ниже шаблоны модальных окон -->
+
+<template name="profileDummy">
+  {{! Это пустой шаблон}}
+</template>
+
+<template name="modalChangeLoginPhone">
+  {{! Модалка}}
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">x</button>
+        <h3>Смена номера телефона для входа на сайт</h3>
+      </div>
+      <div class="modal-body">
+        <form id="sendSMS" class="form-horizontal">
+          <fieldset>
+
+            <div class="form-group">
+              <label class="col-sm-5 control-label">
+                Текущий номер телефона
+              </label>
+              <div class="col-sm-7">
+                {{currentPhone}}
+              </div>
+            </div>
+
+            {{>profileInputHelperPhone name="phone" label="Новый номер телефон"}}
+
+            {{>profileSubmitButton text="Отправить код подтверждения" class="btn-primary"}}
+
+          </fieldset>
+        </form>
+        {{! скрытая формочка, будет показана после отправки смс}}
+        <form id="confirmSMS" class="form-horizontal" style="display:none">
+          <fieldset>
+            {{>profileInputHelper name="token" label="Код подтверждения" ac="off"
+              icon="fa fa-lock" placeholder="СМС код"}}
+            {{>profileSubmitButton text="Подтвердить изменение телефона" class="btn-success"}}
+          </fieldset>
+        </form>
+      </div>
+    </div>
+  </div>
+</template>
+
+<template name="modalChangePassword">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">x</button>
+        <h3>Смена пароля</h3>
+      </div>
+      <div class="modal-body">
+        <form id="password" class="form-horizontal">
+          <fieldset>
+
+            {{>profileInputHelper name="oldPwd" label="Старый пароль" type="password" icon="fa fa-lock"}}
+            {{>profileInputHelper name="newPwd1" label="Новый пароль" type="password" icon="fa fa-lock"}}
+            {{>profileInputHelper name="newPwd2" label="Повторите новый пароль" type="password" icon="fa fa-lock"}}
+
+            {{>profileSubmitButton text="Сменить пароль" class="btn-success"}}
+
+          </fieldset>
+        </form>
+      </div>
+    </div>
+  </div>
+</template>
+
+<!-- 
+          Вспомагательные шаблоны,
+          
+          TODO: вынести их кудато глобально, если будут повторятся
+          -->
+
+<template name="profileInputHelperPhone">
+  <div class="form-group has-feedback">
+    <label class="col-sm-5 control-label" for="inputSuccess3">{{ label }}</label>
+    <div class="col-sm-7">
+      <div class="input-group">
+        <span class="input-group-addon"><i class="fa fa-mobile fa-fw"></i></span>
+        <input name="{{ name }}"
+               class="form-control bfh-phone" data-format="+d (ddd) ddd-dd-ddd" value="7" type="text">
+      </div>
+    </div>
+  </div>
+</template>
+
+<template name="profileInputHelper">
+  <div class="form-group has-feedback">
+    <label class="col-sm-5 control-label" for="inputSuccess3">{{ label }}</label>
+    <div class="col-sm-7">
+      <div class="input-group">
+        <span class="input-group-addon"><i class="{{ icon }} fa-fw"></i></span>
+        <input name="{{ name }}"
+               autocomplete="{{ ac }}"
+               class="form-control" type="{{ type }}"  placeholder="{{ placeholder }}">
+      </div>
+    </div>
+  </div>
+</template>
+
+<template name="profileSubmitButton">
+  <div class="form-group">
+    <div class="col-sm-offset-5 col-sm-5">
+      <button type="submit" class="btn {{class}}">{{ text }}</button>
+    </div>
+  </div>
+</template>

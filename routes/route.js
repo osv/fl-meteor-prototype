@@ -45,7 +45,7 @@ Meteor.startup(function () {
   });
 
   Router.route('/profile/personal', {
-    name: 'myPersonal',
+    name: 'profilePersonal',
     controller: 'ApplicationController'
   });
 
