@@ -29,10 +29,14 @@ zimme:iron-router-auth
 
 # manuel:viewmodel@1.2.6
 
+# collection facility
 aldeed:collection2
+matb33:collection-hooks
 
 mol-smslogin
 mol-messages
 
 gadicohen:headers
 konecty:mongo-counter@0.0.2
+
+zeroasterisk:throttle
