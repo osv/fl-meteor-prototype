@@ -1,5 +1,4 @@
 /*
- Пояснения:
 
  Session.get("currentProfileModal")  - переменная которая содержит текущое модальное окно
 
@@ -32,7 +31,7 @@ Template.profilePersonal.helpers({
 
 /* ****************************************************
  
- Шаблон смены логин телефон
+ Смены логин телефона
 
 ***************************************************** */
 
@@ -108,6 +107,10 @@ Template.modalChangeLoginPhone.events({
     var phone = t.find('[name="phone"]').value,
         cleanPhone = cleanPhoneNumber(phone);
 
+    t.$('#sendSMS').data('formValidation').validate();
+    if (!t.$('#sendSMS').data('formValidation').isValid())
+      return false;
+
     // первый  этап,  блокируем  формочку,  и при  если  нет  проблем,
     // показываем форму для ввода СМС кода
     t.$("#sendSMS fieldset").prop('disabled', true);
@@ -128,6 +131,10 @@ Template.modalChangeLoginPhone.events({
         cleanPhone = cleanPhoneNumber(phone),
         token = t.find('[name="token"]').value;
 
+    t.$('#confirmSMS').data('formValidation').validate();
+    if (!t.$('#confirmSMS').data('formValidation').isValid())
+      return false;
+
     Meteor.call('change login phone', cleanPhone, token, function(err){
       if (err)
         Messages.info(err.reason);
@@ -142,7 +149,7 @@ Template.modalChangeLoginPhone.events({
 
 /* ****************************************************
 
- Шаблон смены пароля
+ Смена пароля
 
  **************************************************** */
 Template.profileChangePassword.rendered = function() {
@@ -210,8 +217,11 @@ Template.modalChangePassword.events({
     var oldPwd = t.find('[name="oldPwd"]').value,
         newPwd1 = t.find('[name="newPwd1"]').value,
         newPwd2 = t.find('[name="newPwd2"]').value;
-    if (newPwd2 !== newPwd2)
+
+    t.$('#password').data('formValidation').validate();
+    if (!t.$('#password').data('formValidation').isValid())
       return false;
+
     Meteor.call('change password', oldPwd, newPwd1, function(err){
       if (err)
         Messages.info(err.reason);
