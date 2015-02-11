@@ -11,7 +11,7 @@ Package.onUse(function(api) {
   api.use('random', ['server']);
   api.use('zeroasterisk:throttle', 'server');
   api.use('check');
-  api.use(['templating'], 'client');
+  api.use(['sacha:spin', 'templating'], 'client');
 
   // api.use('ddp', ['client', 'server']);
   api.addFiles('./server/sms_server.js', 'server');

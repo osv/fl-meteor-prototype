@@ -46,6 +46,10 @@
         </div>
         {{! ниже логин форма, }}
         <div class="modal-body" id="loginbox">
+
+          {{ #if isLoading}}
+            {{> spinner}}
+          {{ /if}}
           {{! в зависимости от сессионной переменны Session.get('loginForm') выбор формочки логина }}
           {{ > Template.dynamic template=curLoginForm }}
 
@@ -69,10 +73,10 @@
 </template>
 
 <template name="loginSignIn">
-  <form id="login-sign-in-form" class="form-horizontal" role="form">
+  <form id="formSignIn" class="form-horizontal" role="form">
     <fieldset>
-      {{ > bsInputHelperPhone id="login-phone" label="Телефон"}}
-      {{ > bsInputHelper id="login-password" label="Пароль"
+      {{ > bsInputHelperPhone name="phone"    label="Телефон"}}
+      {{ > bsInputHelper      name="password" label="Пароль"
         icon="fa fa-lock" type="password"
         placeholder="Пароль что был выслан СМС"}}
 
@@ -103,11 +107,11 @@
 </template>
 
 <template name="loginSignUp">
-  <form id="login-sign-up-form" class="form-horizontal" role="form">
+  <form id="formSignUp" class="form-horizontal" role="form">
     <fieldset>
-      {{ > bsInputHelperPhone id="login-phone" label="Телефон"}}
+      {{ > bsInputHelperPhone name="phone" label="Телефон"}}
       {{ > bsSwitchMaster }}
-      {{ > bsInputHelper id="login-name" label="Контактное лицо"
+      {{ > bsInputHelper name="name" label="Контактное лицо"
         icon="fa fa-user" placeholder="Иванов"}}
       <div style="margin-top:10px" class="form-group">
         <!-- Button -->
@@ -129,9 +133,9 @@
 </template>
 
 <template name="loginResend">
-  <form id="login-resetToken" class="form-horizontal">
+  <form id="formSendToken" class="form-horizontal">
     <fieldset>
-      {{ > bsInputHelperPhone id="login-phone" label="Номер телефона"}}
+      {{ > bsInputHelperPhone name="phone" label="Телефон"}}
       <div id="resetFormTokenSend" style="margin-top:10px" class="form-group">
         <!-- Button -->
         <div class="col-sm-12 controls">
@@ -142,9 +146,9 @@
       </div>
     </fieldset>
   </form>
-  <form id="login-resetPassword" style="display:none" class="form-horizontal">
+  <form id="formResetPassword" style="display:none" class="form-horizontal">
     <fieldset>
-      {{ > bsInputHelper id="login-token" label="Код подтверждения"
+      {{ > bsInputHelper name="token" label="Код подтверждения" ac="off"
         icon="fa fa-lock" placeholder="СМС код"}}
       <div style="margin-top:10px" class="form-group">
         <!-- Button -->
@@ -160,12 +164,12 @@
 
 <!-- helpers -->
 <template name="bsInputHelperPhone">
-  <div id="{{ id }}-fgrp" class="form-group has-feedback" style="margin-bottom: 25px">
+  <div class="form-group has-feedback" style="margin-bottom: 25px">
     <label class="col-md-4 control-label" for="inputSuccess3">{{ label }}</label>
     <div class="col-md-8">
       <div class="input-group">
         <span class="input-group-addon"><i class="fa fa-mobile fa-fw"></i></span>
-        <input id="{{ id }}"
+        <input name="{{ name }}"
                class="form-control bfh-phone" data-format="+d (ddd) ddd-dd-ddd" value="7" type="text">
       </div>
     </div>
@@ -173,12 +177,12 @@
 </template>
 
 <template name="bsInputHelper">
-  <div id="{{ id }}-fgrp" class="form-group has-feedback" style="margin-bottom: 25px">
+  <div class="form-group has-feedback" style="margin-bottom: 25px">
     <label class="col-md-4 control-label" for="inputSuccess3">{{ label }}</label>
     <div class="col-md-8">
       <div class="input-group">
         <span class="input-group-addon"><i class="{{ icon }} fa-fw"></i></span>
-        <input id="{{ id }}"
+        <input name="{{ name }}" autocomplete="{{ ac }}"
                class="form-control" type="{{ type }}"  placeholder="{{ placeholder }}">
       </div>
     </div>

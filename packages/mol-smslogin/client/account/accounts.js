@@ -9,19 +9,39 @@ function cleanPhoneNumber(phone) {
   return phone.replace(/[-+ ()]/g, '');
 }
 
+function isPhoneValid(phone) {
+  if (phone.match(/^380\d{9}$/))
+    return true;
+  else
+    if (phone.match(/^7\d{10}$/))
+      return true;
+  return false;
+};
+
+// Set authLoading session variable and disabled prop of given form's fieldname
+// Статус загрузки.
+function setLoading(formID, bStatus) {
+  Session.set('authLoading', bStatus);
+  $('#' + formID + ' fieldset').prop('disabled', bStatus);
+}
+
 Template.loginButton.helpers({
   dropDownMenus: function(){
     return Accounts.dropDownMenus;
   },
   displayName: function(){
     var user = Meteor.user();
-    return (user.profile && user.profile.completeName) || (user.profile && user.profile.phone);
+    return (user.profile && user.profile.completeName) || (user.profile && user.phone);
   },
   alertMessage: function(){
     return Session.get('alertMessage');
   },
   infoMessage: function(){
     return Session.get('infoMessage');
+  },
+  isLoading: function() {
+    console.log ('loading ', Session.get('authLoading'));
+    return Session.get('authLoading');
   },
   // выбор формочки в зависимости от сессионой перем. loginForm
   curLoginForm: function(){
@@ -38,11 +58,11 @@ Template.loginButton.helpers({
 
 // очищает алерты и инфобокс в логин окне
 function clrAlerts() {
-    Session.set('alertMessage', '');
-    Session.set('infoMessage', '');
+  Session.set('authLoading', false);
+  Session.set('alertMessage', '');
+  Session.set('infoMessage', '');
 }
 
-// Login Form Events
 Template.loginButton.events({
   'click #signIn': function(){
     clrAlerts();
@@ -52,78 +72,162 @@ Template.loginButton.events({
     clrAlerts();
     Session.set('loginForm', 'loginSignUp');
   },
+  'keypress input, click button': function(e, t) {
+    clrAlerts();
+  },
+  'click #logout' : function() {
+    Meteor.logout();
+    return false;
+  }
+});
+
+/* Вход */
+
+Template.loginSignIn.rendered = function () {
+
+  // Установим телефон в форме логина с формы регистрации, он в currenPhone
+  var phone = Session.get('currenPhone');
+  if (isNotEmpty(phone)) {
+    console.log('set phone %s', phone);
+    this.$('[name="phone"]').val(phone);
+  } 
+
+  this.$('#formSignIn').formValidation({
+    fields: {
+      phone: {
+        validators: {
+          callback: {
+            callback: function(value) {
+              return isPhoneValid( cleanPhoneNumber( value ) );
+            },
+            message: 'Проверьте правильность ввода номера'
+          }
+        }
+      },
+      password: {
+        validators: {
+          notEmpty: {
+            message: 'Введите пароль'
+          }
+        }
+      }
+    }
+  })
+    .on('success.form.fv', function(e, data) {
+      // Prevent form submission
+      // http://formvalidation.io/examples/form-submit-twice/
+      e.preventDefault();
+    });
+};
+
+Template.loginSignIn.events({
   'click #reg': function(){
     clrAlerts();
     Session.set('loginForm', 'loginSignUp');
   },
   'click #restore': function(){
+    clrAlerts();
     Session.set('loginForm', 'loginResend');
   },
-  'click #login-phone':function(){
-    $('#login-phone-fgrp').removeClass("has-error");
-  },
-  'click #login-name':function(){
-    $('#login-name-fgrp').removeClass("has-error");
-  },
-  'submit #login-sign-in-form': function(e, t) {
+  'submit #formSignIn': function(e, t) {
     e.preventDefault();
-    var phone = t.find('#login-phone').value,
-        password = t.find('#login-password').value;
-    phone = cleanPhoneNumber(phone);
+
+    var cleanPhone = cleanPhoneNumber(t.find('[name="phone"]').value),
+        password = t.find('[name="password"]').value;
+
     clrAlerts();
-    if (!phone.match(/^\d{11,12}$/)) { // 11 или 12 цифр, (в укр 12)
-      Session.set('alertMessage', 'Проверьте правильность ввода номера.');
-      $('#login-phone-fgrp').addClass("has-error");
+
+    t.$('#formSignIn').data('formValidation').validate();
+    if (!t.$('#formSignIn').data('formValidation').isValid())
       return false;
-    }
-    if (isNotEmpty(password))
-    {
-      $('fieldset').prop('disabled', true);
-      Meteor.loginWithPhone(phone, password, function(err){
-        $('fieldset').prop('disabled', false);
-        if (err) {
-          Session.set('alertMessage', err.reason);
-        } else {
-          $('#loginModal').modal('hide'); //скрываем модальное окно, залогинились уже
-        }
-      });
-    }
+
+    setLoading('formSignIn', true);
+    Meteor.loginWithPhone(cleanPhone, password, function(err){
+      setLoading('formSignIn', false);
+      if (err) {
+        Session.set('alertMessage', err.reason);
+      } else {
+        $('#loginModal').modal('hide'); //скрываем модальное окно, залогинились уже
+      }
+    });
     return false;
   },
-  'submit #login-sign-up-form': function(e, t) {
+});
+
+/* Регистрация */
+
+Template.loginSignUp.rendered = function() {
+
+  // автоскрытие поповера после 6сек
+  $('[name="phone"]').popover({content:
+                             'Ваш телефон будет использован только для входа на сайт.'+
+                             ' При желании вы можете указать его как контактный позже.',
+                             placement: 'top'})
+    .on('shown.bs.popover', function () {
+      setTimeout(function () {
+        $('[name="phone"]').popover('hide');
+      }, 6500);
+  });
+
+  this.$('#formSignUp').formValidation({
+    trigger: null,
+    fields: {
+      phone: {
+        validators: {
+          callback: {
+            callback: function(value) {
+              return isPhoneValid( cleanPhoneNumber( value ) );
+            },
+            message: 'Проверьте правильность ввода номера'
+          }
+        }
+      },
+      name: {
+        validators: {
+          notEmpty: {
+            message: "Поле не может быть пустым"
+          },
+          stringLength: {
+            min: 2,
+            message: "Инициалы, имя или ФИО, редактируемо в будущем.",
+          }
+        }
+      },
+      status: {
+        validators: {
+          notEmpty: {
+            message: "Вы должны выбрать вашу роль на сайте"
+          }
+        }}}})
+    .on('success.form.fv', function(e, data) {
+      e.preventDefault();
+    });
+};
+
+Template.loginSignUp.events({
+  'submit #formSignUp': function(e, t) {
     e.preventDefault();
-    var phone = t.find('#login-phone').value,
-        fullName = t.find('#login-name').value;
-    var clearPhone = cleanPhoneNumber(phone); //телефон без пробелов, минусов, плюсов, скобок
+    var phone = t.find('[name="phone"]').value,
+        clearPhone = cleanPhoneNumber(phone), //телефон без пробелов, минусов, плюсов, скобок
+        fullName = t.find('[name="name"]').value;
+
     clrAlerts();
-    if (!clearPhone.match(/^\d{11,12}$/)) { // 11 или 12 цифр, (в укр 12)
-      Session.set('alertMessage', 'Проверьте правильность ввода номера.');
-      $('#login-phone-fgrp').addClass("has-error");
+
+    t.$('#formSignUp').data('formValidation').validate();
+    if (!t.$('#formSignUp').data('formValidation').isValid())
       return false;
-    }
-    // подсветим ошибку если не выделено заказчик или исполнитель
-    if (! $('#customer').prop('checked') &&
-        ! $('#master').prop('checked') ) {
-      $('#switch-fgrp').addClass("has-error");
-      $('#switch-fgrp .btn').removeClass("btn-default");
-      $('#switch-fgrp .btn').addClass("btn-danger");
-      Session.set('alertMessage', 'Вы должны выбрать вашу роль');
-      return false;
-    }
 
     var masterOrCustomer = $('#master').prop('checked');
 
     if (!isNotEmpty(fullName)) {
-      Session.set('alertMessage', 'Укажите как к Вам можно обращаться');
-      $('#login-name-fgrp').addClass("has-error");
       return false;
     }
-    $('#login-name-fgrp').removeClass("has-error");
+
     if (isNotEmpty(clearPhone))
     {
-      $('fieldset').prop('disabled', true);
+      setLoading('formSignUp', true);
       Meteor.call('registerUserPhone', clearPhone, fullName, masterOrCustomer, function(err, id) {
-        $('fieldset').prop('disabled', false);
+        setLoading('formSignUp', false);
         if (err) {
           Session.set('alertMessage', err.reason);
         } else {
@@ -138,40 +242,82 @@ Template.loginButton.events({
     }
     return false;
   },
-  'submit #login-resetToken': function(e, t) {
+});
+
+/* Востановление пароля */
+
+Template.loginResend.rendered = function() {
+
+  this.$('#formSendToken').formValidation({
+    fields: {
+      phone: {
+        validators: {
+          callback: {
+            callback: function(value) {
+              return isPhoneValid( cleanPhoneNumber( value ) );
+            },
+            message: 'Проверьте правильность ввода номера'
+          }}}}})
+    .on('success.form.fv', function(e, data) {
+      e.preventDefault();
+    });
+
+  $('#formResetPassword').formValidation({
+    fields: {
+      token: {
+        validators: {
+          notEmpty: {
+            message: "Введите код"
+          },
+          stringLength: {
+            min: 6,
+            max: 6,
+            message: "Код содержит 6 символов",
+          }}}}})
+    .on('success.form.fv', function(e) {
     e.preventDefault();
-    var phone = t.find('#login-phone').value;
-    phone = cleanPhoneNumber(phone);
+  });
+
+};
+
+Template.loginResend.events({
+  'submit #formSendToken': function(e, t) {
+    e.preventDefault();
+    var cleanPhone = cleanPhoneNumber(t.find('[name="phone"]').value);
+
     clrAlerts();
-    if (!phone.match(/^\d{11,12}$/)) {
-      Session.set('alertMessage', 'Проверьте правильность введенного номера.');
+
+    t.$('#formSendToken').data('formValidation').validate();
+    if (!t.$('#formSendToken').data('formValidation').isValid())
       return false;
-    }
-    $('#login-phone').prop('disabled', true);
-    $('#resetFormTokenSend').hide();
-    Meteor.call('resendPasswordSMS', phone, function (err) {
+
+    setLoading('formSendToken', true);
+    Meteor.call('resendPasswordSMS', cleanPhone, function (err) {
+      setLoading('formSendToken', false);
       if (err) {
         Session.set('alertMessage', err.reason);
-        $('#login-phone').prop('disabled', false);
-        $('#resetFormTokenSend').show();
       } else {
-        $('#login-resetPassword').show();
+        t.$('#formResetPassword').show();
+        t.$('#formSendToken fieldset').prop('disabled', true); // предыдущую формочку блокируем
         Session.set('infoMessage', 'На Ваш номер отправлено сообщение с кодом для сброса пароля.');
       }
     });
     return false;
   },
-  'submit #login-resetPassword': function(e, t) {
+  'submit #formResetPassword': function(e, t) {
     e.preventDefault();
-    var phone = t.find('#login-phone').value,
+    var phone = t.find('[name="phone"]').value,
         cleanPhone = cleanPhoneNumber(phone),
-        resetToken = t.find('#login-token').value;
-    if (!cleanPhone.match(/^\d{11,12}$/))
+        resetToken = t.find('[name="token"]').value;
+
+    t.$('#formResetPassword').data('formValidation').validate();
+    if (!t.$('#formValidation').data('formValidation').isValid())
       return false;
+
     if (isNotEmpty(resetToken)) {
-      $('fieldset').prop('disabled', true);
+      setLoading('formSendToken', true);
       Meteor.call('resendPasswordSMS', cleanPhone, resetToken, function(err) {
-        $('fieldset').prop('disabled', false);
+        setLoading('formSendToken', false);
         if (err) {
           Session.set('alertMessage', err.reason);
         } else {
@@ -182,25 +328,6 @@ Template.loginButton.events({
       });
     }
     return false;
-  },
-  'focus #login-phone, focus #login-password, focus #login-name': function(e, t) {
-    clrAlerts();
-  },
-  'focus #login-restore-password, focus #login-token': function(e, t) {
-    clrAlerts();
-  },
-  'click #logout' : function() {
-    Meteor.logout();
-    return false;
-  }
-});
-
-Template.bsSwitchMaster.events({
-  'click .input-group':function(){
-    $('#switch-fgrp').removeClass("has-error");
-    $('#switch-fgrp .btn').addClass("btn-default");
-    $('#switch-fgrp .btn').removeClass("btn-danger");
-    clrAlerts();
   },
 });
 
@@ -214,22 +341,3 @@ Template.bsInputHelperPhone.rendered = function () {
 Template.bsInputHelper.helpers({
   type: function() { return this.type || 'text'; }
 });
-
-Template.loginSignIn.rendered = function () {
-  // Установим телефон в форме логина с формы регистрации, он в currenPhone
-  var phone = Session.get('currenPhone');
-  if (isNotEmpty(phone)) {
-    $('#login-phone').val(phone);
-  }
-};
-
-Template.loginSignUp.rendered = function () {
-  // автоскрытие поповера после 6сек
-  $('#login-phone').popover({content: 'Ваш телефон будет использован только для входа на сайт. При желании вы можете указать его как контактный позже.',
-                             placement: 'top'});
-  $('#login-phone').on('shown.bs.popover', function () {
-    setTimeout(function () {
-      $('#login-phone').popover('hide');
-    }, 6500);
-  });
-};
