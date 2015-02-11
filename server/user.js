@@ -88,7 +88,14 @@ Meteor.methods({
     var user = Meteor.users.findOne(this.userId, {fields: {password: 1}});
 
     if (SHA256(oldPassword) === user.password) {
-      Meteor.users.update(this.userId, {$set: {password: SHA256(newPassword)}});
+      var currentLoginToken = Accounts._getLoginToken(this.connection.id);
+      Meteor.users.update(this.userId,
+                          {
+                            $set: {password: SHA256(newPassword)},
+                            // удаляем логин токены кроме текущего аналогично accounts-password/password_server.js
+                            $pull: {
+                              'services.resume.loginTokens': { hashedToken: { $ne: currentLoginToken } }}
+                          });
       logEvent({type: Events.EV_PROFILE, name: "Changed password", userId: this.userId});
     } else
       throw new Meteor.Error(403, "Вы ввели не правильный ваш старый пароль.");
