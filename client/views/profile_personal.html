@@ -12,7 +12,14 @@
   {{>profileInput label="Контактное лицо" t="profileContactName"
     popover="Вы можете оставить только инициалы, но людям приятно знать с кем имеют честь разговаривать."
     }}
-
+  {{#if isMaster}}
+    {{>profileInput label="Описание деятельности" t="profileOverview"
+      popover="Краткое описание. Именно это увидят пользователи в каталоге исполнителей"
+      }}
+    {{>profileInput label="Подробное описание деятельности" t="profileDescribe"
+      popover="Подробно опишите какие работы вы выполняете."
+      }}
+  {{/if}}
   <div id="profileModal" class="modal" role="dialog" arria-hidden="true">
     {{ > Template.dynamic template=currentModal }}
   </div>
@@ -86,6 +93,56 @@
         </div>
       </div>
     </fieldset>
+  </form>
+</template>
+
+<template name="profileOverview">
+  {{#if edit}}
+    {{>formOverview}}
+  {{else}}
+    <p>
+      {{ overview }}
+    </p>
+    <a id="editOverview" href="#" class="btn btn-default">
+      Редактировать
+    </a>
+  {{/if}}
+</template>
+
+<template name="formOverview">
+  <form id="formOverview" class="form-horizontal">
+    <div class="form-group">
+      <textarea name="overview" class="form-control" rows="5">{{overview}}</textarea>
+    </div>
+    <div class="form-group">
+      <button id="save"   type="submit" class="btn btn-success">Сохранить</button>
+      <button id="cancel" type="button" class="btn btn-warning">Отменить</button>
+    </div>
+  </form>
+</template>
+
+<template name="profileDescribe">
+  {{#if edit}}
+    {{>formDescribe}}
+  {{else}}
+    <p>
+      {{#markdown}}{{ describe }}{{/markdown}}
+    </p>
+    <a id="editDescr" href="#" class="btn btn-default">
+      Редактировать
+    </a>
+  {{/if}}
+</template>
+
+<template name="formDescribe">
+  <form class="form-horizontal">
+    <div class="form-group">
+      <textarea name="describe" class="form-control" rows="10">{{describe}}</textarea>
+    </div>
+    <div class="form-group">
+      <button id="save"   type="submit" class="btn btn-success">Сохранить</button>
+      <button id="cancel" type="button" class="btn btn-warning">Отменить</button>
+    </div>
   </form>
 </template>
 

@@ -114,7 +114,28 @@ Meteor.methods({
     Meteor.users.update(this.userId, {$set: {"profile.completeName": fullName}});
     logEvent({type: Events.EV_PROFILE, name: "Changed name", userId: this.userId,
               desc: "Name changed from " + user.profile.completeName + " to " + fullName});
+  },
+  'change user describe long': function(workDescribe) {
+    check(workDescribe, String);
+
+    if (!this.userId)
+      throw new Meteor.Error(401, 'User not logged in');
+
+    Meteor.users.update(this.userId, {$set: {"profile.dLong": workDescribe}});
+    logEvent({type: Events.EV_PROFILE, name: "Changed describe", userId: this.userId,
+              desc: "Work long describe: " + workDescribe + " to " + workDescribe});
+  },
+  'change user describe short': function(workDescribe) {
+    check(workDescribe, String);
+
+    if (!this.userId)
+      throw new Meteor.Error(401, 'User not logged in');
+
+    Meteor.users.update(this.userId, {$set: {"profile.dShort": workDescribe}});
+    logEvent({type: Events.EV_PROFILE, name: "Changed preview", userId: this.userId,
+              desc: "Work short describe: " + workDescribe + " to " + workDescribe});
   }
+
 });
 
 Meteor.startup(function() {

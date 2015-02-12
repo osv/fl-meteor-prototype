@@ -5,6 +5,15 @@ Schema.UserProfile = new SimpleSchema({
     type: String,
     optional: true
   },
+  dShort: {                     // описан работ мастера краткое
+    type: String,
+    optional: true
+  },
+  dLong: {                      // описан работ мастера ПОДРОБНОЕ
+    type: String,
+    optional: true
+  },
+   
 });
 
 Schema.User = new SimpleSchema({

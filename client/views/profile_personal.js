@@ -297,6 +297,133 @@ Template.formContactName.events({
   },
 });
 
+
+/* ****************************************************
+
+ Краткое описание деятельности мастера
+
+ **************************************************** */
+
+var editOverview = new ReactiveVar(false);
+
+Template.profileOverview.helpers({
+  edit: function() {
+    return editOverview.get();
+  },
+  overview: function(){
+    return Meteor.user().profile.dShort;
+  }
+});
+
+Template.profileOverview.events({
+  'click #editOverview': function() {
+    editOverview.set(true);
+  },
+});
+// form
+Template.formOverview.rendered = function(){
+  this.$('#formOverview').formValidation({
+    fields: {
+      overview: {
+        validators: {
+          stringLength: {
+            min: 0,
+            max: 214,
+            message: 'В кратком описании допустимо 214 символов'
+          }
+        }
+      }
+    }
+  }).on('success.form.fv', function(e) {
+    e.preventDefault();
+  });
+};
+
+Template.formOverview.helpers({
+  overview: function(){
+    return Meteor.user().profile.dShort;
+  }
+});
+
+Template.formOverview.events({
+  'click #save': function(e, t){
+    e.preventDefault();
+
+    t.$('#formOverview').data('formValidation').validate();
+    if (!t.$('#formOverview').data('formValidation').isValid())
+      return false;
+
+    var workDescribe = t.find('[name="overview"]').value;
+
+    editOverview.set(false);
+
+    Meteor.call('change user describe short', workDescribe, function(err){
+      if (err)
+        Messages.info(err.reason);
+      else {
+        Messages.info('Изменено краткое описание деятельности');
+      }
+    });
+    return false;
+  },
+  'click #cancel': function(){
+    editOverview.set(false);
+  },
+});
+
+
+/* ****************************************************
+
+ Описание деятельности мастера ПОДРОБНОЕ
+
+ **************************************************** */
+
+var editWorkDescribe = new ReactiveVar(false);
+
+Template.profileDescribe.helpers({
+  edit: function() {
+    return editWorkDescribe.get();
+  },
+  describe: function(){
+    return Meteor.user().profile.dLong;
+  }
+});
+
+Template.profileDescribe.events({
+  'click #editDescr': function() {
+    editWorkDescribe.set(true);
+  },
+});
+
+//form
+Template.formDescribe.helpers({
+  describe: function(){
+    return Meteor.user().profile.dLong;
+  }
+});
+
+Template.formDescribe.events({
+  'click #save': function(e, t){
+    e.preventDefault();
+
+    var workDescribe = t.find('[name="describe"]').value;
+
+    editWorkDescribe.set(false);
+
+    Meteor.call('change user describe long', workDescribe, function(err){
+      if (err)
+        Messages.info(err.reason);
+      else {
+        Messages.info('Изменено описание деятельности');
+      }
+    });
+    return false;
+  },
+  'click #cancel': function(){
+    editWorkDescribe.set(false);
+  },
+});
+
 /* ****************************************************
 
  Вспомагательный шаблон, номер телефона ввода
