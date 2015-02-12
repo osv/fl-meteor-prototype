@@ -21,3 +21,11 @@ UI.registerHelper('ifActiveRouteRE', function (regexp) {
 UI.registerHelper('isAdmin', function() {
   return isAdmin(Meteor.user());
 });
+
+UI.registerHelper('isMaster', function() {
+  return isMaster(Meteor.user());
+});
+
+UI.registerHelper('isCustomer', function() {
+  return isCustomer(Meteor.user());
+});
