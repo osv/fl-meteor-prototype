@@ -23,6 +23,12 @@ rzymek:moment-locale-ru
 
 alethes:pages
 
+# markdown
+chuangbo:marked
+
+# очистка хтмл
+djedi:sanitize-html
+
 # routers
 iron:router
 multiply:iron-router-progress
