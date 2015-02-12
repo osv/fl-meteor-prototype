@@ -1,54 +1,95 @@
 <template name="profilePersonal">
   {{>profileMenu}}
   <h1>Личные данные</h1>
-  <div class="row">
-    <form class="form-horizontal">
-        <fieldset>
-          <legend>Регистрационные данные</legend>
-          {{>profileLoginPhone}}
-          {{>profileChangePassword}}
-        </fieldset>
-        <fieldset>
-          <legend>Публикуемые данные</legend>
-        </fieldset>
-    </form>
-  </div>
+  <legend>Регистрационные данные</legend>
+  {{>profileInput label="Телефон (вход)" t="profileLoginPhone"
+    popover="Этот телефон используется для входа на сайт, другие не видят его если не указан как контактной."
+    }}
+  {{>profileInput label="Пароль" t="profileChangePassword"
+    popover="Ваш первый пароль был отправлен SMS на ваш телефон. Вы можете сменить его здесь."
+    }}
+  <legend>Публикуемые данные</legend>
+  {{>profileInput label="Контактное лицо" t="profileContactName"
+    popover="Вы можете оставить только инициалы, но людям приятно знать с кем имеют честь разговаривать."
+    }}
+
   <div id="profileModal" class="modal" role="dialog" arria-hidden="true">
     {{ > Template.dynamic template=currentModal }}
+  </div>
+</template>
+
+<template name="profileInput">
+  {{! bootstrap grid
+
+        @label - описание поля
+        @t - имя шаблона с виджетами
+        @popover - текст подсказки
+
+        }}
+  <div class="row profile-input">
+    <div class="col-sm-3">
+      <p class="text-right">
+        <label>
+          {{label}}
+        </label>
+      </p>
+    </div>
+    {{#if popover}}
+      <div class="col-sm-4" data-content="{{popover}}"
+           data-title="{{label}}" data-placement="auto right" data-trigger="hover" data-toggle="popover" data-delay='{"show":"300", "hide":"100"}'>
+        {{ > Template.dynamic template=t }}
+      </div>
+    {{else}}
+      <div class="col-sm-4">
+        {{ > Template.dynamic template=t }}
+      </div>
+    {{/if}}
   </div>
 </template>
 
 <!-- Ниже шаблоны полей профиля -->
 
 <template name="profileLoginPhone">
-  <div class="form-group">
-    <label class="col-sm-3 control-label">
-      Телефон (вход)
-    </label>
-    <div class="col-sm-4" data-content="Этот телефон используется для входа на сайт, другие не видят его если не указан как контактной."
-       data-title="Телефон входа" data-placement="auto right" data-trigger="hover" data-toggle="popover" data-delay="{show: 500, hide: 100}">
-      {{ currentPhone }} <a href="#" class="btn btn-default" id="changeLoginPhone">Изменить</a>
-    </div>
-  </div>
+  {{ currentPhone }}
+  <a id="changeLoginPhone" href="#" class="btn btn-default">
+    Изменить
+  </a>
 </template>
 
 <template name="profileChangePassword">
-  <div class="form-group">
-    <label class="col-sm-3 control-label">
-      Пароль
-    </label>
-    <div class="col-sm-4" data-content="Ваш первый пароль был отправлен SMS на ваш телефон. Вы можете сменить его здесь."
-         data-title="Пароль" data-placement="auto right" data-trigger="hover" data-toggle="popover" data-delay="{show: 500, hide: 100}">
-      <a href="#" class="btn btn-default" id="changePassword">Изменить пароль</a>
-    </div>
-  </div>
+  <a id="changePassword" href="#" class="btn btn-default">
+    Изменить пароль
+  </a>
+</template>
+
+<template name="profileContactName">
+  {{#if edit}}
+    {{>formContactName contactName=contactName}}
+  {{else}}
+    {{ contactName }}
+    <a id="editContact" href="#" class="btn btn-default">
+      Изменить
+    </a>
+  {{/if}}
+</template>
+
+<template name="formContactName">
+  <form id="contact" class="form-horizontal">
+    <fieldset>
+      <div class="form-group has-feedback">
+        <div class="input-group">
+          <input class="form-control" value="{{contactName}}" name="contact">
+          <div class="input-group-btn">
+            <button id="save"   type="submit" class="btn btn-success">Сохранить</button>
+            <button id="cancel" type="button" class="btn btn-warning">Отменить</button>
+          </div>
+        </div>
+      </div>
+    </fieldset>
+  </form>
 </template>
 
 <!-- Ниже шаблоны модальных окон -->
-
-<template name="profileDummy">
-  {{! Это пустой шаблон}}
-</template>
 
 <template name="modalChangeLoginPhone">
   {{! Модалка}}

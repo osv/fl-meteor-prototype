@@ -11,6 +11,7 @@ fortawesome:fontawesome
 less
 email
 sha
+reactive-var
 
 # cfs:standard-packages
 # cfs:filesystem

@@ -29,6 +29,11 @@ Template.profilePersonal.helpers({
   }
 });
 
+Template.profileInput.rendered = function(){
+  this.$('[data-toggle="popover"]').popover();
+};
+
+
 /* ****************************************************
  
  Смены логин телефона
@@ -40,10 +45,6 @@ Template.profileLoginPhone.helpers({
     return formatPhone('' + Meteor.user().phone);
   },
 });
-
-Template.profileLoginPhone.rendered = function(){
-  this.$('[data-toggle="popover"]').popover();
-};
 
 Template.profileLoginPhone.events({
   'click #changeLoginPhone': function(){
@@ -152,9 +153,6 @@ Template.modalChangeLoginPhone.events({
  Смена пароля
 
  **************************************************** */
-Template.profileChangePassword.rendered = function() {
-  this.$('[data-toggle="popover"]').popover();
-};
 
 Template.profileChangePassword.events({
   'click #changePassword': function(){
@@ -231,6 +229,76 @@ Template.modalChangePassword.events({
       }
     });
     return false;
+  },
+});
+
+/* ****************************************************
+
+ Контактное лицо
+
+ **************************************************** */
+
+var editContactName = new ReactiveVar(false);
+
+Template.profileContactName.helpers({
+  edit: function() {
+    return editContactName.get();
+  },
+  contactName: function(){
+    return Meteor.user().profile.completeName;
+  }
+});
+
+Template.profileContactName.events({
+  'click #editContact': function() {
+    editContactName.set(true);
+  },
+});
+
+Template.formContactName.rendered = function() {
+  this.$('#contact').formValidation({
+    fields: {
+      contact: {
+        validators: {
+          notEmpty: {
+            message: 'Не оставляйте контактное лицо пустым'
+          }
+        }
+      }
+    }
+  }).on('error.form.fv', function(e) {
+    console.log('error');
+    e.preventDefault();
+  }).on('success.form.fv', function(e) {
+    console.log('success');
+    e.preventDefault();
+  });
+};
+
+Template.formContactName.events({
+  'click #save, submit form': function(e, t){
+    e.preventDefault();
+
+    t.$('#contact').data('formValidation').validate();
+    if (!t.$('#contact').data('formValidation').isValid())
+      return false;
+
+    var fullName = t.find('[name="contact"]').value;
+
+    editContactName.set(false);
+
+    Meteor.call('change user name', fullName, function(err){
+      if (err)
+        Messages.info(err.reason);
+      else {
+        $('#profileModal').modal('hide');
+        Messages.info('Контактное имя изменено');
+      }
+    });
+    return false;
+  },
+  'click #cancel': function(){
+    editContactName.set(false);
   },
 });
 
