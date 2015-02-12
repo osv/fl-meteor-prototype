@@ -134,6 +134,16 @@ Meteor.methods({
     Meteor.users.update(this.userId, {$set: {"profile.dShort": workDescribe}});
     logEvent({type: Events.EV_PROFILE, name: "Changed preview", userId: this.userId,
               desc: "Work short describe: " + workDescribe + " to " + workDescribe});
+  },
+  'change user website': function(website) {
+    check(website, String);
+
+    if (!this.userId)
+      throw new Meteor.Error(401, 'User not logged in');
+
+    Meteor.users.update(this.userId, {$set: {"profile.website": website}});
+    logEvent({type: Events.EV_PROFILE, name: "Changed website", userId: this.userId,
+              desc: website});
   }
 
 });

@@ -426,6 +426,93 @@ Template.formDescribe.events({
 
 /* ****************************************************
 
+ Web site
+
+ **************************************************** */
+
+var editWebsite = new ReactiveVar(false);
+
+Template.profileWebsite.helpers({
+  edit: function() {
+    return editWebsite.get();
+  },
+  website: function(){
+    return Meteor.user().profile.website;
+  }
+});
+
+Template.profileWebsite.events({
+  'click #editWebsite': function() {
+    editWebsite.set(true);
+  },
+});
+
+Template.formWebsite.helpers({
+  currentWebsite: function(){
+    return Meteor.user().profile.website;
+  }
+});
+
+Template.formWebsite.rendered = function() {
+  this.$('form').formValidation({
+    fields: {
+      website: {
+        validators: {
+          uri: {
+            message: 'Веб сайт не валидный',
+            transformer: function($field, validator) {
+              // Get the field value
+              var value = $field.val();
+              // Check if it doesn't start with http:// or https://
+              if (value && value.substr(0, 7) !== 'http://' && value.substr(0, 8) !== 'https://') {
+                // then prefix with http://
+                value = 'http://' + value;
+              }
+              // Return new value
+              return value;
+            }
+          }
+        }
+      }
+    }
+  }).on('success.form.fv', function(e) {
+    e.preventDefault();
+  });
+};
+
+Template.formWebsite.events({
+  'click #save, submit form': function(e, t){
+    e.preventDefault();
+
+    t.$('form').data('formValidation').validate();
+    if (!t.$('form').data('formValidation').isValid())
+      return false;
+
+    var website = t.find('[name="website"]').value;
+    // Check if it doesn't start with http:// or https://
+    if (website && website.substr(0, 7) !== 'http://' && website.substr(0, 8) !== 'https://') {
+      // then prefix with http://
+      website = 'http://' + website;
+    }
+
+    editWebsite.set(false);
+
+    Meteor.call('change user website', website, function(err){
+      if (err)
+        Messages.info(err.reason);
+      else {
+        Messages.info('Website изменен');
+      }
+    });
+    return false;
+  },
+  'click #cancel': function(){
+    editWebsite.set(false);
+  },
+});
+
+/* ****************************************************
+
  Вспомагательный шаблон, номер телефона ввода
 
  **************************************************** */

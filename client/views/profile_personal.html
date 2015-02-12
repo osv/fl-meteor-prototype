@@ -20,6 +20,9 @@
       popover="Подробно опишите какие работы вы выполняете."
       }}
   {{/if}}
+  {{>profileInput label="Вебсайт" t="profileWebsite"
+    popover="Если у вас есть веб сайт укажите его"
+    }}
   <div id="profileModal" class="modal" role="dialog" arria-hidden="true">
     {{ > Template.dynamic template=currentModal }}
   </div>
@@ -143,6 +146,39 @@
       <button id="save"   type="submit" class="btn btn-success">Сохранить</button>
       <button id="cancel" type="button" class="btn btn-warning">Отменить</button>
     </div>
+  </form>
+</template>
+
+<template name="profileWebsite">
+  {{#if edit}}
+    {{>formWebsite}}
+  {{else}}
+    <span id="websiteText">
+      {{#if website}}
+        <a href="{{ website }}" target="_blank">{{ website }}</a>
+      {{else}}
+        Вебсайт не указан
+      {{/if}}
+    </span>
+    <a id="editWebsite" href="#" class="btn btn-default">
+      Изменить
+    </a>
+  {{/if}}
+</template>
+
+<template name="formWebsite">
+  <form id="website" class="form-horizontal">
+    <fieldset>
+      <div class="form-group">
+        <div class="input-group">
+          <input class="form-control" value="{{currentWebsite}}" name="website">
+          <div class="input-group-btn">
+            <button id="save"   type="submit" class="btn btn-success">Сохранить</button>
+            <button id="cancel" type="button" class="btn btn-warning">Отменить</button>
+          </div>
+        </div>
+      </div>
+    </fieldset>
   </form>
 </template>
 
