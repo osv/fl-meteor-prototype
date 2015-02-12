@@ -99,6 +99,21 @@ Meteor.methods({
       logEvent({type: Events.EV_PROFILE, name: "Changed password", userId: this.userId});
     } else
       throw new Meteor.Error(403, "Вы ввели не правильный ваш старый пароль.");
+  },
+  'change user name': function(fullName) {
+    check(fullName, String);
+
+    if (!this.userId)
+      throw new Meteor.Error(401, 'User not logged in');
+
+    if (fullName.length < 2)
+      throw new Meteor.Error(403);
+
+    var user = Meteor.users.findOne(this.userId, {fields: {"profile.completeName": 1}});
+
+    Meteor.users.update(this.userId, {$set: {"profile.completeName": fullName}});
+    logEvent({type: Events.EV_PROFILE, name: "Changed name", userId: this.userId,
+              desc: "Name changed from " + user.profile.completeName + " to " + fullName});
   }
 });
 
