@@ -266,11 +266,7 @@ Template.formContactName.rendered = function() {
         }
       }
     }
-  }).on('error.form.fv', function(e) {
-    console.log('error');
-    e.preventDefault();
   }).on('success.form.fv', function(e) {
-    console.log('success');
     e.preventDefault();
   });
 };
@@ -291,7 +287,6 @@ Template.formContactName.events({
       if (err)
         Messages.info(err.reason);
       else {
-        $('#profileModal').modal('hide');
         Messages.info('Контактное имя изменено');
       }
     });
