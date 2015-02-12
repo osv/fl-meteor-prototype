@@ -13,7 +13,10 @@ Schema.UserProfile = new SimpleSchema({
     type: String,
     optional: true
   },
-   
+  website: {
+    type: String,
+    optional: true
+  },
 });
 
 Schema.User = new SimpleSchema({
