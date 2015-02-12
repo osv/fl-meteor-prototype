@@ -316,7 +316,7 @@ Template.profileOverview.helpers({
 });
 
 Template.profileOverview.events({
-  'click #editOverview': function() {
+  'click #editOverview, dblclick #overviewText': function() {
     editOverview.set(true);
   },
 });
@@ -390,7 +390,7 @@ Template.profileDescribe.helpers({
 });
 
 Template.profileDescribe.events({
-  'click #editDescr': function() {
+  'click #editDescr, dblclick #descText': function() {
     editWorkDescribe.set(true);
   },
 });

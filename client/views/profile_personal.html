@@ -100,7 +100,7 @@
   {{#if edit}}
     {{>formOverview}}
   {{else}}
-    <p>
+    <p id="overviewText">
       {{ overview }}
     </p>
     <a id="editOverview" href="#" class="btn btn-default">
@@ -125,7 +125,7 @@
   {{#if edit}}
     {{>formDescribe}}
   {{else}}
-    <p>
+    <p id="descText">
       {{#markdown}}{{ describe }}{{/markdown}}
     </p>
     <a id="editDescr" href="#" class="btn btn-default">
