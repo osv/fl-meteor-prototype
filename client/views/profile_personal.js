@@ -256,7 +256,7 @@ Template.profileContactName.events({
 });
 
 Template.formContactName.rendered = function() {
-  this.$('#contact').formValidation({
+  this.$('form').formValidation({
     fields: {
       contact: {
         validators: {
@@ -275,8 +275,8 @@ Template.formContactName.events({
   'click #save, submit form': function(e, t){
     e.preventDefault();
 
-    t.$('#contact').data('formValidation').validate();
-    if (!t.$('#contact').data('formValidation').isValid())
+    t.$('form').data('formValidation').validate();
+    if (!t.$('form').data('formValidation').isValid())
       return false;
 
     var fullName = t.find('[name="contact"]').value;
@@ -322,7 +322,7 @@ Template.profileOverview.events({
 });
 // form
 Template.formOverview.rendered = function(){
-  this.$('#formOverview').formValidation({
+  this.$('form').formValidation({
     fields: {
       overview: {
         validators: {
@@ -349,8 +349,8 @@ Template.formOverview.events({
   'click #save': function(e, t){
     e.preventDefault();
 
-    t.$('#formOverview').data('formValidation').validate();
-    if (!t.$('#formOverview').data('formValidation').isValid())
+    t.$('form').data('formValidation').validate();
+    if (!t.$('form').data('formValidation').isValid())
       return false;
 
     var workDescribe = t.find('[name="overview"]').value;
