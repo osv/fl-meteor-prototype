@@ -60,10 +60,14 @@
 <!-- Ниже шаблоны полей профиля -->
 
 <template name="profileLoginPhone">
-  {{ currentPhone }}
-  <a id="changeLoginPhone" href="#" class="btn btn-default">
-    Изменить
-  </a>
+  <div class="input-group">
+    <span class="input-group-addon">{{ currentPhone }}</span>
+    <div class="input-group-btn">
+      <a id="changeLoginPhone" href="#" class="btn btn-default">
+        Изменить
+      </a>
+    </div>
+  </div>
 </template>
 
 <template name="profileChangePassword">
@@ -76,10 +80,14 @@
   {{#if edit}}
     {{>formContactName contactName=contactName}}
   {{else}}
-    {{ contactName }}
-    <a id="editContact" href="#" class="btn btn-default">
-      Изменить
-    </a>
+    <div class="input-group">
+      <span class="input-group-addon">{{ contactName }}</span>
+      <div class="input-group-btn">
+        <a id="editContact" href="#" class="btn btn-default">
+          Изменить
+        </a>
+      </div>
+    </div>
   {{/if}}
 </template>
 
@@ -169,16 +177,20 @@
   {{#if edit}}
     {{>formWebsite}}
   {{else}}
-    <span id="websiteText">
-      {{#if website}}
-        <a href="{{ website }}" target="_blank">{{ website }}</a>
-      {{else}}
-        Вебсайт не указан
-      {{/if}}
-    </span>
-    <a id="editWebsite" href="#" class="btn btn-default">
-      Изменить
-    </a>
+    <div class="input-group">
+      <span class="input-group-addon">
+        {{#if website}}
+          <a href="{{ website }}" target="_blank">{{ website }}</a>
+        {{else}}
+          Вебсайт не указан
+        {{/if}}
+      </span>
+      <div class="input-group-btn">
+        <a id="editWebsite" href="#" class="btn btn-default">
+          Изменить
+        </a>
+      </div>
+    </div>
   {{/if}}
 </template>
 
