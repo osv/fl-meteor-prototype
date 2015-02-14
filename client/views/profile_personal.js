@@ -262,6 +262,11 @@ Template.formContactName.rendered = function() {
         validators: {
           notEmpty: {
             message: 'Не оставляйте контактное лицо пустым'
+          },
+          stringLength: {
+            max: 58,
+            min: 2,
+            message: 'Допустимо 58 символов'
           }
         }
       }

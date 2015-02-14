@@ -106,7 +106,8 @@ Meteor.methods({
     if (!this.userId)
       throw new Meteor.Error(401, 'User not logged in');
 
-    if (fullName.length < 2)
+    fullName = fullName.trim();
+    if (fullName.length < 3 || fullName.length > 58)
       throw new Meteor.Error(403);
 
     var user = Meteor.users.findOne(this.userId, {fields: {"profile.completeName": 1}});

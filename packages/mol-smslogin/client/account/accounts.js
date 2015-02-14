@@ -187,7 +187,8 @@ Template.loginSignUp.rendered = function() {
           },
           stringLength: {
             min: 2,
-            message: "Инициалы, имя или ФИО, редактируемо в будущем.",
+            max: 58,
+            message: "ФИО не должно быть больше 58 символов",
           }
         }
       },

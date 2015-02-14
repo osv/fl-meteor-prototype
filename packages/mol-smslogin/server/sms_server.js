@@ -58,7 +58,9 @@ var createUserPhone = function (phone, fullName, masterOrCustomer) {
   check(fullName, String);
   check(masterOrCustomer, Boolean);
 
-  if (!fullName && !phone)
+  fullName = fullName.trim();
+
+  if (fullName.length < 3 || fullName.length > 58 || !phone)
     throw new Meteor.Error(400, "Need to set a fullName or phone");
 
   if (phone && fullName) {
