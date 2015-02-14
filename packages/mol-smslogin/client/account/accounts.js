@@ -40,7 +40,6 @@ Template.loginButton.helpers({
     return Session.get('infoMessage');
   },
   isLoading: function() {
-    console.log ('loading ', Session.get('authLoading'));
     return Session.get('authLoading');
   },
   // выбор формочки в зависимости от сессионой перем. loginForm
@@ -88,7 +87,6 @@ Template.loginSignIn.rendered = function () {
   // Установим телефон в форме логина с формы регистрации, он в currenPhone
   var phone = Session.get('currenPhone');
   if (isNotEmpty(phone)) {
-    console.log('set phone %s', phone);
     this.$('[name="phone"]').val(phone);
   } 
 
@@ -311,7 +309,7 @@ Template.loginResend.events({
         resetToken = t.find('[name="token"]').value;
 
     t.$('#formResetPassword').data('formValidation').validate();
-    if (!t.$('#formValidation').data('formValidation').isValid())
+    if (!t.$('#formResetPassword').data('formValidation').isValid())
       return false;
 
     if (isNotEmpty(resetToken)) {
