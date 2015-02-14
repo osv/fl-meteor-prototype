@@ -104,7 +104,14 @@
     {{>formOverview}}
   {{else}}
     <p id="overviewText">
-      {{ overview }}
+      {{#if overview}}
+        {{ overview }}
+      {{else}}
+        <div class="alert alert-warning" role="alert">
+          <i class="fa fa-exclamation-triangle"></i>
+          Краткое описание не заполнено
+        </div>
+      {{/if}}
     </p>
     <a id="editOverview" href="#" class="btn btn-default">
       Редактировать
@@ -115,7 +122,8 @@
 <template name="formOverview">
   <form class="form-horizontal">
     <div class="form-group">
-      <textarea name="overview" class="form-control" rows="5">{{overview}}</textarea>
+      <textarea placeholder="Например: Производим качественный и быстрый ремонт санузла. Большой опыт работ. Поможем с доставкой материалов"
+                name="overview" class="form-control" rows="5">{{overview}}</textarea>
     </div>
     <div class="form-group">
       <button id="save"   type="submit" class="btn btn-success">Сохранить</button>
@@ -129,7 +137,15 @@
     {{>formDescribe}}
   {{else}}
     <p id="descText">
-      {{#markdown}}{{ describe }}{{/markdown}}
+      {{#if describe}}
+        {{#markdown}}{{ describe }}{{/markdown}}
+      {{else}}
+        <div class="alert alert-warning" role="alert">
+          <i class="fa fa-exclamation-triangle"></i>
+          Подробное описание не заполнено 
+        </div>
+      {{/if}}
+
     </p>
     <a id="editDescr" href="#" class="btn btn-default">
       Редактировать
