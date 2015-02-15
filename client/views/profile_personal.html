@@ -142,7 +142,9 @@
   {{else}}
     <p id="overviewText">
       {{#if overview}}
-        {{ overview }}
+        <div class="well">
+          {{ overview }}
+        </div>
       {{else}}
         <div class="alert alert-warning" role="alert">
           <i class="fa fa-exclamation-triangle"></i>
@@ -175,7 +177,9 @@
   {{else}}
     <p id="descText">
       {{#if describe}}
-        {{#markdown}}{{ describe }}{{/markdown}}
+        <div class="well">
+          {{#markdown}}{{ describe }}{{/markdown}}
+        </div>
       {{else}}
         <div class="alert alert-warning" role="alert">
           <i class="fa fa-exclamation-triangle"></i>
