@@ -43,7 +43,18 @@
         {{ > Template.dynamic template=currentModal }}
       </div>
     </div>
+    <div class="col-md-4">
+      {{>profileQRcode}}
+    </div>
   </div>
+</template>
+
+<template name="profileQRcode">
+  {{user}}
+  <div data-content="QR код может быть использован как способ для добавления ваших контактных данных в адресную книгу, для системы android таким приложением может быть, например, Barcode Scanner"
+       data-title="QR code" data-placement="auto right" data-trigger="hover" data-toggle="popover" data-delay='{"show":"300", "hide":"400"}'>
+    <div id="qr-profile" style="width:100px; height:100px; margin-top:15px;"></div>
+  </div>  
 </template>
 
 <template name="profileInput">

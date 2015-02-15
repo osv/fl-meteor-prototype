@@ -293,6 +293,7 @@ Template.formContactName.events({
         Messages.info(err.reason);
       else {
         Messages.info('Контактное имя изменено');
+        buildQRCode();
       }
     });
     return false;
@@ -476,7 +477,11 @@ Template.formWebsite.rendered = function() {
               // Return new value
               return value;
             }
-          }
+          },
+          stringLength: {
+            max: 64,
+            message: "Длина URL не должна быть более 72 символов",
+          },
         }
       }
     }
@@ -507,6 +512,7 @@ Template.formWebsite.events({
         Messages.info(err.reason);
       else {
         Messages.info('Website изменен');
+        buildQRCode();
       }
     });
     return false;
@@ -614,6 +620,7 @@ Template.profileContactRow.events({
           Messages.info(err.reason);
         else {
           Messages.info('Контакт удален ' + self.contact);
+          buildQRCode();
         }
       });
   }
@@ -674,11 +681,49 @@ Template.formNewContact.events({
         Messages.info(err.reason);
       else {
         Messages.info('Контакт добавлен ' + contact);
+        buildQRCode();
       }
     });
     return false;
   },
 });
+
+/* ****************************************************
+
+ QR код VCARD-а
+
+ **************************************************** */
+
+var qrcode;
+
+Template.profileQRcode.helpers({
+  user: function() {
+    Meteor.user();
+  }
+});
+
+function buildQRCode () {
+  var vcard = userVCARD();
+  
+  qrcode.makeCode(vcard);
+  console.log('vcard:\n%s', vcard);
+}
+
+Template.profileQRcode.rendered = function(){
+  this.$('[data-toggle="popover"]').popover();
+
+  qrcode = new QRCode(document.getElementById("qr-profile"), {
+    width : 200,
+    height : 200,
+    colorDark : "green",
+    colorLight : "#ffffff",
+    correctLevel : QRCode.CorrectLevel.M,
+  });
+
+  buildQRCode();
+
+};
+
 /* ****************************************************
 
  Вспомагательный шаблон, номер телефона ввода
