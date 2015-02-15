@@ -145,8 +145,30 @@ Meteor.methods({
     Meteor.users.update(this.userId, {$set: {"profile.website": website}});
     logEvent({type: Events.EV_PROFILE, name: "Changed website", userId: this.userId,
               desc: website});
-  }
+  },
+  'user add contact': function(type, contact) {
+    check(type, String);
+    check(contact, String);
 
+    if (!this.userId)
+      throw new Meteor.Error(401, 'User not logged in');
+
+    if (! _.contains(['phone', 'email', 'skype', 'fax'], type))
+      throw new Meteor.Error(403, "Supported contacts: 'phone', 'email', 'skype', 'fax'");
+
+    //var contacts = Meteor.users.findOne(this.userId, {fields: {'profile.contacts': 1}});
+
+    Meteor.users.update(this.userId, {$addToSet: {"profile.contacts": {type: type, contact: contact}}});
+  },
+  'user rm contact': function(type, contact) {
+    check(type, String);
+    check(contact, String);
+
+    if (!this.userId)
+      throw new Meteor.Error(401, 'User not logged in');
+
+    Meteor.users.update(this.userId, {$pull: {"profile.contacts": {type: type, contact: contact}}});
+  },
 });
 
 Meteor.startup(function() {

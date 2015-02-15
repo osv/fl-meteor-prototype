@@ -23,6 +23,9 @@
   {{>profileInput label="Вебсайт" t="profileWebsite"
     popover="Если у вас есть веб сайт укажите его"
     }}
+  {{>profileInput label="Контакты" t="profileContacts"
+    popover="Контакты по которым с вами могут связаться."
+    }}
   <div id="profileModal" class="modal" role="dialog" arria-hidden="true">
     {{ > Template.dynamic template=currentModal }}
   </div>
@@ -202,6 +205,95 @@
           <input class="form-control" value="{{currentWebsite}}" name="website">
           <div class="input-group-btn">
             <button id="save"   type="submit" class="btn btn-success">Сохранить</button>
+            <button id="cancel" type="button" class="btn btn-warning">Отменить</button>
+          </div>
+        </div>
+      </div>
+    </fieldset>
+  </form>
+</template>
+
+<template name="profileContacts">
+  {{#if haveContacts}}
+    {{>profileContactsTable TYPE="phone" ICON="fa-phone"    LABEL="Телефон"}}
+    {{>profileContactsTable TYPE="fax"   ICON="fa-fax"      LABEL="Факс"}}
+    {{>profileContactsTable TYPE="email" ICON="fa-envelope" LABEL="E-mail"}}
+    {{>profileContactsTable TYPE="skype" ICON="fa-skype"    LABEL="Skype"}}
+  {{else}}
+    <div class="alert alert-warning" role="alert">
+      <i class="fa fa-exclamation-triangle"></i>
+      Вы не указали ни одного контакта
+    </div>
+  {{/if}}
+
+  {{#if newContact}}
+    {{>formNewContact}}
+  {{else}}
+    <div class="btn-group">
+      <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+        <i class="fa fa-plus-circle"></i>
+        Добавить контакт <span class="caret"></span>
+      </button>
+      <ul class="dropdown-menu" role="menu">
+        <li><a href="#" data-action="phone">
+          <i class="fa fa-fw fa-phone"></i>
+          Телефон</a></li>
+        <li><a href="#" data-action="fax">
+          <i class="fa fa-fw fa-fax"></i>
+          Телефон/факс</a></li>
+        <li><a href="#" data-action="email">
+          <i class="fa fa-fw fa-envelope"></i>
+          e-mail</a></li>
+        <li><a href="#" data-action="skype">
+          <i class="fa fa-fw fa-skype"></i>
+          skype</a></li>
+      </ul>
+    </div>
+  {{/if}}
+</template>
+
+<template name="profileContactsTable">
+  {{#if contacts TYPE}}
+    <table class="table table-striped table-condensed">
+      <thead><tr><th>
+        <i class="fa {{ICON}} fa-fw"></i>
+        {{LABEL}}</th></tr></thead>
+      <tbody>
+        {{#each contacts TYPE}}
+          <tr>
+            {{> profileContactRow }}
+          </tr>
+        {{/each}}
+      </tbody>
+    </table>
+  {{/if}}
+</template>
+
+<template name="profileContactRow">
+  <td>
+    {{formatContact}}
+  </td>
+  <td>
+    <a href="#" data-action="rm">
+      Удалить
+    </a>
+  </td>
+</template>
+
+<template name="formNewContact">
+  <form class="form-horizontal">
+    <fieldset>
+      <div class="form-group">
+        <div class="input-group">
+          <span class="input-group-addon"><i class="fa {{icon}} fa-fw"></i></span>
+          {{#if isPhone}}
+            <input name="contact" class="form-control bfh-phone"
+                   data-format="+d (ddd) ddd-dd-ddd" value="{{defaultValue}}" type="text">
+          {{else}}
+          <input name="contact" class="form-control" placeholder="{{placeholder}}">
+          {{/if}}
+          <div class="input-group-btn">
+            <button id="save"   type="submit" class="btn btn-success">Добавить</button>
             <button id="cancel" type="button" class="btn btn-warning">Отменить</button>
           </div>
         </div>

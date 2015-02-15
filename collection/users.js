@@ -1,5 +1,16 @@
 Schema = {};
 
+// схема дополнительных контактов
+Schema.Contacts = new SimpleSchema({
+  type: {
+    type: String,
+    allowedValues: ['phone', 'email', 'skype', 'fax']
+  },
+  contact: {
+    type: String
+  }
+});
+
 Schema.UserProfile = new SimpleSchema({
   completeName: {
     type: String,
@@ -17,6 +28,11 @@ Schema.UserProfile = new SimpleSchema({
     type: String,
     optional: true
   },
+  contacts: {
+    type: [Schema.Contacts],
+    optional: true
+  },
+
 });
 
 Schema.User = new SimpleSchema({
