@@ -730,7 +730,7 @@ Template.profileQRcode.rendered = function(){
 
  **************************************************** */
 
-var uploadAvatar = new ReactiveVar(false),
+var uploadingAvatar = new ReactiveVar(false), // spinner
     avatarRealSize, avatarId,
     cropCoords;
 
@@ -756,7 +756,7 @@ Template.profileAvatar.helpers({
 
 Template.modalAvatarSelect.helpers({
   isLoading: function() {
-    return uploadAvatar.get();
+    return uploadingAvatar.get();
   },
 });
 
@@ -774,9 +774,9 @@ Template.modalAvatarSelect.events({
    }   
    var reader = new FileReader();
    reader.onload = function(fileLoadEvent) {
-     uploadAvatar.set(true);
+     uploadingAvatar.set(true);
      Meteor.call('avatar-upload', file.type, file.name, reader.result, function(err, res){
-       uploadAvatar.set(false);
+       uploadingAvatar.set(false);
        if (err) {
          Messages.info(err.reason);
        } else {
@@ -791,7 +791,8 @@ Template.modalAvatarSelect.events({
 });
 
 Template.modalAvatarCrop.helpers({
-  cropId: function() {return avatarId;}
+  cropId: function() {return avatarId;},
+  isLoading: function() {return uploadingAvatar.get();}
 });
 
 Template.modalAvatarCrop.rendered = function() {
@@ -853,13 +854,15 @@ Template.modalAvatarCrop.rendered = function() {
 
 Template.modalAvatarCrop.events({
   'click [data-action="save"]': function() {
-    Meteor.call('avatar-commit', avatarId, cropCoords, function(err, res){
-      uploadAvatar.set(false);
+    uploadingAvatar.set(true);
+    Meteor.call('avatar-commit', avatarId, cropCoords, function(err){
+      uploadingAvatar.set(false);
       if (err) {
         Messages.info(err.reason);
       } else {
         Session.set("currentProfileModal", 'modalAvatarCrop');
         Messages.info('Фото установлено');
+        $('#profileModal').modal('hide');
       }
     });
     console.log(cropCoords.x, cropCoords.y, cropCoords.w, cropCoords.h);

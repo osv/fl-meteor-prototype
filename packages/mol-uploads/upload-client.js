@@ -9,9 +9,13 @@ UI.registerHelper('avatarUrlSmall', function() {
 UI.registerHelper('avatarUrlBig', function() {
   var avatar = Meteor.user().profile.avatar;
   if (avatar)
-    return '/i/av/src/' + avatar + '.png';
+    return '/i/av/src/' + avatar + '.jpg';
   else
     return '/default.jpg';
+});
+
+UI.registerHelper('avatarUrlMicro', function(avatarId) {
+  return '/i/av/soc/' + avatarId + '.jpg';
 });
 
 UI.registerHelper('avatarForCrop', function(id) {

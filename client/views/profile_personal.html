@@ -425,8 +425,14 @@
         {{#if isLoading}}
           {{> spinner}}
         {{/if}}
-        <img class="img-thumbnail" src="{{avatarUrlBig}}">
-        <input id="file" type="file" class="btn btn-primary btn-lg">
+        <div class="av-container">
+          <img class="img-thumbnail" width="200" height="200" src="{{avatarUrlSmall}}">
+          <div class="input-group">
+            <span class="btn btn-file  btn-primary">
+              Загрузить... <input id="file" type="file">
+            </span>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -439,6 +445,9 @@
         <button type="button" class="close" data-dismiss="modal">x</button>
         <h3>Обрезка фотографии</h3>
         <div class="modal-body">
+          {{#if isLoading}}
+            {{> spinner}}
+          {{/if}}
           <div class="row">
             <img id="crop" class="img-thumbnail" src="{{avatarForCrop cropId}}">
           </div>
