@@ -32,7 +32,10 @@ Schema.UserProfile = new SimpleSchema({
     type: [Schema.Contacts],
     optional: true
   },
-
+  avatar: {
+    type: String,
+    optional: true
+  }
 });
 
 Schema.User = new SimpleSchema({

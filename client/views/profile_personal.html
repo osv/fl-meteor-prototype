@@ -33,6 +33,9 @@
         popover="Если у вас есть веб сайт укажите его"
         }}
     </div>
+    <div class="col-md-4">
+      {{>profileAvatar}}
+    </div>
   </div>
   <div class="row">
     <div class="col-md-8">
@@ -332,6 +335,18 @@
   </form>
 </template>
 
+<template name="profileAvatar">
+  <div class="av-container">
+    <img class="img-thumbnail" width="200" height="200" src="{{avatarUrlSmall}}">
+    <div class="input-group">
+      <button data-action="avatar" class="btn btn-default btn-sm">Загрузить</button>
+      {{#if haveAvatart}}
+        <button data-action="remove" class="btn btn-warning btn-sm">Удалить</button>
+      {{/if}}
+    </div>
+  </div>
+</template>
+
 <!-- Ниже шаблоны модальных окон -->
 
 <template name="modalChangeLoginPhone">
@@ -393,6 +408,54 @@
 
           </fieldset>
         </form>
+      </div>
+    </div>
+  </div>
+</template>
+
+
+<template name="modalAvatarSelect">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">x</button>
+        <h3>Загрузить фотографию</h3>
+      </div>
+      <div class="modal-body">
+        {{#if isLoading}}
+          {{> spinner}}
+        {{/if}}
+        <img class="img-thumbnail" src="{{avatarUrlBig}}">
+        <input id="file" type="file" class="btn btn-primary btn-lg">
+      </div>
+    </div>
+  </div>
+</template>
+
+<template name="modalAvatarCrop">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">x</button>
+        <h3>Обрезка фотографии</h3>
+        <div class="modal-body">
+          <div class="row">
+            <img id="crop" class="img-thumbnail" src="{{avatarForCrop cropId}}">
+          </div>
+          <div class="row">
+            <div id="avatar-preview-pane">
+              <div class="avatar-container">
+                <img id="preview" class="jcrop-preview" src="{{avatarForCrop cropId}}">
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="input-group">
+              <button data-action="save" class="btn btn-primary">Сохранить</button>
+              <button data-dismiss="modal" class="btn btn-default">Отменить</button>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>

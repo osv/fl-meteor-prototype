@@ -726,6 +726,147 @@ Template.profileQRcode.rendered = function(){
 
 /* ****************************************************
 
+ Аватар
+
+ **************************************************** */
+
+var uploadAvatar = new ReactiveVar(false),
+    avatarRealSize, avatarId,
+    cropCoords;
+
+Template.profileAvatar.events({
+  'click [data-action="avatar"]': function() {
+    Session.set("currentProfileModal", 'modalAvatarSelect');
+    $('#profileModal').modal('show');
+  },
+  'click [data-action="remove"]': function() {
+    Meteor.call('avatar-remove', function(err) {
+      if (err) {
+        Messages.info(err.reason);
+      } else {
+        Messages.info('Фото удалено');
+      }
+    });
+  },
+});
+
+Template.profileAvatar.helpers({
+  haveAvatart: function() { return Meteor.user().profile.avatar; }
+});
+
+Template.modalAvatarSelect.helpers({
+  isLoading: function() {
+    return uploadAvatar.get();
+  },
+});
+
+Template.modalAvatarSelect.events({
+  'change #file': function(event, template) {
+   var file = event.currentTarget.files[0];
+   console.log('file: ', file);
+   if (!file.type.match(/^image\//)) {
+     Messages.info("Файл не является изображением");
+     return;
+   }
+   if (file.size > 600000) {
+     Messages.info("Файл слишком большой");
+     return;
+   }   
+   var reader = new FileReader();
+   reader.onload = function(fileLoadEvent) {
+     uploadAvatar.set(true);
+     Meteor.call('avatar-upload', file.type, file.name, reader.result, function(err, res){
+       uploadAvatar.set(false);
+       if (err) {
+         Messages.info(err.reason);
+       } else {
+         avatarRealSize = res.size;
+         avatarId = res.id;
+         Session.set("currentProfileModal", 'modalAvatarCrop');
+       }
+     });
+   };
+   reader.readAsBinaryString(file);
+ }
+});
+
+Template.modalAvatarCrop.helpers({
+  cropId: function() {return avatarId;}
+});
+
+Template.modalAvatarCrop.rendered = function() {
+  var t = this,
+      jcrop_api,
+      boundx,
+      boundy,
+
+      $preview = t.$('#avatar-preview-pane'),
+      $pcnt = t.$('#avatar-preview-pane .avatar-container'),
+      $pimg = t.$('#avatar-preview-pane .avatar-container img'),
+
+      xsize = $pcnt.width(),
+      ysize = $pcnt.height();
+
+  console.log(avatarRealSize);
+  t.$('#crop').Jcrop({
+    onChange: showPreview,
+    onSelect: showPreview,
+    bgColor: 'black',
+    bgOpacity: 0.6,
+    bgFade: true,
+    trueSize: [avatarRealSize.width, avatarRealSize.height],
+    aspectRatio: 1
+  },function(){
+    // Use the API to get the real image size
+    var bounds = this.getBounds();
+    boundx = bounds[0];
+    boundy = bounds[1];
+    // Store the API in the jcrop_api variable
+    jcrop_api = this;
+
+    jcrop_api.animateTo([20, 20, avatarRealSize.width-40, avatarRealSize.height, 40]);
+
+
+    // Move the preview into the jcrop container for css positioning
+    $preview.appendTo(jcrop_api.ui.holder);
+  });
+
+  function showPreview(c)
+  {
+    // сохраняем координаты
+    cropCoords = c;
+    console.log(c);
+    if (parseInt(c.w) > 0)
+    {
+      var rx = xsize / c.w;
+      var ry = ysize / c.h;
+
+      $pimg.css({
+        width: Math.round(rx * boundx) + 'px',
+        height: Math.round(ry * boundy) + 'px',
+        marginLeft: '-' + Math.round(rx * c.x) + 'px',
+        marginTop: '-' + Math.round(ry * c.y) + 'px'
+      });
+    }
+  }
+};
+
+Template.modalAvatarCrop.events({
+  'click [data-action="save"]': function() {
+    Meteor.call('avatar-commit', avatarId, cropCoords, function(err, res){
+      uploadAvatar.set(false);
+      if (err) {
+        Messages.info(err.reason);
+      } else {
+        Session.set("currentProfileModal", 'modalAvatarCrop');
+        Messages.info('Фото установлено');
+      }
+    });
+    console.log(cropCoords.x, cropCoords.y, cropCoords.w, cropCoords.h);
+  },
+});
+/* ****************************************************
+
  Вспомагательный шаблон, номер телефона ввода
 
  **************************************************** */

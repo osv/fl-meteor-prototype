@@ -42,6 +42,7 @@ matb33:collection-hooks
 
 mol-smslogin
 mol-messages
+mol-uploads
 
 gadicohen:headers
 konecty:mongo-counter@0.0.2
