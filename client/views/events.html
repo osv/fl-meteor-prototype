@@ -65,7 +65,7 @@
 <template name="eventItem">
   <tr>
     <td>{{name}}</td>
-    <td>{{desc}}</td>
+    <td>{{#markdown}}{{desc}}{{/markdown}}</td>
     <td><span data-toggle="tooltip" data-placement="top" title="{{created}}">{{fromNow}}</span></td>
     <td>
       <a href="#" class="filter-by-user" data-toggle="tooltip" data-placement="top" title="Филтр">
