@@ -337,7 +337,9 @@
 
 <template name="profileAvatar">
   <div class="av-container">
-    <img class="img-thumbnail" width="200" height="200" src="{{avatarUrlSmall}}">
+    <a href="{{avatarUrlBig}}" target="_blank">
+      <img class="img-thumbnail" width="200" height="200" src="{{avatarUrlSmall}}">
+    </a>
     <div class="input-group">
       <button data-action="avatar" class="btn btn-default btn-sm">Загрузить</button>
       {{#if haveAvatart}}
