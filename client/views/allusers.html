@@ -32,7 +32,10 @@
 <template name="userInfoForAdmin">
   <tr>
     <td>{{formatedPhone}}</td>
-    <td>{{ profile.completeName }}</td>
+    <td>
+      <img class="img-rounded" src="{{avatarUrlMicro profile.avatar}}">
+      {{ profile.completeName }}
+    </td>
     <td><span data-toggle="tooltip" data-placement="top" title="{{created}}">{{fromNow}}</span></td>
     <td>{{role}}</td>
     <td>{{isAdmin}}</td>
