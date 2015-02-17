@@ -40,6 +40,10 @@ function smallAvatarPath(name) {
   return path.join(UploadDir, 'av/thm/', name + '.png');
 }
 
+function microAvatarPath(name) {
+  return path.join(UploadDir, 'av/soc/', name + '.png');
+}
+
 function pendingImgOrig(name) {
   return path.join(UploadDir, 'pending/orig', name + '.png');
 }
@@ -106,6 +110,8 @@ Meteor.methods({
     imageUtil.convert( buffer, pngfile );
     imageUtil.resizeAndWrite( buffer, thumbfile, 400, 400);
 
+    logEvent({type: Events.EV_PROFILE, userId: this.userId, name: "Photo loaded"});
+
     return {id: filename, size: realSize};
   },
   // Установить аватарку, @pendingImg - идентификатор который получен был методом 'avatar-upload'
@@ -124,15 +130,18 @@ Meteor.methods({
         // Имя файла, в подкаталоги распихиваю, '98765' -> '9/8/98765'
         // Это нужно чтобы дохрена файлов не держать в одном каталоге
         avatarId   = i.toString().replace(/(\d)(\d)/, "$1/$2/$1$2"),
-        bigname    = bigAvatarPath ( avatarId ),
+        bigname    = bigAvatarPath   ( avatarId ),
         thumbname  = smallAvatarPath ( avatarId ),
+        microname  = microAvatarPath ( avatarId ),
         pendinfile = pendingImgOrig ( pendingId );
 
     mkdirp.sync(path.dirname(bigname));
     mkdirp.sync(path.dirname(thumbname));
+    mkdirp.sync(path.dirname(microname));
 
     imageUtil.cropAndResize(pendinfile, bigname, coords, 400);
     imageUtil.cropAndResize(pendinfile, thumbname, coords, 200);
+    imageUtil.cropAndResize(pendinfile, microname, coords, 50);
 
     var oldAvatar = Meteor.users.findOne(this.userId, {fields: {"profile.avatar": 1}})
           .profile.avatar;
@@ -143,7 +152,9 @@ Meteor.methods({
       try {fs.unlinkSync( bigAvatarPath   ( oldAvatar ) );} catch(e) {}        
       try {fs.unlinkSync( smallAvatarPath ( oldAvatar ) );} catch(e) {}
     }
-
+    try {fs.unlinkSync( pendinfile );} catch(e) {}
+    logEvent({type: Events.EV_PROFILE, userId: this.userId, name: "Photo saved",
+              desc: "![avatar](" + Meteor.absoluteUrl() + '/i/av/soc/' + avatarId + '.png)'});
     return avatarId;
   },
   // удаляет аватарку
@@ -162,6 +173,7 @@ Meteor.methods({
       try {fs.unlinkSync( bigAvatarPath   ( oldAvatar ) );} catch(e) {}        
       try {fs.unlinkSync( smallAvatarPath ( oldAvatar ) );} catch(e) {}
     }
+    logEvent({type: Events.EV_PROFILE, userId: this.userId, name: "Photo removed"});
   },
 });
 
