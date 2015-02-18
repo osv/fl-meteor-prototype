@@ -21,5 +21,5 @@ UI.registerHelper('avatarUrlMicro', function(avatarId) {
 });
 
 UI.registerHelper('avatarForCrop', function(id) {
-    return '/i/pending/thum/' + id + '.png';
+    return '/i/pending/thum/' + id + '.jpg';
 });

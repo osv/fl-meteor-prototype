@@ -49,7 +49,7 @@ function pendingImgOrig(name) {
 }
 
 function pendingImgSmall(name) {
-  return path.join(UploadDir, 'pending/thum', name + '.png');
+  return path.join(UploadDir, 'pending/thum', name + '.jpg');
 }
 
 // Async imagemagick utils
