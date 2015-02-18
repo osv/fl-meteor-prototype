@@ -121,7 +121,14 @@ Meteor.methods({
     check(coords.x, Number);
     check(coords.y, Number);
     check(coords.w, Number);
-    check(coords.h, Number);
+
+    _.each(['w', 'x', 'y'], function(it) {
+      coords[it] = Math.floor(coords[it]); });
+
+    coords.h = coords.w;
+
+    if (coords.w < 10)
+      throw new Meteor.Error(403, 'Выделите фрагмент фотографии');
 
     if (!this.userId)
       throw new Meteor.Error(401, 'User not logged in');
