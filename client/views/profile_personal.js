@@ -548,6 +548,9 @@ var contactsTypes = {
     i: 'fa-envelope',
     placeholder: "john@example.com",
     validators: {
+      notEmpty: {
+        message: "Введите e-mail"
+      },
       regexp: {
         regexp: '^[^@\\s]+@([^@\\s]+\\.)+[^@\\s]+$',
         message: 'Неправильный e-mail адрес'
@@ -558,6 +561,9 @@ var contactsTypes = {
     i: 'fa-skype',
     placeholder: 'Скайп ID',
     validators: {
+      notEmpty: {
+        message: "Введите skype идентификатор"
+      },
       regexp: {
         // http://stackoverflow.com/questions/12746862/regular-expressions-for-skype-name-in-php
         regexp: '^[a-zA-Z][a-zA-Z0-9\\.,\\-_]{5,31}$',
