@@ -740,13 +740,14 @@ Template.profileAvatar.events({
     $('#profileModal').modal('show');
   },
   'click [data-action="remove"]': function() {
-    Meteor.call('avatar-remove', function(err) {
-      if (err) {
-        Messages.info(err.reason);
-      } else {
-        Messages.info('Фото удалено');
-      }
-    });
+    if (confirm('Удалить фотографию?'))
+      Meteor.call('avatar-remove', function(err) {
+        if (err) {
+          Messages.info(err.reason);
+        } else {
+          Messages.info('Фото удалено');
+        }
+      });
   },
 });
 
