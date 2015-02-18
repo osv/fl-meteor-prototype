@@ -1,0 +1,14 @@
+<template name="homeLayout">
+  <div class="container">
+    <header>
+      {{> yield region='header'}}
+    </header>
+    <article>
+      {{> yield}}
+    </article>
+    <footer>
+      {{> yield region='footer'}}
+    </footer>
+  </div>
+</template>
+

@@ -1,19 +1,19 @@
-<template name="profileMenu">
-  <ul class="nav nav-tabs">
-    <li class="{{ifActiveRoute "/profile"}}">            <a href="/profile">Объявления, фото</a></li>
-    <li class="{{ifActiveRoute "/profile/personal"}}">   <a href="/profile/personal">Личные данные</a></li>
-    <li class="{{ifActiveRoute "/profile/messages"}}">
-      <a href="/profile2">Сообщения <span class="badge">0</span></a></li>
-    {{#if isAdmin}}
-    <li class="{{ifActiveRouteRE "users"}}">             <a href="/users">Пользователи</a></li>
-    <li class="{{ifActiveRouteRE "events"}}">            <a href="/events">Сис. события</a></li>
-    {{/if}}
-  </ul>
-</template>
-
 <template name="myProfile">
-  {{>profileMenu}}
   
-  Тут будует мои 
+  <h2>Работы, проекты, портфолио
+    <button data-action="new" class="btn btn-primary pull-right"><i class="fa fa-plus-circle"></i>Добавить</button>
+  </h2>
+  <div class="row">
+    <div class="container">
+      {{#each portfolio}}
+        
+        {{else}}
+        <div class="jumbotron">
+          <h3>Нет проектов</h3>
+        </div>
+      {{/each}}
+    </div>
+  </div>
+
 </template>
 

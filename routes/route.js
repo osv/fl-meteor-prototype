@@ -4,6 +4,7 @@ Router.configure({
   // notFoundTemplate: 'notFound',
   yieldTemplates: {
     'appMenu': {to: 'header'},
+    'appNavigation': {to: 'navigation'},
     'appFooter': {to: 'footer'}
   },
   progressSpinner : false,      // смотри multiply:iron-router-progress
@@ -31,6 +32,11 @@ Meteor.startup(function () {
 
   Router.route('/', {
     name: 'home',
+    layoutTemplate: 'homeLayout',
+    yieldTemplates: {
+      'appMenu': {to: 'header'},
+      'appFooter': {to: 'footer'}
+    },
     controller: 'ApplicationController'
   });
 

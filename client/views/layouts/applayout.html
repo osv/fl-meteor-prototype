@@ -4,16 +4,41 @@
 
 <template name="appLayout">
   <div class="container">
-    <div class="header">
+    <header>
       {{> yield region='header'}}
-    </div>
-    <div class="container">
+    </header>
+    <nav>
+      {{> yield region='navigation'}}
+    </nav>
+    <article>
       {{> yield}}
-    </div>
-    <div class="footer">
+    </article>
+    <footer>
       {{> yield region='footer'}}
-    </div>
-    </div>
+    </footer>
+  </div>
+</template>
+
+<template name="appNavigation">
+  <ul class="nav nav-tabs">
+    <li class="{{ifActiveRoute "/profile"}}">
+      <a href="/profile">Цены, фото</a>
+    </li>
+    <li class="{{ifActiveRoute "/profile/personal"}}">
+      <a href="/profile/personal">Личные данные</a>
+    </li>
+    <li class="{{ifActiveRoute "/profile/messages"}}">
+      <a href="/profile2">Сообщения <span class="badge">0</span></a>
+    </li>
+    {{#if isAdmin}}
+      <li class="{{ifActiveRouteRE "users"}}">
+        <a href="/users">Пользователи</a>
+      </li>
+      <li class="{{ifActiveRouteRE "events"}}">
+        <a href="/events">Сис. события</a>
+      </li>
+    {{/if}}
+  </ul>
 </template>
 
 <template name="appMenu">
