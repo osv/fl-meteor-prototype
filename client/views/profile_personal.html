@@ -21,6 +21,9 @@
       {{>profileInput label="Контактное лицо" t="profileContactName"
         popover="Вы можете оставить только инициалы, но людям приятно знать с кем имеют честь разговаривать."
         }}
+
+      {{>profileInput label="Фотография" t="profileAvatar"}}
+
       {{#if isMaster}}
         {{>profileInput label="Описание деятельности" t="profileOverview"
           popover="Краткое описание. Именно это увидят пользователи в каталоге исполнителей"
@@ -32,9 +35,6 @@
       {{>profileInput label="Вебсайт" t="profileWebsite"
         popover="Если у вас есть веб сайт укажите его"
         }}
-    </div>
-    <div class="col-md-4">
-      {{>profileAvatar}}
     </div>
   </div>
   <div class="row">
