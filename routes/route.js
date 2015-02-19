@@ -46,13 +46,24 @@ Meteor.startup(function () {
   });
 
   Router.route('/profile', {
-    name: 'myProfile',
+    name: 'profilePub',
     controller: 'ApplicationController'
   });
 
   Router.route('/profile/personal', {
     name: 'profilePersonal',
     controller: 'ApplicationController'
+  });
+
+  Router.route('/profile/portfolio/:id', {
+    name: 'profilePortfolio',
+    controller: 'ApplicationController',
+    waitOn: function () {
+      return Meteor.subscribe('editMyPortfolio', this.params.id); 
+    },
+    data: function () {
+      return Portfolio.findOne(this.params.id);
+    }
   });
 
   // all users for admins
