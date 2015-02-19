@@ -250,8 +250,9 @@ Template.profileContactName.helpers({
 });
 
 Template.profileContactName.events({
-  'click #editContact': function() {
+  'click [data-action="edit"]': function(e, t) {
     editContactName.set(true);
+    Meteor.defer(function() { t.$('input').focus(); });
   },
 });
 
@@ -277,7 +278,7 @@ Template.formContactName.rendered = function() {
 };
 
 Template.formContactName.events({
-  'click #save, submit form': function(e, t){
+  'click [data-action="save"], submit form': function(e, t){
     e.preventDefault();
 
     t.$('form').data('formValidation').validate();
@@ -298,7 +299,7 @@ Template.formContactName.events({
     });
     return false;
   },
-  'click #cancel': function(){
+  'click [data-action="cancel"]': function(){
     editContactName.set(false);
   },
 });
@@ -322,8 +323,9 @@ Template.profileOverview.helpers({
 });
 
 Template.profileOverview.events({
-  'click #editOverview, dblclick #overviewText': function() {
+  'click [data-action="edit"], dblclick p': function(e, t) {
     editOverview.set(true);
+    Meteor.defer(function() { t.$('textarea').focus(); });
   },
 });
 // form
@@ -352,7 +354,7 @@ Template.formOverview.helpers({
 });
 
 Template.formOverview.events({
-  'click #save': function(e, t){
+  'click [data-action="save"]': function(e, t){
     e.preventDefault();
 
     t.$('form').data('formValidation').validate();
@@ -372,7 +374,7 @@ Template.formOverview.events({
     });
     return false;
   },
-  'click #cancel': function(){
+  'click [data-action="cancel"]': function(){
     editOverview.set(false);
   },
 });
@@ -396,8 +398,9 @@ Template.profileDescribe.helpers({
 });
 
 Template.profileDescribe.events({
-  'click #editDescr, dblclick #descText': function() {
+  'click [data-action="edit"], dblclick p': function(e, t) {
     editWorkDescribe.set(true);
+    Meteor.defer(function() { t.$('textarea').focus(); });
   },
 });
 
@@ -409,7 +412,7 @@ Template.formDescribe.helpers({
 });
 
 Template.formDescribe.events({
-  'click #save': function(e, t){
+  'click [data-action="save"]': function(e, t){
     e.preventDefault();
 
     var workDescribe = t.find('[name="describe"]').value;
@@ -425,7 +428,7 @@ Template.formDescribe.events({
     });
     return false;
   },
-  'click #cancel': function(){
+  'click [data-action="cancel"]': function(){
     editWorkDescribe.set(false);
   },
 });
@@ -448,8 +451,9 @@ Template.profileWebsite.helpers({
 });
 
 Template.profileWebsite.events({
-  'click #editWebsite': function() {
+  'click [data-action="edit"]': function(e, t) {
     editWebsite.set(true);
+    Meteor.defer(function() { t.$('input').focus(); });
   },
 });
 
@@ -491,7 +495,7 @@ Template.formWebsite.rendered = function() {
 };
 
 Template.formWebsite.events({
-  'click #save, submit form': function(e, t){
+  'click [data-action="save"], submit form': function(e, t){
     e.preventDefault();
 
     t.$('form').data('formValidation').validate();
@@ -517,7 +521,7 @@ Template.formWebsite.events({
     });
     return false;
   },
-  'click #cancel': function(){
+  'click [data-action="cancel"]': function(){
     editWebsite.set(false);
   },
 });
@@ -590,6 +594,7 @@ Template.profileContacts.events({
     var action = e.target.dataset.action; // data-action attribute
     if (_.contains(_.keys(contactsTypes), action)) {
       newContact.set(action);
+      Meteor.defer(function() { t.$('input').focus(); });
     }
   }
 });
@@ -664,8 +669,8 @@ Template.formNewContact.helpers({
 });
 
 Template.formNewContact.events({
-  'click #cancel': function(){
-    newContact.set();
+  'click [data-action="cancel"]': function(){
+    newContact.set(false);
   },
   'submit form': function(e, t){
     e.preventDefault();

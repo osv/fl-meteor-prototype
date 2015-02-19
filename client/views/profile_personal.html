@@ -114,9 +114,9 @@
     <div class="input-group">
       <span class="input-group-addon">{{ contactName }}</span>
       <div class="input-group-btn">
-        <a id="editContact" href="#" class="btn btn-default">
+        <button data-action="edit" class="btn btn-default">
           Изменить
-        </a>
+        </button>
       </div>
     </div>
   {{/if}}
@@ -129,8 +129,8 @@
         <div class="input-group">
           <input class="form-control" value="{{contactName}}" name="contact">
           <div class="input-group-btn">
-            <button id="save"   type="submit" class="btn btn-success">Сохранить</button>
-            <button id="cancel" type="button" class="btn btn-warning">Отменить</button>
+            <button data-action="save"   type="submit" class="btn btn-success">Сохранить</button>
+            <button data-action="cancel" type="button" class="btn btn-warning">Отменить</button>
           </div>
         </div>
       </div>
@@ -142,7 +142,7 @@
   {{#if edit}}
     {{>formOverview}}
   {{else}}
-    <p id="overviewText">
+    <p>
       {{#if overview}}
         <div class="well">
           {{ overview }}
@@ -154,9 +154,9 @@
         </div>
       {{/if}}
     </p>
-    <a id="editOverview" href="#" class="btn btn-default">
+    <button data-action="edit" class="btn btn-default">
       Редактировать
-    </a>
+    </button>
   {{/if}}
 </template>
 
@@ -167,8 +167,8 @@
                 name="overview" class="form-control" rows="5">{{overview}}</textarea>
     </div>
     <div class="form-group">
-      <button id="save"   type="submit" class="btn btn-success">Сохранить</button>
-      <button id="cancel" type="button" class="btn btn-warning">Отменить</button>
+      <button data-action="save"   type="submit" class="btn btn-success">Сохранить</button>
+      <button data-action="cancel" type="button" class="btn btn-warning">Отменить</button>
     </div>
   </form>
 </template>
@@ -177,7 +177,7 @@
   {{#if edit}}
     {{>formDescribe}}
   {{else}}
-    <p id="descText">
+    <p>
       {{#if describe}}
         <div class="well">
           {{#markdown}}{{ describe }}{{/markdown}}
@@ -188,11 +188,10 @@
           Подробное описание не заполнено 
         </div>
       {{/if}}
-
     </p>
-    <a id="editDescr" href="#" class="btn btn-default">
+    <button data-action="edit" class="btn btn-default">
       Редактировать
-    </a>
+    </button>
   {{/if}}
 </template>
 
@@ -202,8 +201,8 @@
       <textarea name="describe" class="form-control" rows="10">{{describe}}</textarea>
     </div>
     <div class="form-group">
-      <button id="save"   type="submit" class="btn btn-success">Сохранить</button>
-      <button id="cancel" type="button" class="btn btn-warning">Отменить</button>
+      <button data-action="save"   type="submit" class="btn btn-success">Сохранить</button>
+      <button data-action="cancel" type="button" class="btn btn-warning">Отменить</button>
     </div>
   </form>
 </template>
@@ -221,9 +220,9 @@
         {{/if}}
       </span>
       <div class="input-group-btn">
-        <a id="editWebsite" href="#" class="btn btn-default">
+        <button data-action="edit" class="btn btn-default">
           Изменить
-        </a>
+        </button>
       </div>
     </div>
   {{/if}}
@@ -236,8 +235,8 @@
         <div class="input-group">
           <input class="form-control" value="{{currentWebsite}}" name="website">
           <div class="input-group-btn">
-            <button id="save"   type="submit" class="btn btn-success">Сохранить</button>
-            <button id="cancel" type="button" class="btn btn-warning">Отменить</button>
+            <button data-action="save"   type="submit" class="btn btn-success">Сохранить</button>
+            <button data-action="cancel" type="button" class="btn btn-warning">Отменить</button>
           </div>
         </div>
       </div>
@@ -325,8 +324,8 @@
           <input name="contact" class="form-control" placeholder="{{placeholder}}" autocomplete="off">
           {{/if}}
           <div class="input-group-btn">
-            <button id="save"   type="submit" class="btn btn-success">Добавить</button>
-            <button id="cancel" type="button" class="btn btn-warning">Отменить</button>
+            <button data-action="save"   type="submit" class="btn btn-success">Добавить</button>
+            <button data-action="cancel" type="button" class="btn btn-warning">Отменить</button>
           </div>
         </div>
       </div>
