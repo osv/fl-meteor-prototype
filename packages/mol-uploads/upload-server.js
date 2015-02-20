@@ -32,6 +32,15 @@ mkdirp.sync(UploadDir);
 
 console.log("==> Uploads located: %s", UploadDir);
 
+// limit uploads per user, log event
+function limitUploads(userId) {
+  // ограничем количество аплоада для юзера в 300 в день, на всякий случай
+  if (!Throttle.checkThenSet('upload.' + userId, 300, 86400000)) {
+    logEvent({type: Events.EV_SECURITY, userId: userId, name: "Upload overhead"});
+    throw new Meteor.Error(403, 'Слишком много загрузок');
+  }
+}
+
 function bigAvatarPath(name) {
   return path.join(UploadDir, 'av/src/', name + '.jpg');
 }
@@ -93,6 +102,8 @@ Meteor.methods({
     console.log(type, name);
     if (!this.userId)
       throw new Meteor.Error(401, 'User not logged in');
+
+    limitUploads(this.userId);
 
     var buffer = new Buffer(blob, 'binary'),
         i = incrementCounter('counters', 'pendingImg'),
