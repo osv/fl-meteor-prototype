@@ -33,6 +33,7 @@ Events.attachSchema(eventSchema);
 Events.EV_BOOT = 1;
 Events.EV_USERLOGIN = 2;
 Events.EV_PROFILE = 3;          // user profile changed
+Events.EV_SECURITY = 4;         // не нормальное поведение юзера
 
 if (Meteor.isServer) {
 
