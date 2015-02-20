@@ -1,10 +1,34 @@
 // https://gist.github.com/dariocravero/3922137
 // http://stackoverflow.com/questions/13201723/generating-and-serving-static-files-with-meteor
-
+// http://habrahabr.ru/post/242943/ - там пример gm.js
 
 // https://github.com/jtwalters/meteor-cache-busting-url
 // https://github.com/awwx/meteor-cache-forever-helper#readme
 // https://github.com/awwx/meteor-cache-forever
+
+
+/*
+
+ Каталоги картинок:
+
+ Avatars:
+ /i/av/src/X/Y/XY.jpg
+ /i/av/thm/X/Y/XY.png
+ /i/av/soc/X/Y/XY.png
+
+ Ожидаются к обрезки на аватар, их потом нужно удалить
+ /i/pending/orig/X/Y/XY.jpg
+ /i/pending/thum/X/Y/XY.jpg
+
+ Портфолио
+ /i/p/src/X/Y/XY.jpg
+ /i/p/thm/X/Y/XY.jpg
+ /i/p/org/X/Y/XY.jpg
+
+ Превью для портфолио
+ /i/p/pre/X/Y/XY.jpg
+ 
+*/
 
 var fs = Npm.require('fs'),
     path = Npm.require('path'),
@@ -72,6 +96,7 @@ var imageUtil = {
     function (buffer, path, w, h, cb) {
       gm(buffer)
         .resize(w, h)
+        .noProfile()            // noProfile() - Removes EXIF, ICM, etc profile data.
         .write(path, cb);
     }),
   cropAndResize: Meteor.wrapAsync(
@@ -79,11 +104,22 @@ var imageUtil = {
       gm(input)
         .crop(coords.w, coords.h, coords.x, coords.y)
         .resize(size, size)
+        .noProfile()
+        .write(out, cb);
+    }),
+  resizeCropCenter: Meteor.wrapAsync(
+    function (input, out, w, h, cb) {
+      gm(input)
+        .resize(w, "" + h + "^", ">")
+        .gravity('Center')
+        .crop(w, h, 0, 0)
+        .noProfile()
         .write(out, cb);
     }),
   convert: Meteor.wrapAsync(
     function (buffer, path, cb) {
       gm(buffer)
+        .noProfile()
         .write(path, cb);
     }),
 };
@@ -192,6 +228,97 @@ Meteor.methods({
       try {fs.unlinkSync( smallAvatarPath ( oldAvatar ) );} catch(e) {}
     }
     logEvent({type: Events.EV_PROFILE, userId: this.userId, name: "Photo removed"});
+  }
+});
+
+function id2filename(id) {
+  return id.toString().replace(/(\w)(\w)/, "$1/$2/$1$2");
+}
+function smallPortfolioPath(id) {
+  return path.join(UploadDir, 'p/thm/', id2filename(id) + '.jpg');
+}
+
+function bigPortfolioPath(id) {
+  return path.join(UploadDir, 'p/src/', id2filename(id) + '.jpg');
+}
+
+function origPortfolioPath(id) {
+  return path.join(UploadDir, 'p/org/', id2filename(id) + '.jpg');
+}
+
+function previewPortfolioPath(id) {
+  return path.join(UploadDir, 'p/pre/', id2filename(id) + '.jpg');
+}
+/*
+ 
+ Ниже методы для аплоада фото портфолио
+
+ */
+
+Meteor.methods({
+  // upload photo
+  'portfolio-upload': function(portfolioId, type, name, blob) {
+    console.log('upload '+name);
+    if (!type.match(/^image\//)) {
+      throw new Meteor.Error(403, "Файл не является изображением");
+    }
+
+    if (!this.userId)
+      throw new Meteor.Error(401, 'User not logged in');
+
+    limitUploads(this.userId);
+
+    // смотрим есть ли такое вообще портфолио, на всякий случай
+    if (!Portfolio.findOne({_id: portfolioId, userId: this.userId}))
+      throw new Meteor.Error(400, 'There no such portfolio');
+
+    var buffer = new Buffer(blob, 'binary'),
+        imgId = incrementCounter('counters', 'portfolio'),
+        // Имя файла, в подкаталоги распихиваю, '98765' -> '9/8/98765'
+        // Это нужно чтобы дохрена файлов не держать в одном каталоге
+        origfile = origPortfolioPath ( imgId ),
+        thumbfile = smallPortfolioPath ( imgId ),
+        bigfile = bigPortfolioPath ( imgId );
+
+    mkdirp.sync(path.dirname(origfile));
+    mkdirp.sync(path.dirname(thumbfile));
+    mkdirp.sync(path.dirname(bigfile));
+
+    // TODO: try catch
+    try {
+      imageUtil.convert( buffer, origfile );
+      imageUtil.resizeCropCenter(origfile, thumbfile, 300, 200);
+      imageUtil.resizeCropCenter(origfile, bigfile, 800, 600);
+    } catch (e) {
+      try {fs.unlinkSync( origfile); } catch(er) {}
+      try {fs.unlinkSync( thumbfile); } catch(er) {}
+      try {fs.unlinkSync( bigfile); } catch(er) {}
+      throw new Meteor.Error(500, 'Ошибка загрузки файла ' + name);
+    }
+    Portfolio.update(portfolioId, {$addToSet: {img: {i: imgId}}});
+
+    // Делаем превьюшку если нет превю.
+    var p = Portfolio.findOne(portfolioId, {fields: {preview: 1}});
+    if (!p.preview) {
+      var prevId = incrementCounter('counters', 'preview'),
+          previewfile = previewPortfolioPath(prevId);
+      mkdirp.sync(path.dirname(previewfile));
+      imageUtil.resizeCropCenter(origfile, previewfile, 300, 200);
+      Portfolio.update(portfolioId, {$set: {preview: prevId}});
+    }
+  },
+  'portfolio-rm-image': function(portfolioId, imageId) {
+    check(portfolioId, String);
+    check(imageId, String);
+
+    if (!this.userId)
+      throw new Meteor.Error(401, 'User not logged in');
+
+    Portfolio.update({_id: portfolioId, userId: this.userId}, {$pull: {img: {i: imageId}}});
+
+    try {fs.unlinkSync( smallPortfolioPath( imageId )); } catch(e) {}
+    try {fs.unlinkSync( bigPortfolioPath( imageId )); } catch(e) {}
+    try {fs.unlinkSync( origPortfolioPath( imageId )); } catch(e) {}
   },
 });
 

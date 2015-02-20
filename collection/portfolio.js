@@ -15,15 +15,15 @@
 
 var portfolioSchema = {};
 
-portfolioSchema.Images = {
+portfolioSchema.Images = new SimpleSchema ({
   i: {                          // идентификатор картинки
     type: String
   },
-  desc: {                       // описание картинки
-    type: String,
-    optional: true
-  },
-};
+  // desc: {                       // описание картинки
+  //   type: String,
+  //   optional: true
+  // },
+});
 
 // image portfolio
 portfolioSchema.Portfolio = new SimpleSchema({

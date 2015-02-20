@@ -1,7 +1,190 @@
 <template name="profilePortfolio">
+  <h1>Портфолио</h1>
   <div class="row">
-    <div class="col-md-8">
-      {{ _id }}
+    <div class="col-md-12">
+      <div class="col-md-offset-3 col-sm-offset-3 portfolio-input">
+        <div class="input-group">
+          {{#if showPublishBtn}}
+            <button class="btn btn-lg btn-success">Опубликовать</button>
+          {{/if}}
+          {{#if showDeleteBtn}}
+            <button class="btn btn-lg btn-link">Удалить</button>
+          {{/if}}
+        </div>
+      </div>
     </div>
   </div>
+  <div class="row">
+    <div class="col-md-12">
+      {{>portfolioInput label="Заголовок" t="portfolioTitle"
+        context=this
+        popover="Краткое описание работы."
+      }}
+      {{>portfolioInput label="Описание" t="portfolioDescribe"
+        context=this
+        popover="Здесь можно оставить подробности о работе."
+      }}
+      {{#if preview}}
+      {{! Этот елемент не показываем, чтобы не перегружать интерфейс
+         и чтобы не запрокрастинировал юзер,
+
+          preview - будет сгенерирована автоматически, юзеру ж позволим ее сменить
+         }}
+        {{>portfolioInput label="Превью" t="portfolioPreview"
+          context=this
+          popover="Превью работы. Именно это фото будет показана в списке ваших работ. Вы можете загрузить, или же она будет взята с первой вашей загруженной фотографии."
+        }}
+      {{/if}}
+      {{>portfolioInput label="Фото работ" t="portfolioPhoto"
+        context=this
+      }}
+    </div>
+  </div>
+</template>
+
+<template name="portfolioInput">
+  {{! bootstrap grid
+
+        @label - описание поля
+        @t - имя шаблона с виджетами
+        @popover - текст подсказки
+
+        }}
+  <div class="row portfolio-input">
+    <div class="col-md-3 col-sm-3">
+      <p class="text-right">
+        <label>
+          {{label}}
+        </label>
+      </p>
+    </div>
+    {{#if popover}}
+      <div class="col-md-9 col-sm-9" data-content="{{popover}}"
+           data-title="{{label}}" data-placement="auto right" data-trigger="hover" data-toggle="popover" data-delay='{"show":"300", "hide":"100"}'>
+        {{ > Template.dynamic template=t data=context}}
+      </div>
+    {{else}}
+      <div class="col-md-9 col-sm-9">
+        {{ > Template.dynamic template=t data=context}}
+      </div>
+    {{/if}}
+  </div>
+</template>
+
+<template name="portfolioTitle">
+  {{#if edit}}
+    <form class="form-horizontal">
+      <fieldset>
+        <div class="form-group">
+          <div class="input-group">
+            <input class="form-control" value="{{ title }}">
+            <div class="input-group-btn">
+              <button data-action="save"   type="submit" class="btn btn-success">Сохранить</button>
+              <button data-action="cancel" type="button" class="btn btn-warning">Отменить</button>
+            </div>
+          </div>
+        </div>
+      </fieldset>
+    </form>
+  {{else}}
+    <div class="input-group">
+      {{#if title}}
+        <span class="input-group-addon">{{ title }}</span>
+      {{else}}
+        <span class="input-group-addon">
+          <i class="fa fa-exclamation-triangle"></i>
+          Заголовок не задан
+        </span>
+      {{/if}}
+      <div class="input-group-btn">
+        <button data-action="edit" class="btn btn-default">
+          Изменить
+        </button>
+      </div>
+    </div>
+  {{/if}}
+</template>
+
+<template name="portfolioDescribe">
+  {{#if edit}}
+    <form class="form-horizontal">
+      <div class="form-group">
+        <textarea name="describe" class="form-control" rows="10">{{desc}}</textarea>
+      </div>
+      <div class="form-group">
+        <button data-action="save"   type="submit" class="btn btn-success">Сохранить</button>
+        <button data-action="cancel" type="button" class="btn btn-warning">Отменить</button>
+      </div>
+    </form>
+  {{else}}
+    <p>
+      {{! desc - поле в колекции Portfolio }}
+      {{#if desc }}
+        <div class="well">
+          {{#markdown}}{{ desc }}{{/markdown}}
+        </div>
+      {{else}}
+        <div class="alert alert-warning" role="alert">
+          <i class="fa fa-exclamation-triangle"></i>
+          Работа не описана
+        </div>
+      {{/if}}
+    </p>
+    <button data-action="edit" class="btn btn-default">
+      Редактировать
+    </button>
+  {{/if}}
+</template>
+
+<template name="portfolioPreview">
+  {{#if preview}}
+    <img class="img-thumbnail" src="{{portfolioUrlImgPreview preview}}">
+  {{/if}}
+  <div class="input-group">
+    <button data-action="load" class="btn btn-default">
+      Сменить
+    </button>
+  </div>
+</template>
+
+<template name="portfolioPhoto">
+  {{#if uploading}}
+    <p class="form-control-static">
+      <div class="alert alert-info">
+        Идет загрузка.
+        {{#if moreThanOne}}
+          Осталось {{uploading}} файла.
+        {{/if}}
+      </div>
+    </p>
+    {{>spinner}}
+  {{else}}
+    <div id="dropzone" class="dropzone active">
+      <div class="container">
+        Перетащите сюда файлы или нажмите
+        <span class="btn btn-file btn-primary">
+          Загрузить... <input type="file" multiple>
+        </span>
+      </div>
+    </div>
+  {{/if}}
+  {{#each img}}
+    {{>portfolioPhotoItem}}
+  {{else}}
+    <i class="fa fa-exclamation-triangle"></i>
+    Это портфолио не содержит фотографий
+  {{/each}}
+</template>
+
+<template name="portfolioPhotoItem">
+    <div class="col-sm-12 col-md-6">
+      <a href="{{portfolioURLorig i}}" target="_blank">
+        <img class="img-thumbnail" src="{{portfolioURLsmall i}}">
+      </a>
+      <div class="row">
+        <button data-action="rm" class="btn btn-sm btn-default">
+          Удалить
+        </button>
+      </div>
+    </div>
 </template>
