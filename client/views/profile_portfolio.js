@@ -147,7 +147,7 @@ Template.portfolioPhoto.events({
     e.stopPropagation();
     uploadFiles(e.originalEvent.dataTransfer.files, this._id);
   },        
-  'click [type="file"]': function(event, template) {
+  'change [type="file"]': function(event, template) {
     uploadFiles(event.target.files, this._id);
   },
 });
