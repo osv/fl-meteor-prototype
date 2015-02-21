@@ -65,24 +65,29 @@ function limitUploads(userId) {
   }
 }
 
-function bigAvatarPath(name) {
-  return path.join(UploadDir, 'av/src/', name + '.jpg');
+// "foobar" -> "f/o/foobar"
+function id2filename(id) {
+  return id.toString().replace(/(\w)(\w)/, "$1/$2/$1$2");
 }
 
-function smallAvatarPath(name) {
-  return path.join(UploadDir, 'av/thm/', name + '.png');
+function bigAvatarPath(id) {
+  return path.join(UploadDir, 'av/src/', id2filename(id) + '.jpg');
 }
 
-function microAvatarPath(name) {
-  return path.join(UploadDir, 'av/soc/', name + '.png');
+function smallAvatarPath(id) {
+  return path.join(UploadDir, 'av/thm/', id2filename(id) + '.png');
 }
 
-function pendingImgOrig(name) {
-  return path.join(UploadDir, 'pending/orig', name + '.png');
+function microAvatarPath(id) {
+  return path.join(UploadDir, 'av/soc/', id2filename(id) + '.png');
 }
 
-function pendingImgSmall(name) {
-  return path.join(UploadDir, 'pending/thum', name + '.jpg');
+function pendingImgOrig(id) {
+  return path.join(UploadDir, 'pending/orig', id2filename(id) + '.png');
+}
+
+function pendingImgSmall(id) {
+  return path.join(UploadDir, 'pending/thum', id2filename(id) + '.jpg');
 }
 
 // Async imagemagick utils
@@ -127,7 +132,7 @@ var imageUtil = {
 Meteor.methods({
   // загрузка аватарки в временной каталог, эта картинка можно обрезать и уже методомо
   // avatar-commit принять изменения.
-  // Метод возвращает {id: filename, size: realSize}
+  // Метод возвращает {id: imgId, size: realSize}
   //  id - идентификатор картинки, файл можно получить pendingImgOrig(id)
   //  size - размер этой картинки
   'avatar-upload': function(type, name, blob) {
@@ -142,12 +147,12 @@ Meteor.methods({
     limitUploads(this.userId);
 
     var buffer = new Buffer(blob, 'binary'),
-        i = incrementCounter('counters', 'pendingImg'),
+        imgId = incrementCounter('counters', 'pendingImg'),
         // Имя файла, в подкаталоги распихиваю, '98765' -> '9/8/98765'
         // Это нужно чтобы дохрена файлов не держать в одном каталоге
-        filename = i.toString().replace(/(\d)(\d)/, "$1/$2/$1$2"),
-        pngfile = pendingImgOrig ( filename ),
-        thumbfile = pendingImgSmall ( filename );
+        pngfile = pendingImgOrig ( imgId ),
+        thumbfile = pendingImgSmall ( imgId );
+
 
     mkdirp.sync(path.dirname(pngfile));
     mkdirp.sync(path.dirname(thumbfile));
@@ -158,13 +163,13 @@ Meteor.methods({
     imageUtil.resizeAndWrite( buffer, thumbfile, 400, 400);
 
     logEvent({type: Events.EV_PROFILE, userId: this.userId, name: "Photo loaded"});
-
-    return {id: filename, size: realSize};
+    console.log(imgId);
+    return {id: imgId, size: realSize};
   },
   // Установить аватарку, @pendingImg - идентификатор который получен был методом 'avatar-upload'
   // @coords - координаты обрезки
   'avatar-commit': function(pendingId, coords) {
-    check(pendingId, String);
+    check(pendingId, Match.Any);
     check(coords.x, Number);
     check(coords.y, Number);
     check(coords.w, Number);
@@ -180,10 +185,9 @@ Meteor.methods({
     if (!this.userId)
       throw new Meteor.Error(401, 'User not logged in');
 
-    var i = incrementCounter('counters', 'avatar'),
+    var avatarId = incrementCounter('counters', 'avatar'),
         // Имя файла, в подкаталоги распихиваю, '98765' -> '9/8/98765'
         // Это нужно чтобы дохрена файлов не держать в одном каталоге
-        avatarId   = i.toString().replace(/(\d)(\d)/, "$1/$2/$1$2"),
         bigname    = bigAvatarPath   ( avatarId ),
         thumbname  = smallAvatarPath ( avatarId ),
         microname  = microAvatarPath ( avatarId ),
@@ -208,7 +212,7 @@ Meteor.methods({
     }
     try {fs.unlinkSync( pendinfile );} catch(e) {}
     logEvent({type: Events.EV_PROFILE, userId: this.userId, name: "Photo saved",
-              desc: "![avatar](" + Meteor.absoluteUrl() + '/i/av/soc/' + avatarId + '.png)'});
+              desc: "![avatar](" + Meteor.absoluteUrl() + '/i' + microAvatarPath(avatarId)});
     return avatarId;
   },
   // удаляет аватарку
@@ -231,9 +235,6 @@ Meteor.methods({
   }
 });
 
-function id2filename(id) {
-  return id.toString().replace(/(\w)(\w)/, "$1/$2/$1$2");
-}
 function smallPortfolioPath(id) {
   return path.join(UploadDir, 'p/thm/', id2filename(id) + '.jpg');
 }
@@ -249,6 +250,11 @@ function origPortfolioPath(id) {
 function previewPortfolioPath(id) {
   return path.join(UploadDir, 'p/pre/', id2filename(id) + '.jpg');
 }
+
+function previewPendingPortfolioPath(id) {
+  return path.join(UploadDir, 'p/pre/', id2filename(id) + '.jpg');
+}
+
 /*
  
  Ниже методы для аплоада фото портфолио

@@ -1,8 +1,13 @@
+// "foobar" -> "f/o/foobar"
+function imgId2file(id) {
+  return id.toString().replace(/(\w)(\w)/, "$1/$2/$1$2");
+}
+
 UI.registerHelper('avatarUrlSmall', function(avatar) {
   if (!avatar)
     avatar = Meteor.user().profile.avatar;
   if (avatar)
-    return '/i/av/thm/' + avatar + '.png';
+    return '/i/av/thm/' + imgId2file (avatar) + '.png';
   else
     return '/default.jpg';
 });
@@ -11,24 +16,21 @@ UI.registerHelper('avatarUrlBig', function(avatar) {
   if (!avatar)
     avatar = Meteor.user().profile.avatar;
   if (avatar)
-    return '/i/av/src/' + avatar + '.jpg';
+    return '/i/av/src/' + imgId2file (avatar) + '.jpg';
   else
     return '/default.jpg';
 });
 
 UI.registerHelper('avatarUrlMicro', function(avatarId) {
-  return '/i/av/soc/' + avatarId + '.png';
+  return '/i/av/soc/' + imgId2file (avatar) + '.png';
 });
 
-UI.registerHelper('avatarForCrop', function(id) {
-    return '/i/pending/thum/' + id + '.jpg';
+UI.registerHelper('avatarForCrop', function(imgId) {
+  console.log('avatarForCrop', imgId);
+    return '/i/pending/thum/' + imgId2file (imgId) + '.jpg';
 });
 
 // portfolio
-
-function imgId2file(id) {
-  return id.replace(/(\w)(\w)/, "$1/$2/$1$2");
-}
 
 UI.registerHelper('portfolioURLsmall', function(id) {
     return '/i/p/thm/' + imgId2file(id) + '.jpg';
