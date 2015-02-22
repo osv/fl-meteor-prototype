@@ -1,4 +1,5 @@
 // Методы которые отвечают за аплоад картинок в packages/mol-uploads/upload-server.js
+
 Meteor.methods({
   // Создает новое портфолио с статусом {done: false} которое не будет опубликовано
   // нигде до нажатии кнопки "опубликовать", как на одеске короч
@@ -38,6 +39,22 @@ Meteor.methods({
                       userId: this.userId},
                      {$set: {desc: describe}});
   },
+  'portfolio-delete': function(portfolioId) {
+    check(portfolioId, String);
+
+    if (!this.userId)
+      throw new Meteor.Error(401, 'User not logged in');
+
+    var portfolio = Portfolio.findOne({_id: portfolioId, userId: this.userId});
+    if (!portfolio)
+      throw new Meteor.Error(400, 'There no such portfolio');
+
+    Meteor.call('portfolio-rm-uploads', portfolioId);
+
+    Portfolio.remove({_id: portfolioId, userId: this.userId});
+
+    logEvent({type: Events.EV_PROFILE, userId: this.userId, name: "Remove portfolio", desc: 'id: '+ portfolioId});
+  }
 });
 
 Meteor.publish('editMyPortfolio', function (pId) {

@@ -10,6 +10,24 @@ Template.profilePortfolio.helpers ({
   }
 });
 
+Template.profilePortfolio.events({
+  'click [data-action="remove"]': function(e, t) {
+    if(confirm("Удалить портфолио?")) {
+      t.$('[data-action="remove"]').prop('disabled', true);
+      Meteor.call('portfolio-delete', this._id, // this.id - айди портфолио
+                  function(err) {
+                    t.$('[data-action="remove"]').prop('disabled', false);
+                    if (err) {
+                      Messages.info(err.reason);
+                    } else {
+                      Router.go('/profile');
+                      Messages.info('Портфолио удалено');
+                    }
+                  });
+    }
+  }
+});
+
 /*
 
  Вспомагательный шаблон
@@ -89,14 +107,24 @@ Template.portfolioDescribe.events({
 
  */
 
-var uploadingPhotos = ReactiveVar(); //индикатор загрузки, количество файлов
+var uploadingPhotos = ReactiveVar(),  //индикатор загрузки, количество файлов
+    filesCount;                       // количество файлов для аплоада
 
 Template.portfolioPhoto.helpers({
   uploading: function() { return uploadingPhotos.get(); },
+  percent: function() {
+    // 3 1 3 = 35
+    // 3 2 2 = 75
+    // 3 3 1 = 100
+    console.log('%s perc %s', filesCount, 
+                100 * (filesCount - uploadingPhotos.get() +1) / filesCount);
+    return 100 * (filesCount - uploadingPhotos.get() +1) / filesCount;
+  },
   moreThanOne: function() { return uploadingPhotos.get() > 1 ? true : false; }
 });
 
 function uploadFiles(files, profileId) {
+  filesCount = files.length;
   _.each(files, function(file) {
 
     if (!file.type.match(/^image\//)) {
@@ -156,8 +184,8 @@ Template.portfolioPhoto.events({
 
 Template.portfolioPhotoItem.events({
   'click [data-action="rm"]': function(e, t) {
-    t.$('[data-action="rm"]').prop('disabled', true);
-    if(confirm("Удалить фото?"))
+    if(confirm("Удалить фото?")) {
+      t.$('[data-action="rm"]').prop('disabled', true);
       Meteor.call('portfolio-rm-image', Template.parentData(1)._id, this.i,
                   function(err) {
                     t.$('[data-action="rm"]').prop('disabled', false);
@@ -165,5 +193,6 @@ Template.portfolioPhotoItem.events({
                       Messages.info(err.reason);
                     }
                   });
+    }
   }
 });

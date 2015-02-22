@@ -326,6 +326,30 @@ Meteor.methods({
     try {fs.unlinkSync( bigPortfolioPath( imageId )); } catch(e) {}
     try {fs.unlinkSync( origPortfolioPath( imageId )); } catch(e) {}
   },
+  'portfolio-rm-uploads': function(portfolioId) {
+    check(portfolioId, String);
+
+    if (!this.userId)
+      throw new Meteor.Error(401, 'User not logged in');
+
+    var portfolio = Portfolio.findOne({_id: portfolioId, userId: this.userId});
+    if (!portfolio)
+      throw new Meteor.Error(400, 'There no such portfolio');
+
+    // удаляем файлы картинок
+    _.each(portfolio.img, function(img) {
+      console.log('remove %s', img.i);
+      try {fs.unlinkSync( smallPortfolioPath( img.i )); } catch(e) {}
+      try {fs.unlinkSync( bigPortfolioPath( img.i )); } catch(e) {}
+      try {fs.unlinkSync( origPortfolioPath( img.i )); } catch(e) {}
+    });
+
+    // удаляем файл превю портфолио
+    if (portfolio.preview) {
+      console.log('remove preview %s');
+      try {fs.unlinkSync( previewPortfolioPath( portfolio.preview )); } catch(e) {}
+    }
+  },
 });
 
 

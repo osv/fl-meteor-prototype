@@ -7,9 +7,7 @@
           {{#if showPublishBtn}}
             <button class="btn btn-lg btn-success">Опубликовать</button>
           {{/if}}
-          {{#if showDeleteBtn}}
-            <button class="btn btn-lg btn-link">Удалить</button>
-          {{/if}}
+          <button data-action="remove" class="btn btn-lg btn-link">Удалить</button>
         </div>
       </div>
     </div>
@@ -149,15 +147,14 @@
 
 <template name="portfolioPhoto">
   {{#if uploading}}
-    <p class="form-control-static">
-      <div class="alert alert-info">
+    <div class="progress">
+      <div class="progress-bar progress-bar-striped active" style="width: {{percent}}%">
         Идет загрузка.
         {{#if moreThanOne}}
           Осталось {{uploading}} файла.
         {{/if}}
       </div>
-    </p>
-    {{>spinner}}
+    </div>
   {{else}}
     <div id="dropzone" class="dropzone active">
       <div class="container">
