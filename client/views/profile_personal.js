@@ -775,7 +775,6 @@ Template.modalAvatarSelect.helpers({
 Template.modalAvatarSelect.events({
   'change #file': function(event, template) {
    var file = event.currentTarget.files[0];
-   console.log('file: ', file);
    if (!file.type.match(/^image\//)) {
      Messages.info("Файл не является изображением");
      return;
@@ -820,7 +819,6 @@ Template.modalAvatarCrop.rendered = function() {
       xsize = $pcnt.width(),
       ysize = $pcnt.height();
 
-  console.log(avatarRealSize);
   t.$('#crop').Jcrop({
     onChange: showPreview,
     onSelect: showPreview,
@@ -848,7 +846,6 @@ Template.modalAvatarCrop.rendered = function() {
   {
     // сохраняем координаты
     cropCoords = c;
-    console.log(c);
     if (parseInt(c.w) > 0)
     {
       var rx = xsize / c.w;
@@ -877,7 +874,6 @@ Template.modalAvatarCrop.events({
         $('#profileModal').modal('hide');
       }
     });
-    console.log(cropCoords.x, cropCoords.y, cropCoords.w, cropCoords.h);
   },
 });
 /* ****************************************************
