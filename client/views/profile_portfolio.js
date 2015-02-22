@@ -196,3 +196,119 @@ Template.portfolioPhotoItem.events({
     }
   }
 });
+
+/*
+
+ Превью фортфолио
+
+*/
+
+var uploadingPreview = ReactiveVar(false),
+    previewRealSize,
+    cropCoords,
+    previewID = ReactiveVar();
+
+Template.portfolioPreview.helpers({
+  cropId: function() { return previewID.get(); },
+  isLoading: function() { return uploadingPreview.get(); }
+});
+
+Template.portfolioPreview.events({
+  'change [type="file"]': function(e, t) {
+    var file = e.target.files[0],
+        self = this;
+    if (!file.type.match(/^image\//)) {
+      Messages.info("Файл не является изображением");
+      return;
+    }
+    if (file.size > 1200000) {
+      Messages.info("Файл слишком большой");
+      return;
+    }
+    var reader = new FileReader();
+    reader.onload = function(fileLoadEvent) {
+      uploadingPreview.set(true);
+      t.$('[type="file"]').prop('disabled', true);
+      Meteor.call('portfolio-upload-preview', self._id, file.type, file.name, reader.result, function(err, res){
+        uploadingPreview.set(false);
+        t.$('[type="file"]').prop('disabled', false);
+        if (err) {
+          Messages.info(err.reason);
+        } else {
+          previewRealSize = res.size;
+          previewID.set(res.id);
+
+          Meteor.defer(function() {
+            
+            var jcrop_api,
+                boundx,
+                boundy,
+                $preview = t.$('#jcrop-preview-pane'),
+                $pcnt = t.$('#jcrop-preview-pane .portfolio-preview-container'),
+                $pimg = t.$('#jcrop-preview-pane .portfolio-preview-container img'),
+
+                xsize = $pcnt.width(),
+                ysize = $pcnt.height(),
+
+                showPreview=function (c) {
+                  // сохраняем координаты
+                  cropCoords = c;
+                  if (parseInt(c.w) > 0)
+                  {
+                    var rx = xsize / c.w;
+                    var ry = ysize / c.h;
+
+                    $pimg.css({
+                      width: Math.round(rx * boundx) + 'px',
+                      height: Math.round(ry * boundy) + 'px',
+                      marginLeft: '-' + Math.round(rx * c.x) + 'px',
+                      marginTop: '-' + Math.round(ry * c.y) + 'px'
+                    });
+                  }
+                };
+
+            t.$('#crop').Jcrop({
+              onChange: showPreview,
+              onSelect: showPreview,
+              bgColor: 'black',
+              bgOpacity: 0.6,
+              bgFade: true,
+              trueSize: [previewRealSize.width, previewRealSize.height],
+              aspectRatio: 1.3
+            },function(){
+              // Use the API to get the real image size
+              var bounds = this.getBounds();
+              boundx = bounds[0];
+              boundy = bounds[1];
+              // Store the API in the jcrop_api variable
+              jcrop_api = this;
+
+              jcrop_api.animateTo([20, 20, previewRealSize.width-40, previewRealSize.height, 40]);
+
+              // Move the preview into the jcrop container for css positioning
+              $preview.appendTo(jcrop_api.ui.holder);
+            });
+            t.$('.modal')
+              .modal('show')
+              .on('hidden.bs.modal', function (){
+                previewID.set(false); // это приведет к удалению формы модального окна и удалению Jcrop
+              });
+          });
+        }
+      });
+    };
+    reader.readAsBinaryString(file);
+  },
+  'click [data-action="save"]': function(e, t) {
+    uploadingPreview.set(true);
+    Meteor.call('portfolio-commit-preview', this._id, previewID.get(), cropCoords, function(err) {
+      uploadingPreview.set(false);
+      if (err) {
+        Messages.info(err.reason);
+        } else {
+          Messages.info('Фото установлено');
+          t.$('.modal').modal('hide');
+        }
+    });
+  }
+});

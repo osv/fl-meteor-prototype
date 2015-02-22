@@ -251,8 +251,12 @@ function previewPortfolioPath(id) {
   return path.join(UploadDir, 'p/pre/', id2filename(id) + '.jpg');
 }
 
-function previewPendingPortfolioPath(id) {
-  return path.join(UploadDir, 'p/pre/', id2filename(id) + '.jpg');
+function pendingOrigPortfolioPath(id) {
+  return path.join(UploadDir, 'p/pending/src/', id2filename(id) + '.jpg');
+}
+
+function pendingSmallPortfolioPath(id) {
+  return path.join(UploadDir, 'p/pending/thm/', id2filename(id) + '.jpg');
 }
 
 /*
@@ -306,10 +310,10 @@ Meteor.methods({
     // Делаем превьюшку если нет превю.
     var p = Portfolio.findOne(portfolioId, {fields: {preview: 1}});
     if (!p.preview) {
-      var prevId = incrementCounter('counters', 'preview'),
+      var prevId = incrementCounter('counters', 'portfolioThumb'),
           previewfile = previewPortfolioPath(prevId);
       mkdirp.sync(path.dirname(previewfile));
-      imageUtil.resizeCropCenter(origfile, previewfile, 300, 200);
+      imageUtil.resizeCropCenter(origfile, previewfile, 200, 150);
       Portfolio.update(portfolioId, {$set: {preview: prevId}});
     }
   },
@@ -350,6 +354,76 @@ Meteor.methods({
       try {fs.unlinkSync( previewPortfolioPath( portfolio.preview )); } catch(e) {}
     }
   },
+  // Метод возвращает {id: filename, size: realSize}
+  //  id - идентификатор картинки
+  //  size - размер этой картинки
+  'portfolio-upload-preview': function(portfolioId, type, name, blob) {
+    if (!type.match(/^image\//)) {
+      throw new Meteor.Error(403, "Файл не является изображением");
+    }
+
+    if (!this.userId)
+      throw new Meteor.Error(401, 'User not logged in');
+
+    limitUploads(this.userId);
+
+    // смотрим есть ли такое вообще портфолио, на всякий случай
+    if (!Portfolio.findOne({_id: portfolioId, userId: this.userId}))
+      throw new Meteor.Error(400, 'There no such portfolio');
+
+    var buffer = new Buffer(blob, 'binary'),
+        pendingId = incrementCounter('counters', 'previewPending'),
+        pendingfile = pendingOrigPortfolioPath (pendingId),
+        thumbfile = pendingSmallPortfolioPath (pendingId);
+
+    mkdirp.sync(path.dirname(pendingfile));
+    mkdirp.sync(path.dirname(thumbfile));
+
+    var realSize = imageUtil.getSize(buffer);
+
+    imageUtil.convert( buffer, pendingfile );
+    imageUtil.resizeAndWrite( buffer, thumbfile, 400, 400);
+
+    return {id: pendingId, size: realSize};
+  },
+  'portfolio-commit-preview': function(portfolioId, pendingId, coords) {
+    check(pendingId, Match.Any);
+    check(coords.x, Number);
+    check(coords.y, Number);
+    check(coords.w, Number);
+
+    _.each(['w', 'x', 'y'], function(it) {
+      coords[it] = Math.floor(coords[it]); });
+
+     coords.h = coords.w / 1.333 ;
+
+    if (coords.w < 10)
+      throw new Meteor.Error(403, 'Выделите фрагмент фотографии');
+
+    if (!this.userId)
+      throw new Meteor.Error(401, 'User not logged in');
+
+    var portfolio = Portfolio.findOne({_id: portfolioId, userId: this.userId}, {fields: {preview: 1}});
+    if (!portfolio)
+      throw new Meteor.Error(400, 'There no such portfolio');
+
+    var prevId = incrementCounter('counters', 'portfolioThumb'),
+        previewfile = previewPortfolioPath( prevId ),
+        pendingfile = pendingOrigPortfolioPath (pendingId);
+
+    mkdirp.sync(path.dirname(previewfile));
+
+    imageUtil.cropAndResize(pendingfile, previewfile, coords, 200, 150);
+
+    // удаляем старую превюшку
+    if (portfolio.preview) {
+      try {fs.unlinkSync( previewPortfolioPath( portfolio.preview )); } catch(e) {}
+    }
+
+    Portfolio.update(portfolioId, {$set: {preview: prevId}});
+
+    try {fs.unlinkSync( bigAvatarPath   ( pendingfile ) );} catch(e) {}
+  }
 });
 
 

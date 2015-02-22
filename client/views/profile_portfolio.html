@@ -139,10 +139,45 @@
     <img class="img-thumbnail" src="{{portfolioUrlImgPreview preview}}">
   {{/if}}
   <div class="input-group">
-    <button data-action="load" class="btn btn-default">
-      Сменить
-    </button>
+    <span class="btn btn-file btn-default">
+      Сменить <input type="file" multiple> 
+    </span>
   </div>
+
+  <!-- модальное окно обрезки превьюшки -->
+  {{#if isLoading}}
+    {{> spinner}}
+  {{/if}}
+  {{#if cropId}}
+    <div class="modal" role="dialog" arria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">x</button>
+            <h3>Обрезка фотографии</h3>
+            <div class="modal-body">
+              <div class="row">
+                <img id="crop" class="img-thumbnail" src="{{portfolioForCrop cropId}}">
+              </div>
+              <div class="row">
+                <div id="jcrop-preview-pane">
+                  <div class="portfolio-preview-container">
+                    <img id="preview" class="jcrop-preview" src="{{portfolioForCrop cropId}}">
+                  </div>
+                </div>
+              </div>
+              <div class="form-group">
+                <div class="input-group">
+                  <button data-action="save" class="btn btn-primary">Сохранить</button>
+                  <button data-dismiss="modal" class="btn btn-default">Отменить</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  {{/if}}
 </template>
 
 <template name="portfolioPhoto">

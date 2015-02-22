@@ -47,3 +47,7 @@ UI.registerHelper('portfolioURLorig', function(id) {
 UI.registerHelper('portfolioUrlImgPreview', function(id) {
     return '/i/p/pre/' + imgId2file(id) + '.jpg';
 });
+
+UI.registerHelper('portfolioForCrop', function(id) {  
+    return '/i/p/pending/thm/' + imgId2file(id) + '.jpg';
+});
