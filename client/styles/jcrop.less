@@ -1,40 +1,48 @@
 
-/* Apply these styles only when #avatar-preview-pane has
+/* Apply these styles only when #jcrop-preview-pane has
    been placed within the Jcrop widget */
-.jcrop-holder  {
-    #avatar-preview-pane {
-        display: block;
-        position: absolute;
-        z-index: 2000;
-        top: 0px;
-        right: -120px;
-        padding: 6px;
-        border: 1px rgba(0,0,0,.4) solid;
-        background-color: white;
 
-        -webkit-border-radius: 3px;
-        -moz-border-radius: 3px;
-        border-radius: 3px;
+// миксинги для jcrop
+.holder() {
+    display: block;
+    position: absolute;
+    z-index: 2000;
+    top: 0px;
+    right: -120px;
+    padding: 6px;
+    border: 1px rgba(0,0,0,.4) solid;
+    background-color: white;
 
-        -webkit-box-shadow: 1px 1px 5px 2px rgba(0, 0, 0, 0.2);
-        -moz-box-shadow: 1px 1px 5px 2px rgba(0, 0, 0, 0.2);
-        box-shadow: 1px 1px 5px 2px rgba(0, 0, 0, 0.2);
-    }
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    border-radius: 3px;
+
+    -webkit-box-shadow: 1px 1px 5px 2px rgba(0, 0, 0, 0.2);
+    -moz-box-shadow: 1px 1px 5px 2px rgba(0, 0, 0, 0.2);
+    box-shadow: 1px 1px 5px 2px rgba(0, 0, 0, 0.2);
+}
+
+.container(@width: 100px, @height: 100px) {
+    width: @width;
+    height: @height;
+    overflow: hidden;
 }
 
 .jcrop-keymgr {
     top: 0 !important;
 }
 
-#avatar-preview-pane {
-    .avatar-container {
-        width: 100px;
-        height: 100px;
-        overflow: hidden;
+.jcrop-holder  {
+    #jcrop-preview-pane {
+        .holder();
     }
-
 }
 
-.jcrop-holder {
-    margin-bottom: 15px;
+#jcrop-preview-pane {
+    .avatar-container {
+        .container();
+    }
+    .portfolio-preview-container {
+        .container(100px, 75px);
+    }
 }
