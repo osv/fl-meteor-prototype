@@ -105,10 +105,10 @@ var imageUtil = {
         .write(path, cb);
     }),
   cropAndResize: Meteor.wrapAsync(
-    function (input, out, coords, size, cb) {
+    function (input, out, coords, w, h, cb) {
       gm(input)
         .crop(coords.w, coords.h, coords.x, coords.y)
-        .resize(size, size)
+        .resize(w, h)
         .noProfile()
         .write(out, cb);
     }),
@@ -197,9 +197,9 @@ Meteor.methods({
     mkdirp.sync(path.dirname(thumbname));
     mkdirp.sync(path.dirname(microname));
 
-    imageUtil.cropAndResize(pendinfile, bigname, coords, 400);
-    imageUtil.cropAndResize(pendinfile, thumbname, coords, 200);
-    imageUtil.cropAndResize(pendinfile, microname, coords, 50);
+    imageUtil.cropAndResize(pendinfile, bigname, coords, 400, 400);
+    imageUtil.cropAndResize(pendinfile, thumbname, coords, 200, 200);
+    imageUtil.cropAndResize(pendinfile, microname, coords, 50, 50);
 
     var oldAvatar = Meteor.users.findOne(this.userId, {fields: {"profile.avatar": 1}})
           .profile.avatar;
