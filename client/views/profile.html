@@ -6,7 +6,18 @@
   <div class="row">
     <div class="container">
       {{#each portfolio}}
-        
+        <div class="row">
+          <div class="col-sm-3">
+            <a href="/profile/portfolio/{{id}}">
+              <img class="img-thumbnail" width="200" height="150" src="{{portfolioUrlImgPreview preview}}">
+            </a>
+          </div>
+          <div class="col-sm-9">
+            <div class="row">
+              {{title}}
+            </div>
+          </div>
+        </div>
         {{else}}
         <div class="jumbotron">
           <h3>Нет проектов</h3>

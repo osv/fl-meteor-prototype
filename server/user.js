@@ -19,8 +19,7 @@ Accounts.resettedPasswordHook.push(function(user) {
 Meteor.publish('currentUser', function() {
   var user = Meteor.users.find({_id: this.userId},
                                {fields: {
-                                 isMaster: true,
-                                 isAdmin: true,
+                                 gal: true, // портфолио
                                  phone: true}});
   return user;
 });

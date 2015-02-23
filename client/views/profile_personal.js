@@ -24,7 +24,6 @@ var bsValidator = {
 
 Template.profilePersonal.helpers({
   currentModal: function() {
-    Session.get()
     return Session.get("currentProfileModal");
   }
 });

@@ -9,3 +9,9 @@ Template.profilePub.events({
     });
   },
 });
+
+Template.profilePub.helpers({
+  portfolio: function() {
+    return Meteor.user().gal;
+  }
+});

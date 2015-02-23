@@ -1,13 +1,12 @@
 Template.profilePortfolio.helpers ({
-  // Показываем опубликовать кнопку только если есть картинки в этом портфолио
+  // Показываем опубликовать кнопку только если есть картинки c превью в этом портфолио
   // и не опубликовано до этого
   showPublishBtn: function () {
-    return this.img && this.img.length && ! this.done;
+    return this.img &&
+      this.img.length &&        // есть картинки
+      this.preview &&           // есть превью
+      ! this.done;              // не опубликовано до этого
   },
-  // показываем удалить кнопку только если уже опубликовано
-  showDeleteBtn: function() {
-    return this.done;
-  }
 });
 
 Template.profilePortfolio.events({
@@ -25,6 +24,16 @@ Template.profilePortfolio.events({
                     }
                   });
     }
+  },
+  'click [data-action="publish"]': function() {
+    Meteor.call('portfolio-publish', this._id, function (err) {
+      if (err) {
+        Messages.info(err.reason);
+      } else {
+        Router.go('/profile');
+        Messages.info('Портфолио теперь доступно другим');
+      }
+    });
   }
 });
 
@@ -274,7 +283,7 @@ Template.portfolioPreview.events({
               bgOpacity: 0.6,
               bgFade: true,
               trueSize: [previewRealSize.width, previewRealSize.height],
-              aspectRatio: 1.3
+              aspectRatio: 1.333
             },function(){
               // Use the API to get the real image size
               var bounds = this.getBounds();

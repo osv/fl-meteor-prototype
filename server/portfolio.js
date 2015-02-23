@@ -27,6 +27,10 @@ Meteor.methods({
     Portfolio.update({_id: portfolioId,
                       userId: this.userId},
                      {$set: {title: title}});
+
+    Meteor.users.update({_id: this.userId, "gal.id": portfolioId},
+                        {$set: {"gal.$.title": title}});
+
   },
   'portfolio-describe': function(portfolioId, describe) {
     check(portfolioId, String);
@@ -38,6 +42,29 @@ Meteor.methods({
     Portfolio.update({_id: portfolioId,
                       userId: this.userId},
                      {$set: {desc: describe}});
+  },
+  'portfolio-publish': function(portfolioId) {
+    check(portfolioId, String);
+
+    if (!this.userId)
+      throw new Meteor.Error(401, 'User not logged in');
+
+    var portfolio = Portfolio.findOne({_id: portfolioId, userId: this.userId},
+                                     {fields: {preview: 1, title: 1, img: 1}});
+
+    if (!portfolio)
+      throw new Meteor.Error(400, 'There no such portfolio');
+
+    if (!portfolio.preview || !portfolio.img)
+      throw new Meteor.Error(503, 'Вы не загрузили фотографии');
+    
+    Portfolio.update({_id: portfolioId, userId: this.userId}, {$set: {done: true}});
+    // добавим к юзеру информацию о портфолио
+    Meteor.users.update(this.userId,
+                        {$addToSet:
+                         {gal: {id: portfolioId,
+                                preview: portfolio.preview,
+                                title: portfolio.title }}});
   },
   'portfolio-delete': function(portfolioId) {
     check(portfolioId, String);
@@ -52,6 +79,7 @@ Meteor.methods({
     Meteor.call('portfolio-rm-uploads', portfolioId);
 
     Portfolio.remove({_id: portfolioId, userId: this.userId});
+    Meteor.users.update(this.userId, {$pull: {gal: {id: portfolioId}}});
 
     logEvent({type: Events.EV_PROFILE, userId: this.userId, name: "Remove portfolio", desc: 'id: '+ portfolioId});
   }

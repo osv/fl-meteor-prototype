@@ -11,6 +11,20 @@ Schema.Contacts = new SimpleSchema({
   }
 });
 
+// денормализировання часть портфолио, только превьюшка тайтл
+Schema.Portfolio = new SimpleSchema({
+  id: {                         // айди
+    type: String,
+  },
+  preview: {                       // картинка предпросмотра
+    type: String,
+  },
+  title: {                      // тайстл
+    type: String,
+    optional: true   
+  }
+});
+
 Schema.UserProfile = new SimpleSchema({
   completeName: {
     type: String,
@@ -63,6 +77,10 @@ Schema.User = new SimpleSchema({
   },
   profile: {
     type: Schema.UserProfile,
+    optional: true
+  },
+  gal: {                        // портфолио
+    type: [Schema.Portfolio],
     optional: true
   },
   services: {

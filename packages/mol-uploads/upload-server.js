@@ -205,6 +205,7 @@ Meteor.methods({
           .profile.avatar;
 
     Meteor.users.update(this.userId, {$set: {"profile.avatar": avatarId}});
+
     if (oldAvatar) {
       // старую аватарочку удаляем
       try {fs.unlinkSync( bigAvatarPath   ( oldAvatar ) );} catch(e) {}        
@@ -259,11 +260,19 @@ function pendingSmallPortfolioPath(id) {
   return path.join(UploadDir, 'p/pending/thm/', id2filename(id) + '.jpg');
 }
 
-/*
+/*      
  
  Ниже методы для аплоада фото портфолио
 
  */
+
+function updateUserPortfolioPrev(userId, portfolioId, previewId) {
+  // Смотри схему юзера,
+  // Обновляем превю
+  Meteor.users.update({_id: userId, "gal.id": portfolioId},
+                        {$set: {"gal.$.preview": previewId}});
+}
+
 
 Meteor.methods({
   // upload photo
@@ -313,8 +322,12 @@ Meteor.methods({
       var prevId = incrementCounter('counters', 'portfolioThumb'),
           previewfile = previewPortfolioPath(prevId);
       mkdirp.sync(path.dirname(previewfile));
+
       imageUtil.resizeCropCenter(origfile, previewfile, 200, 150);
+
       Portfolio.update(portfolioId, {$set: {preview: prevId}});
+
+      updateUserPortfolioPrev(this.userId, portfolioId, prevId);
     }
   },
   'portfolio-rm-image': function(portfolioId, imageId) {
@@ -323,6 +336,10 @@ Meteor.methods({
 
     if (!this.userId)
       throw new Meteor.Error(401, 'User not logged in');
+
+    var portfolio = Portfolio.findOne({_id: portfolioId, userId: this.userId});
+    if (!portfolio)
+      throw new Meteor.Error(400, 'There no such portfolio');
 
     Portfolio.update({_id: portfolioId, userId: this.userId}, {$pull: {img: {i: imageId}}});
 
@@ -421,6 +438,8 @@ Meteor.methods({
     }
 
     Portfolio.update(portfolioId, {$set: {preview: prevId}});
+
+    updateUserPortfolioPrev(this.userId, portfolioId, prevId);
 
     try {fs.unlinkSync( bigAvatarPath   ( pendingfile ) );} catch(e) {}
   }
