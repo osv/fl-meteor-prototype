@@ -1,35 +1,8 @@
-@import "./lib/custom.bootstrap.import.less";
-
 .navbar-nav {
     a {
         outline: none !important;
     }
 }
-
-// row елемент в профиле
-.profile-input {
-    margin-bottom: 5px;
-}
-
-.portfolio-input {
-    margin-bottom: 10px;
-}
-
-// дропзона в портфолио
-.dropzone {
-    line-height:100px;
-    border:5px dashed @gray;
-    height: 300px;
-    background-color: @gray-lighter;
-    margin-bottom: @jumbotron-padding;
-    padding: @jumbotron-padding (@jumbotron-padding / 2);
-    font-size: ceil((@font-size-base * 1.5));
-    &.drag-over {
-        border:5px dashed green;
-    }
-}
-
-
 
 // контейнер аватарки в странице профиля
 .av-container {
@@ -38,34 +11,21 @@
     }
 }
 
-/*
-
- Кнопка для input[type=file]
- http://www.abeautifulsite.net/whipping-file-inputs-into-shape-with-bootstrap-3/
- 
-         <span class="btn btn-default btn-file">
-            Browse <input id="file" type="file">
-          </span>
-
-*/
-
-.btn-file {
-    position: relative;
-    overflow: hidden;
-
-    input[type=file] {
-        position: absolute;
-        top: 0;
-        right: 0;
-        min-width: 100%;
-        min-height: 100%;
-        font-size: 100px;
-        text-align: right;
-        filter: alpha(opacity=0);
-        opacity: 0;
-        outline: none;
-        background: white;
-        cursor: inherit;
-        display: block;
-    }
+.ellipsis {
+    overflow-x: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    word-break: break-all;
 }
+
+// немного контроля за отступом, там где нет <p> и не придумывать разные классы только для этого
+.voffset { margin-top: 2px; }
+.voffset1 { margin-top: 5px; }
+.voffset2 { margin-top: 10px; }
+.voffset3 { margin-top: 15px; }
+.voffset4 { margin-top: 30px; }
+.voffset5 { margin-top: 40px; }
+.voffset6 { margin-top: 60px; }
+.voffset7 { margin-top: 80px; }
+.voffset8 { margin-top: 100px; }
+.voffset9 { margin-top: 150px; }

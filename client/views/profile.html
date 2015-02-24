@@ -3,26 +3,30 @@
   <h2>Работы, проекты, портфолио
     <button data-action="new-portfolio" class="btn btn-primary pull-right"><i class="fa fa-plus-circle"></i>Добавить</button>
   </h2>
-  <div class="row">
-    <div class="container">
-      {{#each portfolio}}
+  <div class="row voffset clearfix">
+    <div class="container-fluid">
+      {{#if portfolio}}
         <div class="row">
-          <div class="col-sm-3">
-            <a href="/profile/portfolio/{{id}}">
-              <img class="img-thumbnail" width="200" height="150" src="{{portfolioUrlImgPreview preview}}">
-            </a>
-          </div>
-          <div class="col-sm-9">
-            <div class="row">
-              {{title}}
+          {{#each portfolio}}
+            <div class="col-lg-2 col-md-2 col-sm-3 col-xs-12 portfolioTile">
+              <div class="row">
+                <a href="/profile/portfolio/{{id}}">
+                  <img class="img-thumbnail" width="200" height="150" src="{{portfolioUrlImgPreview preview}}">
+                </a>
+                <div class="ellipsis">
+                  <a href="/profile/portfolio/{{id}}">
+                    {{title}}
+                  </a>
+                </div>
+              </div>
             </div>
-          </div>
+          {{/each}}
         </div>
-        {{else}}
+      {{else}}
         <div class="jumbotron">
           <h3>Нет проектов</h3>
         </div>
-      {{/each}}
+      {{/if}}
     </div>
   </div>
 
