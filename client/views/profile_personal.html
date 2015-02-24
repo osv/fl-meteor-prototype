@@ -4,7 +4,7 @@
 
   <legend>Регистрационные данные</legend>
   <div class="row">
-    <div class="col-md-8">
+    <div>
       {{>profileInput label="Телефон (вход)" t="profileLoginPhone"
         popover="Этот телефон используется для входа на сайт, другие не видят его если не указан как контактной."
         }}
@@ -16,7 +16,7 @@
   <legend>Публикуемые данные</legend>
 
   <div class="row">
-    <div class="col-md-8">
+    <div>
       {{>profileInput label="Контактное лицо" t="profileContactName"
         popover="Вы можете оставить только инициалы, но людям приятно знать с кем имеют честь разговаривать."
         }}
@@ -34,20 +34,14 @@
       {{>profileInput label="Вебсайт" t="profileWebsite"
         popover="Если у вас есть веб сайт укажите его"
         }}
+      {{>profileInput label="Контакты" t="profileContactsAndQR"
+        popover="Контакты по которым с вами могут связаться."
+      }}
     </div>
   </div>
-  <div class="row">
-    <div class="col-md-8">
-      {{>profileInput label="Контакты" t="profileContacts"
-        popover="Контакты по которым с вами могут связаться."
-        }}
-      <div id="profileModal" class="modal" role="dialog" arria-hidden="true">
-        {{ > Template.dynamic template=currentModal }}
-      </div>
-    </div>
-    <div class="col-md-4">
-      {{>profileQRcode}}
-    </div>
+
+  <div id="profileModal" class="modal" role="dialog" arria-hidden="true">
+    {{ > Template.dynamic template=currentModal }}
   </div>
 </template>
 
@@ -67,8 +61,8 @@
         @popover - текст подсказки
 
         }}
-  <div class="row voffset2">
-    <div class="col-md-4 col-sm-4">
+  <div class="row voffset3">
+    <div class="col-md-3 col-sm-4">
       <p class="text-right">
         <label>
           {{label}}
@@ -76,12 +70,12 @@
       </p>
     </div>
     {{#if popover}}
-      <div class="col-md-8 col-sm-8" data-content="{{popover}}"
+      <div class="col-md-9 col-sm-8" data-content="{{popover}}"
            data-title="{{label}}" data-placement="auto right" data-trigger="hover" data-toggle="popover" data-delay='{"show":"300", "hide":"100"}'>
         {{ > Template.dynamic template=t }}
       </div>
     {{else}}
-      <div class="col-md-8 col-sm-8">
+      <div class="col-md-9 col-sm-8">
         {{ > Template.dynamic template=t }}
       </div>
     {{/if}}
@@ -242,6 +236,17 @@
       </div>
     </fieldset>
   </form>
+</template>
+
+<template name="profileContactsAndQR">
+  <div class="row">
+    <div class="col-md-8 col-sm-12 col-xs-12">
+      {{>profileContacts}}
+    </div>
+    <div class="col-md-4 col-sm-4 hidden-xs">
+      {{>profileQRcode}}
+    </div>
+  </div>
 </template>
 
 <template name="profileContacts">
