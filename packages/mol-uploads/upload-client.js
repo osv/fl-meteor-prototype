@@ -22,7 +22,7 @@ UI.registerHelper('avatarUrlBig', function(avatar) {
 });
 
 UI.registerHelper('avatarUrlMicro', function(avatarId) {
-  return '/i/av/soc/' + imgId2file (avatar) + '.png';
+  return '/i/av/soc/' + imgId2file (avatarId) + '.png';
 });
 
 UI.registerHelper('avatarForCrop', function(imgId) {
