@@ -10,6 +10,7 @@ Package.onUse(function(api) {
   api.use('sha', ['client', 'server']);
   api.use('random', ['server']);
   api.use('zeroasterisk:throttle', 'server');
+  api.use('iron:router');
   api.use('check');
   api.use(['sacha:spin', 'templating'], 'client');
 
