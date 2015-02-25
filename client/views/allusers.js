@@ -26,7 +26,7 @@ Template.userInfoForAdmin.helpers({
     return isMaster(this) ? "Исполнитель" : "Заказчик";
   },
   isAdmin: function() {
-    return this.isAdmin ? "Админ" : "Нет";
+    return this.isAdmin;
   },
   created: function() {
     if (typeof this.createdAt !== 'undefined') {
@@ -45,8 +45,31 @@ Template.userInfoForAdmin.helpers({
 
 Template.userInfoForAdmin.rendered = function() {
   //initialize tooltip
-  $('[data-toggle=tooltip]').tooltip();
+  this.$('[data-toggle=tooltip]').tooltip();
 };
+
+Template.userInfoForAdmin.events({
+  'click [data-action="make-admin"]': function() {
+    if (confirm("Дать права админа " + this.profile.completeName + '?'))
+      Meteor.call('user-admin-grand', this._id, function(err) {
+        if (err)
+          Messages.info(err.reason);
+      });
+  },
+  'click [data-action="remove-admin"]': function() {
+    if (confirm("Убрать права админа для " + this.profile.completeName + '?'))
+      Meteor.call('user-admin-remove', this._id, function(err) {
+        if (err)
+          Messages.info(err.reason);
+      });
+  },
+  'click [data-action="logout"]': function() {
+    Meteor.call('user-force-logout', this._id, function(err) {
+      if (err)
+        Messages.info(err.reason);
+    });
+  }
+});
 
 Template.usersAdminSorter.events({
   'click': function(){

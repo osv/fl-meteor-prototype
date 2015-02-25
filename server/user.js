@@ -1,3 +1,5 @@
+var MASTERPHONE = '380123456789'; // телефон-логин для адмира который будет создан
+
 // устанавливаем хуки от sms-login
 Accounts.registerHook.push(function(user, id) {
   logEvent({type: Events.EV_USERLOGIN, name: 'User register',
@@ -219,12 +221,50 @@ Meteor.methods({
     } else
       throw new Meteor.Error (400, 'phone and fullName required for createUserPhone');
   },
+  /*
+
+   Сделать админом юзером, тот кто вызывает метод должен быть админом
+
+   */
+  'user-admin-grand': function(userId) {
+    check(userId, String);
+
+    if (!isAdmin())
+      throw new Meteor.Error(403, 'Только для администраторов');
+    
+    if (Meteor.users.update(userId, {$set: {isAdmin: true}}))
+      logEvent({type: Events.EV_SECURITY, name: "Grand admin right", userId: this.userId,
+                desc: 'Пользователь стал админом: ' + userId});
+  },
+  'user-admin-remove': function(userId) {
+    check(userId, String);
+
+    if (!isAdmin())
+      throw new Meteor.Error(403, 'Только для администраторов');
+
+    // специальный  пользователь  MASTERPHONE  (360123456789)  который
+    // создан при запуске, не позволяем убрать ему админа.
+    if (Meteor.users.update({_id: userId, phone: {$ne: MASTERPHONE}}, {$set: {isAdmin: false}}))
+      logEvent({type: Events.EV_SECURITY, name: "Remove admin right", userId: this.userId,
+                desc: 'Админские права убраны у пользователя' + userId});
+  },
+  // разлогинить
+  'user-force-logout': function(userId) {
+    check(userId, String);
+
+    if (!isAdmin())
+      throw new Meteor.Error(403, 'Только для администраторов');
+
+    if (Meteor.users.update(userId, {$set: {'services.resume.loginTokens': []} }))
+      logEvent({type: Events.EV_USERLOGIN, name: "Force logout", userId: this.userId,
+                desc: 'Пользователя '+ userId + ' принудительно разлогинили админом'});
+
+  }
 });
 
 Meteor.startup(function() {
 
   /*  Создадим админа если его нет с паролем admin */
-  var MASTERPHONE = '380123456789';
   var admin = Meteor.users.findOne({phone: MASTERPHONE});
   if (!admin) {
     admin = Accounts.insertUserDoc( {},

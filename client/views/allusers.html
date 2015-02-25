@@ -51,7 +51,34 @@
     </td>
     <td><span data-toggle="tooltip" data-placement="top" title="{{created}}">{{fromNow}}</span></td>
     <td>{{role}}</td>
-    <td>{{isAdmin}}</td>
+    <td>
+      <div class="btn-group">
+        <button type="button" class="btn btn-sm btn-primary dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+          {{#if isAdmin}}
+            Админ
+          {{else}}
+            Нет
+          {{/if}}
+          <span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu" role="menu">
+          {{#unless isAdmin}}
+            <li><a href="#" data-action="make-admin">
+              <i class="fa fa-fw fa-arrow-circle-up"></i>
+              Сделать админом</a></li>
+              {{else}}
+              <li><a href="#" data-action="remove-admin">
+                <i class="fa fa-fw fa-arrow-circle-down"></i>
+                Убрать админа</a></li>
+          {{/unless}}
+          <li class="divider"></li>
+          <li><a href="#" data-action="logout">
+                <i class="fa fa-fw fa-sign-out"></i>
+                Принудительно разлогинить</a>
+          </li>
+        </ul>
+      </div>
+    </td>
   </tr>
 </template>
 
