@@ -23,7 +23,7 @@ Template.userInfoForAdmin.helpers({
     return formatPhone( this.phone );
   },
   role: function(){
-    return this.isMaster ? "Исполнитель" : "Заказчик";
+    return isMaster(this) ? "Исполнитель" : "Заказчик";
   },
   isAdmin: function() {
     return this.isAdmin ? "Админ" : "Нет";

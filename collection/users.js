@@ -89,11 +89,11 @@ Schema.User = new SimpleSchema({
     blackbox: true
   },
   isAdmin: {
-    type: String,
+    type: Boolean,
     optional: true,
   },
   isMaster: {
-    type: String,
+    type: Boolean,
     optional: true,
   }
 });
