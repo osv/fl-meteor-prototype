@@ -170,6 +170,55 @@ Meteor.methods({
 
     Meteor.users.update(this.userId, {$pull: {"profile.contacts": {type: type, contact: contact}}});
   },
+
+  /*
+
+   Создание юзера админом.
+
+   TODO: нужно ли это, может удолить?
+   */
+  'admin-create-user': function(phone, fullName, isMaster) {
+    check(phone, String);
+    check(fullName, String);
+    check(isMaster, Boolean);
+
+    if (!isAdmin())
+      throw new Meteor.Error(403, 'Только для администраторов');
+
+    fullName = fullName.trim();
+
+    if (fullName.length < 3 || fullName.length > 58 || !phone)
+      throw new Meteor.Error(400, "Need to set a fullName or phone");
+
+    if (phone && fullName) {
+      var user = Meteor.users.findOne({"phone": phone});
+      // create user
+      if (!user) {
+        var password = Random.id(6); 
+
+        user = {
+          profile: { completeName: fullName },
+          phone: phone,
+          password: SHA256('user'),
+          isMaster: isMaster,
+        };
+        var id = Accounts.insertUserDoc({}, user);
+
+        Accounts.registerHook.map(function(currentFunction) { currentFunction(user, id); });
+
+        logEvent({type: Events.EV_USERLOGIN, name: 'User register by Admin', userId: this.userId,
+                  desc: 'Юзер создан админом\n\n' +
+                  '* ID:' + id + '\n' +
+                  '* мастер: ' + isMaster + '\n'+
+                  '* телефон:' + phone});
+
+        return id;
+      } else {
+        throw new Meteor.Error(403, "Этот номер уже используется.");
+      }
+    } else
+      throw new Meteor.Error (400, 'phone and fullName required for createUserPhone');
+  },
 });
 
 Meteor.startup(function() {

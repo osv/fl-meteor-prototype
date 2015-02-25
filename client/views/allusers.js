@@ -56,3 +56,71 @@ Template.usersAdminSorter.events({
     Paginations.usersPages.set("sort", sort);
   }
 });
+
+/*
+ новый юзер
+*/
+Template.formNewUserByAdmin.rendered = function(){
+  console.log(this.$('form'));
+  this.$('form').formValidation({
+    framework: 'bootstrap',
+    message: 'This value is not valid',
+    fields: {
+      name: {
+        validators: {
+          notEmpty: {
+            message: "Имя не должно быть пустым"
+          },
+          stringLength: {
+            min: 2,
+            max: 50,
+            message: "Не поленись набрать хотя б 2 символа",
+          },
+        }
+      },
+      phone: {
+        validators: {
+          callback: {
+            callback: function(value) {
+              return isPhoneValid( cleanPhoneNumber( value ) );
+            },
+            message: 'Проверьте правильность ввода номера'
+          }
+        }
+      },
+      status: {
+        validators: {
+          notEmpty: {
+            message: "Вы должны выбрать вашу роль"
+          }
+        }}
+    }}).on('success.form.fv', function(e) {
+    e.preventDefault();
+  });
+};
+
+Template.formNewUserByAdmin.events({
+  'submit form': function(e, t) {
+    e.preventDefault();
+
+    t.$('form').data('formValidation').validate();
+    if (!t.$('form').data('formValidation').isValid())
+      return false;
+
+    Meteor.call('admin-create-user', 
+                cleanPhoneNumber (t.find('[name="phone"]').value),
+                t.find('[name="name"]').value,
+                t.$('#master').prop('checked'),
+                function (err) {
+                  if (err)
+                    Messages.info(err.reason);
+                  else {
+                    // завставляем обновить табличку
+                    var keyVal = 13;
+                    $('#searchPhone').val(this.userId).trigger({
+                      type: 'keypress', keyCode: keyVal, which: keyVal, charCode: keyVal });
+                  }
+                });
+    return false;
+  }
+});

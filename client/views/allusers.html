@@ -1,6 +1,20 @@
 <template name="usersAdmin">
 
   <h1>Список пользователей в системе</h1>
+
+  <div class="row voffset2">
+    <div class="col-md-5 panel panel-info">
+      <div class="panel-heading">
+        Создать пользователя
+      </div>
+      <div class="panel-body">
+        {{>formNewUserByAdmin}}
+      </div>
+      <div class="panel-footer">
+        Создаст юзера с паролем "user", штука для тестирования, потом будет удалена, возможно
+      </div>
+    </div>
+  </div>
   
   <div class="pull-right">
     {{> pagesNav}}
@@ -43,4 +57,27 @@
 
 <template name="usersAdminSorter">
   {{ label }}<a href="#" ><i class="fa fa-sort fa-fw"></i></a>
+</template>
+
+<template name="formNewUserByAdmin">
+  <form class="form-horizontal">
+    {{>profileInputHelperPhone name="phone" label="телефон"}}
+    {{>profileInputHelper name="name" label="ФИО" icon="fa fa-user" placeholder="Ивано Петрович"}}
+    <div id="switch-fgrp" class="form-group has-feedback" style="margin-bottom: 25px">
+      <label class="col-md-5 control-label" for="inputSuccess3">Вид регистрации</label>
+      <div class="col-md-7">
+        <div class="input-group">
+          <div class="btn-group" data-toggle="buttons">
+            <label class="btn btn-default">
+              <input type="radio" name="status" id="customer" autocomplete="off"> Заказчик
+            </label>
+            <label class="btn btn-default">
+              <input type="radio" name="status" id="master" autocomplete="off"> Исполнитель
+            </label>
+          </div>
+        </div>
+      </div>
+    </div>
+    {{>profileSubmitButton text="Создать пользователя" class="btn-danger"}}
+  </form>
 </template>
