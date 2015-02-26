@@ -210,6 +210,7 @@ Meteor.methods({
       // старую аватарочку удаляем
       try {fs.unlinkSync( bigAvatarPath   ( oldAvatar ) );} catch(e) {}        
       try {fs.unlinkSync( smallAvatarPath ( oldAvatar ) );} catch(e) {}
+      try {fs.unlinkSync( microAvatarPath ( oldAvatar ) );} catch(e) {}
     }
     try {fs.unlinkSync( pendinfile );} catch(e) {}
     logEvent({type: Events.EV_PROFILE, userId: this.userId, name: "Avatar saved",
@@ -231,6 +232,7 @@ Meteor.methods({
       // TODO: Возможно следует сохранить гдето удаленную?
       try {fs.unlinkSync( bigAvatarPath   ( oldAvatar ) );} catch(e) {}        
       try {fs.unlinkSync( smallAvatarPath ( oldAvatar ) );} catch(e) {}
+      try {fs.unlinkSync( microAvatarPath ( oldAvatar ) );} catch(e) {}
     }
     logEvent({type: Events.EV_PROFILE, userId: this.userId, name: "Avatar removed"});
   }
