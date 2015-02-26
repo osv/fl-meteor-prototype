@@ -767,6 +767,7 @@ Template.profileAvatar.helpers({
 });
 
 Template.modalAvatarSelect.helpers({
+  myId: function() {return Meteor.userId; },
   isLoading: function() {
     return uploadingAvatar.get();
   },

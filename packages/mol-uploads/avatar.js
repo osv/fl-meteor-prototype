@@ -27,17 +27,44 @@ Template.avatar.helpers({
   class: function () { return this.class; },
 
   imageUrl: function () {
-    var user = this.user ? this.user : Meteor.users.findOne(this.userId);
+    var user = this.user ? this.user : Meteor.users.findOne(this.userId),
+        url;
+
     if (user.profile.avatar) {
       console.log('avatar: ' + user.profile.avatar);
-      if      (this.size === 'large') return '/i/av/thm/' + imgId2file (user.profile.avatar) + '.png';
-      else if (this.size === 'small') return '/i/av/soc/' + imgId2file (user.profile.avatar) + '.png';
+      if      (this.size === 'large') url = '/i/av/thm/' + imgId2file (user.profile.avatar) + '.png';
+      else if (this.size === 'small') url = '/i/av/soc/' + imgId2file (user.profile.avatar) + '.png';
       else if (this.size === 'extra-small')
-        /* */                         return '/i/av/soc/' + imgId2file (user.profile.avatar) + '.png';
-      else /* по у молчанию */        return '/i/av/src/' + imgId2file (user.profile.avatar) + '.jpg';
+        /* */                         url = '/i/av/soc/' + imgId2file (user.profile.avatar) + '.png';
+      else /* по у молчанию */        url = '/i/av/src/' + imgId2file (user.profile.avatar) + '.jpg';
     } else {
-      return this.defAv ? this.defAv : false;
+      if (this.defAv)
+        url = this.defAv;
     }
+
+    // установим необходимые классы когда отрендерится все.
+    var t = Template.instance();
+    Meteor.defer(function() {
+      if (url) {
+        t.$('img')
+          .on('error', function () {
+            t.$('.avatar')
+              .addClass('avatar-hide-image')
+              .removeClass('avatar-hide-initials');;
+          })
+          .on('load', function () {
+            t.$('.avatar')
+              .addClass('avatar-hide-initials')
+              .removeClass('avatar-hide-image');
+          });
+        } else {
+          t.$('.avatar')
+            .addClass('avatar-hide-image')
+            .removeClass('avatar-hide-initials');
+        }
+
+    });
+    return url;
   },
 
   initialsCss: function () {
@@ -63,21 +90,16 @@ Template.avatar.helpers({
 
 });
 
-// Use a reactive variable to store image load success/failure
-Template.avatar.created = function () {
-//  this.hasImage = new ReactiveVar(true);
-};
-
-// Determine if image loaded successfully and set hasImage variable
-Template.avatar.rendered = function () {
-  var self = this;
-  this.$('img')
-    .on('error', function () {
-      self.$('.avatar').addClass('avatar-hide-image');
-    })
-    .on('load', function () {
-      self.$('.avatar')
-        .addClass('avatar-hide-initials')
-        .removeClass('avatar-hide-image');
-    });
-};
+// // Determine if image loaded successfully
+// Template.avatar.rendered = function () {
+//   var self = this;
+//   this.$('img')
+//     .on('error', function () {
+//       self.$('.avatar').addClass('avatar-hide-image');
+//     })
+//     .on('load', function () {
+//       self.$('.avatar')
+//         .addClass('avatar-hide-initials')
+//         .removeClass('avatar-hide-image');
+//     });
+// };

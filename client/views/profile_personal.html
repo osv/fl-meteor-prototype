@@ -340,7 +340,7 @@
 
 <template name="profileAvatar">
   <div class="av-container">
-    {{> avatar userId=myId shape="rounded" }}
+    {{> avatar userId=myId shape="rounded" defAv="/img/avatar.png"}}
     <div class="input-group voffset2">
       <button data-action="avatar" class="btn btn-default btn-sm">Загрузить</button>
       {{#if haveAvatart}}
@@ -429,8 +429,8 @@
           {{> spinner}}
         {{/if}}
         <div class="av-container">
-          <img class="img-thumbnail" width="200" height="200" src="{{avatarUrlSmall}}">
-          <div class="input-group">
+          {{> avatar userId=myId shape="rounded" defAv="/img/avatar.png"}}
+          <div class="input-group voffset2">
             <span class="btn btn-file  btn-primary">
               Загрузить... <input id="file" type="file">
             </span>
@@ -461,7 +461,7 @@
               </div>
             </div>
           </div>
-          <div class="form-group">
+          <div class="form-group voffset2">
             <div class="input-group">
               <button data-action="save" class="btn btn-primary">Сохранить</button>
               <button data-dismiss="modal" class="btn btn-default">Отменить</button>

@@ -20,6 +20,7 @@ mol-uploads
            (size="large" || "small" || "extra-small")
            (shape="rounded" || "circle")
            (class="some custom classes")
+           (avDef="/img/defaultAvatar.png")
            (bgColor="<color>") (txtColor="<color>") }}
 ```
 
@@ -29,7 +30,8 @@ mol-uploads
   Собственно аватарка будет взята с user.profile.avatar или инициалы user.profile.completeName
   - `size`: Размер  "large" (80px), "small" (30px), or "extra-small" (20px), или 200 если не задано
   - `class`: дополнительный клас
-
+  - `avDef`: Аватарка по умолчанию, если нет, то будут инициалы
+  
 ## Методы
 
 Аплоад аватарки.
