@@ -162,7 +162,7 @@ Meteor.methods({
     imageUtil.convert( buffer, pngfile );
     imageUtil.resizeAndWrite( buffer, thumbfile, 400, 400);
 
-    logEvent({type: Events.EV_PROFILE, userId: this.userId, name: "Photo loaded"});
+    logEvent({type: Events.EV_PROFILE, userId: this.userId, name: "Avatar uploaded"});
     console.log(imgId);
     return {id: imgId, size: realSize};
   },
@@ -197,9 +197,9 @@ Meteor.methods({
     mkdirp.sync(path.dirname(thumbname));
     mkdirp.sync(path.dirname(microname));
 
-    imageUtil.cropAndResize(pendinfile, bigname, coords, 400, 400);
-    imageUtil.cropAndResize(pendinfile, thumbname, coords, 200, 200);
-    imageUtil.cropAndResize(pendinfile, microname, coords, 50, 50);
+    imageUtil.cropAndResize(pendinfile, bigname, coords, 200, 200);
+    imageUtil.cropAndResize(pendinfile, thumbname, coords, 80, 80);
+    imageUtil.cropAndResize(pendinfile, microname, coords, 30, 30);
 
     var oldAvatar = Meteor.users.findOne(this.userId, {fields: {"profile.avatar": 1}})
           .profile.avatar;
@@ -212,8 +212,8 @@ Meteor.methods({
       try {fs.unlinkSync( smallAvatarPath ( oldAvatar ) );} catch(e) {}
     }
     try {fs.unlinkSync( pendinfile );} catch(e) {}
-    logEvent({type: Events.EV_PROFILE, userId: this.userId, name: "Photo saved",
-              desc: "![avatar](" + Meteor.absoluteUrl() + '/i' + microAvatarPath(avatarId)});
+    logEvent({type: Events.EV_PROFILE, userId: this.userId, name: "Avatar saved",
+              desc: "![avatar](" + Meteor.absoluteUrl() + '/i/av/soc/' + id2filename(avatarId) + '.png)'});
     return avatarId;
   },
   // удаляет аватарку
@@ -232,7 +232,7 @@ Meteor.methods({
       try {fs.unlinkSync( bigAvatarPath   ( oldAvatar ) );} catch(e) {}        
       try {fs.unlinkSync( smallAvatarPath ( oldAvatar ) );} catch(e) {}
     }
-    logEvent({type: Events.EV_PROFILE, userId: this.userId, name: "Photo removed"});
+    logEvent({type: Events.EV_PROFILE, userId: this.userId, name: "Avatar removed"});
   }
 });
 
@@ -303,7 +303,6 @@ Meteor.methods({
     mkdirp.sync(path.dirname(thumbfile));
     mkdirp.sync(path.dirname(bigfile));
 
-    // TODO: try catch
     try {
       imageUtil.convert( buffer, origfile );
       imageUtil.resizeCropCenter(origfile, thumbfile, 300, 200);
