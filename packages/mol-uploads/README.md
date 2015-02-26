@@ -1,11 +1,34 @@
 mol-uploads
 -----------
 
-Аплоад аватарок. Здеся включен также Jcrop.
+Аплоад аватарок, и картинок для портфолио. Здеся включен также Jcrop.
 
-Загрузки сохраняются в `.meteor/local/uploads`. Аватарки в под каталоге `av/src`, `av/thm`.
+Некоторая идеи взяты с пакета bengott:avatar, например `{{>avatar}}` но без реактивности.
+
+Загрузки сохраняются в `.meteor/local/uploads`. Аватарки в под каталоге `av/src`, `av/thm` и тд.
 
 Установить каталог аплоад, можно через переменную окружения `UPLOADDIR`.
+
+## UI Helpers
+
+* `{{>avatarForCrop imgId }}` - ссылка картинки, уменшенной, для обрезки (400x400)
+
+В html чтобы добавить аватарку:
+
+```handlebars
+{{> avatar (user=<user> || userId=<userId>)
+           (size="large" || "small" || "extra-small")
+           (shape="rounded" || "circle")
+           (class="some custom classes")
+           (bgColor="<color>") (txtColor="<color>") }}
+```
+
+Параметры:
+
+  - `user` или `userId`: обьект юзера.
+  Собственно аватарка будет взята с user.profile.avatar или инициалы user.profile.completeName
+  - `size`: Размер  "large" (80px), "small" (30px), or "extra-small" (20px), или 200 если не задано
+  - `class`: дополнительный клас
 
 ## Методы
 
@@ -28,11 +51,10 @@ meteor.call('avatar-upload', type, name, blob)
 Загруженная картинка должна быть обрезана, указать размеры следующим методом:
 
 ```js
+cropCoords = {x: 0, y:0, w: 100, h:100}
 Meteor.call('avatar-commit',  avatarId, cropCoords, function(err, avatarId)
 
 ```
-
-Где cropCoords = {x, y, w, h};
 
 Удаление аватарки юзером
 
@@ -40,20 +62,34 @@ Meteor.call('avatar-commit',  avatarId, cropCoords, function(err, avatarId)
 meteor.call('avatar-remove')
 ```
 
-## UI Helpers
+Аплоад портфолио картинки `portfolio-upload`
 
-* `avatarForCrop` - ссылка картинки, уменшенной, для обрезки
-* `avatarUrlBig`
-* `avatarUrlSmall`
+Удаление - `portfolio-rm-image`
 
-```html
- <img src="{{avatarUrlSmall}}" >
-```
+Удаить все картинки в портфолио - `portfolio-rm-uploads`
 
+Загрузить превью для портфолио и получить размер и айди как в `avatar-upload` - `portfolio-upload-preview`
+
+Обрезать превью и сохранить `portfolio-commit-preview` примерно как в `avatar-commit`
+
+## Размеры
+
+Аватарки:
+* 200x200 - /i/av/src .. .jpg
+* 80x200 - /i/av/thm .. .png
+* 30x200 - /i/av/soc .. .png
+
+Портфолио. С размерами еще не определился но пока что:
+* `{{>portfolioURLsmall '123'}}` - 800x600 /i/p/thm/ .. .jpg
+* `{{>portfolioURLbig '123'}}` - 300x200 /i/p/src/ .. .jpg
+* `{{>portfolioURLorig '123'}}` - оригинал /i/p/org/ .. jpg
+* `{{>portfolioUrlImgPreview '123'}}` - 200x150 /i/p/pre/ .. .jpg превью дляпортфолио картинки
+(в колекции `portfolioSchema.Portfolio.preview`)
+  
 ## Cron
 
 Нужно будет потом сделать чистку каталога аплоада `pending` тоесть старше чем день нужно удалить,
-здесь временные картинки которые юзер задумал себе на аватарочку установить.
+здесь лежат временные картинки которые юзер задумал себе на аватарочку установить.
 
 ## Роутинг
 
@@ -109,3 +145,7 @@ http {
   }
 }
 ```
+
+## Безопасность
+
+Навсякий случай есть ограничение (`limitUploads`) на аплоад 300 картинок в день для юзера.

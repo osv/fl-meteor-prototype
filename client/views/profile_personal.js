@@ -762,6 +762,7 @@ Template.profileAvatar.events({
 });
 
 Template.profileAvatar.helpers({
+  myId: function() {return Meteor.userId; },
   haveAvatart: function() { return Meteor.user().profile.avatar; }
 });
 

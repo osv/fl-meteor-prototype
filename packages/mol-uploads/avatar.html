@@ -1,0 +1,10 @@
+<template name="avatar">
+  {{! Форсим показ инициалов, как только аватарка загрузится .avatar-hide-image будет убрано }}
+  {{! а будет добавлен .avatar-hide-initials }}
+  <div class="avatar {{size}} {{shape}} {{class}}">
+    {{#if imageUrl}}
+      <img class="avatar-image" src="{{imageUrl}}" {{dimensions}} />
+    {{/if}}
+    <span class="avatar-initials" style="{{initialsCss}}">{{initialsText}}</span>
+  </div>
+</template>

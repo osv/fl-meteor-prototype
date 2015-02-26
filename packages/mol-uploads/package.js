@@ -1,7 +1,7 @@
 Package.describe({
   name: "mol-uploads",
   summary: 'Upload manager',
-  version: '0.0.2',
+  version: '0.0.3',
 });
 
 Npm.depends({
@@ -12,7 +12,9 @@ Npm.depends({
 Package.onUse(function(api) {
   api.versionsFrom('0.9.0');
   api.use(['iron:router', 'zeroasterisk:throttle'], 'server');
-  api.use(['ui'], 'client');
+  api.use(['ui',                // убрать если не будет хелперов
+           'templating',
+           'stylus'], 'client');
 
   // for jcrop
   api.use('jquery', 'client');
@@ -25,5 +27,12 @@ Package.onUse(function(api) {
 
   api.addFiles('upload-server.js', 'server');
   api.addFiles('upload-client.js', 'client');
+
+  api.addFiles([
+    'avatar.html',
+    'avatar.js',
+    'avatar.styl'
+    ], 'client');
+
 });
 

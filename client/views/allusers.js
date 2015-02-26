@@ -28,6 +28,13 @@ Template.userInfoForAdmin.helpers({
   isAdmin: function() {
     return this.isAdmin;
   },
+  class: function() {
+    if (this.isAdmin) {
+      return 'danger';
+    } else if (this.isMaster) {
+      return 'info';
+    }
+  },
   created: function() {
     if (typeof this.createdAt !== 'undefined') {
       return moment(this.createdAt).format("YYYY/MM/DD hh:mm");

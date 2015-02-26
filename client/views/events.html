@@ -61,7 +61,7 @@
 </template>
 
 <template name="eventItem">
-  <tr>
+  <tr class="{{class}}">
     <td>{{name}}</td>
     <td>{{#markdown}}{{desc}}{{/markdown}}</td>
     <td><span data-toggle="tooltip" data-placement="top" title="{{created}}">{{fromNow}}</span></td>

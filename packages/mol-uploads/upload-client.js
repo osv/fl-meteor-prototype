@@ -3,28 +3,6 @@ function imgId2file(id) {
   return id.toString().replace(/(\w)(\w)/, "$1/$2/$1$2");
 }
 
-UI.registerHelper('avatarUrlSmall', function(avatar) {
-  if (!avatar)
-    avatar = Meteor.user().profile.avatar;
-  if (avatar)
-    return '/i/av/thm/' + imgId2file (avatar) + '.png';
-  else
-    return '/default.jpg';
-});
-
-UI.registerHelper('avatarUrlBig', function(avatar) {
-  if (!avatar)
-    avatar = Meteor.user().profile.avatar;
-  if (avatar)
-    return '/i/av/src/' + imgId2file (avatar) + '.jpg';
-  else
-    return '/default.jpg';
-});
-
-UI.registerHelper('avatarUrlMicro', function(avatarId) {
-  return '/i/av/soc/' + imgId2file (avatarId) + '.png';
-});
-
 UI.registerHelper('avatarForCrop', function(imgId) {
   console.log('avatarForCrop', imgId);
     return '/i/pending/thum/' + imgId2file (imgId) + '.jpg';

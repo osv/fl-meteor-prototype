@@ -57,7 +57,16 @@ Template.eventItem.helpers({
       case Events.EV_BOOT: return "Boot";
       case Events.EV_USERLOGIN: return "Login";
       case Events.EV_PROFILE: return "Profile";
+      case Events.EV_SECURITY: return "Security";
       default: return "-";
+    }
+  },
+  class: function() {
+    switch (this.type) {
+    case Events.EV_BOOT: return "warning";
+      //case Events.EV_USERLOGIN: return "";
+    case Events.EV_PROFILE: return "info";
+    case Events.EV_SECURITY: return "danger";
     }
   }
 });

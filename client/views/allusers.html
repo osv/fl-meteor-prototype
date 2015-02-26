@@ -19,7 +19,7 @@
   <div class="pull-right">
     {{> pagesNav}}
   </div>
-  <table class="table table-bordered table-striped">
+  <table class="table table-bordered">
     <thead>
       <tr>
         <th>{{> usersAdminSorter sort="phone" label="Телефон"}}</th>
@@ -43,10 +43,10 @@
 </template>
 
 <template name="userInfoForAdmin">
-  <tr>
+  <tr class="{{class}}">
     <td>{{formatedPhone}}</td>
     <td>
-      <img class="img-rounded" src="{{avatarUrlMicro profile.avatar}}">
+      {{>avatar user=this size="small" shape="rounded"}}
       {{ profile.completeName }}
     </td>
     <td><span data-toggle="tooltip" data-placement="top" title="{{created}}">{{fromNow}}</span></td>

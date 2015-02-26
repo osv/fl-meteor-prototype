@@ -340,10 +340,8 @@
 
 <template name="profileAvatar">
   <div class="av-container">
-    <a href="{{avatarUrlBig}}" target="_blank">
-      <img class="img-thumbnail" width="200" height="200" src="{{avatarUrlSmall}}">
-    </a>
-    <div class="input-group">
+    {{> avatar userId=myId shape="rounded" }}
+    <div class="input-group voffset2">
       <button data-action="avatar" class="btn btn-default btn-sm">Загрузить</button>
       {{#if haveAvatart}}
         <button data-action="remove" class="btn btn-warning btn-sm">Удалить</button>
