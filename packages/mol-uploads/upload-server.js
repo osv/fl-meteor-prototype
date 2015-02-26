@@ -214,7 +214,7 @@ Meteor.methods({
     }
     try {fs.unlinkSync( pendinfile );} catch(e) {}
     logEvent({type: Events.EV_PROFILE, userId: this.userId, name: "Avatar saved",
-              desc: "![avatar](" + Meteor.absoluteUrl() + '/i/av/soc/' + id2filename(avatarId) + '.png)'});
+              desc: "![avatar](" + Meteor.absoluteUrl() + 'i/av/soc/' + id2filename(avatarId) + '.png)'});
     return avatarId;
   },
   // удаляет аватарку
