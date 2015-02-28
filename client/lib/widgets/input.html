@@ -1,0 +1,47 @@
+<template name="wInput">
+  {{#if edit}}
+    {{>wFormInput context=context name=name placeholder=placeholder autocomplete=autocomplete addonIcon=addonIcon}}
+  {{else}}
+    <div class="input-group">
+      <span class="input-group-addon">
+        {{#if curvalue}}
+          {{#if isWebPage}}
+            <a href="{{ curvalue }}" target="_blank">{{ curvalue }}</a>
+          {{else}}
+            {{curvalue}}
+          {{/if}}
+        {{else}}
+          {{#if undefIcon}}
+          <i class="{{undefIcon}}"></i>
+          {{/if}}
+          {{ msgundef }}
+        {{/if}}
+      </span>
+      <div class="input-group-btn">
+        <button data-action="edit" class="btn btn-default">
+          Изменить
+        </button>
+      </div>
+    </div>
+  {{/if}}
+</template>
+
+<template name="wFormInput">
+  <form id="website" class="form-horizontal">
+    <fieldset>
+      <div class="form-group">
+        <div class="input-group">
+          {{#if addonIcon}}
+            <span class="input-group-addon"><i class="fa {{addonIcon}} fa-fw"></i></span>
+          {{/if}}
+          <input class="form-control" value="{{curvalue}}" name="{{name}}"
+                 placeholder="{{placeholder}}" autocomplete="{{autocomplete}}">
+          <div class="input-group-btn">
+            <button data-action="save"   type="submit" class="btn btn-success">Сохранить</button>
+            <button data-action="cancel" type="button" class="btn btn-warning">Отменить</button>
+          </div>
+        </div>
+      </div>
+    </fieldset>
+  </form>
+</template>
