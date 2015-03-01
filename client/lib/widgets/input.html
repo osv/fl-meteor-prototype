@@ -1,6 +1,8 @@
 <template name="wInput">
   {{#if edit}}
-    {{>wFormInput context=context name=name placeholder=placeholder autocomplete=autocomplete addonIcon=addonIcon}}
+    {{>wFormInput reactiveVar=reactiveVar
+      context=context
+      name=name placeholder=placeholder autocomplete=autocomplete addonIcon=addonIcon}}
   {{else}}
     <div class="input-group">
       <span class="input-group-addon">

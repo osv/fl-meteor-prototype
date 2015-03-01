@@ -85,11 +85,6 @@ function get(v) {
   else return null;
 }
 
-
-Template.wInput.created = function() {
-  this.data.context.$edit$ = ReactiveVar(false);
-};
-
 Template.wInput.helpers({
 
   'curvalue': function() { return get(this.context.getter);},
@@ -103,12 +98,18 @@ Template.wInput.helpers({
     return (v && v.match(/^http/)) ? true : false;
   },
   
-  'edit': function() { return this.context.$edit$.get(); },
+  'edit': function() { 
+    if (!this.reactiveVar) {
+      console.log('wInput, created reactive var');
+      this.reactiveVar = ReactiveVar(false);
+    }
+    return this.reactiveVar.get(); },
+  'reactiveVar': function() { return this.reactiveVar; }
 });
 
 Template.wInput.events({
   'click [data-action="edit"]': function(e, t) {
-    Template.currentData().context.$edit$.set(true);
+    this.reactiveVar.set(true);
     Meteor.defer(function() { t.$('input').focus(); });
   }
 });
@@ -120,13 +121,13 @@ Template.wFormInput.helpers({
 });
 
 Template.wFormInput.rendered = function () {
-
-  if (_.isFunction(this.data.context.rendered)) {
-    this.data.context.rendered(this);
+  var context = this.data.context;
+  if (_.isFunction(context.rendered)) {
+    context.rendered(this);
   }
-  if (_.isObject(this.data.context.validator)) {
+  if (_.isObject(context.validator)) {
     var fields = {};
-    fields[this.data.name] = {validators: this.data.context.validator};
+    fields[this.data.name] = {validators: context.validator};
     this.$('form').formValidation( {fields: fields} ).on('success.form.fv', function(e) {
       e.preventDefault();
     });
@@ -150,12 +151,13 @@ Template.wFormInput.events({
       value = context.transform(value);
     }
 
-    context.$edit$.set(false);
+    Template.currentData().reactiveVar.set(false);
 
     if (_.isFunction(context.setter))
       context.setter(value);
   },
   'click [data-action="cancel"]': function(){
-    Template.currentData().context.$edit$.set(false);
+    console.log(this);
+    this.reactiveVar.set(false);
   },
 });
