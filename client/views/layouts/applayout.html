@@ -1,15 +1,8 @@
-<!--
-          Сейчас футер и меню будет в одном это файле. 
--->
-
 <template name="appLayout">
   <div class="container">
     <header>
       {{> yield region='header'}}
     </header>
-    <nav>
-      {{> yield region='navigation'}}
-    </nav>
     <article>
       {{> yield}}
     </article>
@@ -17,28 +10,6 @@
       {{> yield region='footer'}}
     </footer>
   </div>
-</template>
-
-<template name="appNavigation">
-  <ul class="nav nav-tabs">
-    <li class="{{ifActiveRoute "/profile"}}">
-      <a href="/profile">Цены, фото</a>
-    </li>
-    <li class="{{ifActiveRoute "/profile/personal"}}">
-      <a href="/profile/personal">Личные данные</a>
-    </li>
-    <li class="{{ifActiveRoute "/profile/messages"}}">
-      <a href="/profile2">Сообщения <span class="badge">0</span></a>
-    </li>
-    {{#if isAdmin}}
-      <li class="{{ifActiveRouteRE "users"}}">
-        <a href="/users">Пользователи</a>
-      </li>
-      <li class="{{ifActiveRouteRE "events"}}">
-        <a href="/events">Сис. события</a>
-      </li>
-    {{/if}}
-  </ul>
 </template>
 
 <template name="appMenu">
@@ -55,9 +26,23 @@
         </button>
         <a class="navbar-brand" href="{{ pathFor 'home' }}"><img class="navbar-logo" src="/img/brand.png"></a>
       </div>
-
+      
       <!-- Collect the nav links, forms, and other content for toggling -->
       <div class="collapse navbar-collapse" id="collapse-navbar">
+        <ul class="nav navbar-nav">
+          <li class="{{ifActiveRoute "/profile/messages"}}" data-toggle="tooltip" title="Заказы в вашем регионе">
+            <a href="/jobs">Заказы</a>
+          </li>
+          <li class="{{ifActiveRoute "/profile/messages"}}" data-toggle="tooltip" title="Мастера в вашем регионе">
+            <a href="/masters">Мастера</a>
+          </li>
+          {{#if isAdmin}}
+            {{>adminNavItems}}
+          {{/if}}
+        <li class="{{ifActiveRoute "/profile/messages"}}" data-toggle="tooltip" title="Сообщения вам">
+          <a href="/profile/messages">Сообщений<span class="badge">0</span></a>
+        </li>
+        </ul>
 	<ul class="nav navbar-nav navbar-right">
           {{! смотри в accounts.html}}
           {{ > loginButton}}
@@ -65,6 +50,15 @@
       </div><!-- /.navbar-collapse -->
     </div><!-- /.container-fluid -->
   </nav>
+</template>
+
+<template name="adminNavItems">
+  <li class="{{ifActiveRouteRE "users"}}" data-toggle="tooltip" title="Администрирование пользователей в системе">
+    <a href="/users">Пользователи</a>
+  </li>
+  <li class="{{ifActiveRouteRE "events"}}" data-toggle="tooltip" title="Разные системные события">
+    <a href="/events">Events</a>
+  </li>
 </template>
 
 <template name="appFooter">

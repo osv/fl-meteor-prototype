@@ -1,13 +1,19 @@
 Router.configure({
   layoutTemplate: 'appLayout',
   notFoundTemplate: '404',
-  // notFoundTemplate: 'notFound',
   yieldTemplates: {
     'appMenu': {to: 'header'},
-    'appNavigation': {to: 'navigation'},
     'appFooter': {to: 'footer'}
   },
   progressSpinner : false,      // смотри multiply:iron-router-progress
+  waitOn: function() {
+    /* 
+     Всегда подписываемся на текущего юзера.
+     К содалению пакет accounts-base публикует токо [username profile]
+     а нам нужно шоп и другие поля, например isAdmin и т.д.
+     */
+    return Meteor.subscribe("currentUser");
+  }
 });
 
 // Custom options
@@ -18,12 +24,23 @@ Router.plugin('auth', {
   except: ['home', 'login'],
 });
 
+// базовый контроллер
 ApplicationController = RouteController.extend({
   onBeforeAction: function() {
     Paginations.usersPages.unsubscribe();
     Paginations.eventsPages.unsubscribe();
     return this.next();
   }
+});
+
+// контроллер для личного кабинета
+CabinetController = ApplicationController.extend({
+  layoutTemplate: 'appCabinet',
+  yieldTemplates: {
+    'appMenu': {to: 'header'},
+    'appNavigation': {to: 'navigation'},
+    'appFooter': {to: 'footer'}
+  },
 });
 
 Paginations = {};               // здесь будут все Meteor.Pagination для доступа с других мест клиента
@@ -33,10 +50,6 @@ Meteor.startup(function () {
   Router.route('/', {
     name: 'home',
     layoutTemplate: 'homeLayout',
-    yieldTemplates: {
-      'appMenu': {to: 'header'},
-      'appFooter': {to: 'footer'}
-    },
     controller: 'ApplicationController'
   });
 
@@ -47,17 +60,17 @@ Meteor.startup(function () {
 
   Router.route('/profile', {
     name: 'profilePub',
-    controller: 'ApplicationController'
+    controller: 'CabinetController'
   });
 
   Router.route('/profile/personal', {
     name: 'profilePersonal',
-    controller: 'ApplicationController'
+    controller: 'CabinetController'
   });
 
   Router.route('/profile/portfolio/:id', {
     name: 'profilePortfolio',
-    controller: 'ApplicationController',
+    controller: 'CabinetController',
     waitOn: function () {
       return Meteor.subscribe('editMyPortfolio', this.params.id); 
     },

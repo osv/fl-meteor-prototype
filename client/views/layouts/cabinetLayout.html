@@ -1,0 +1,32 @@
+<template name="appCabinet">
+  <div class="container">
+    <header>
+      {{> yield region='header'}}
+    </header>
+    <nav>
+      {{> yield region='navigation'}}
+    </nav>
+    <article>
+      {{> yield}}
+    </article>
+    <footer>
+      {{> yield region='footer'}}
+    </footer>
+  </div>
+</template>
+
+<template name="appNavigation">
+  <ul class="nav nav-tabs">
+    <li class="{{ifActiveRoute "/profile"}}">
+      <a href="/profile">
+        <i class="fa fa-list-alt"></i>
+        Цены, фото</a>
+    </li>
+    <li class="{{ifActiveRoute "/profile/personal"}}">
+      <a href="/profile/personal">
+        <i class="fa fa-cog"></i>
+        Личные данные
+      </a>
+    </li>
+  </ul>
+</template>

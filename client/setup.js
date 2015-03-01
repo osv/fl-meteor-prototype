@@ -1,10 +1,4 @@
 // кастомизация менюшки дропдавн
-Accounts.addDropMenus([{text: 'Ваш профиль', icon: 'fa fa-cogs', url: '/profile', id: 'profile'},
+Accounts.addDropMenus([{text: 'Личные данные', icon: 'fa fa-cog', url: '/profile/personal',},
+                       {text: 'Портфолио', icon: 'fa fa-list-alt', url: '/profile', },
                       ]);
-
-/* 
- Всегда подписываемся на текущего юзера.
- К содалению пакет accounts-base публикует токо [username profile]
- а нам нужно шоп и другие поля, например isAdmin и т.д.
-*/
-Meteor.subscribe("currentUser");
