@@ -102,34 +102,7 @@
 </template>
 
 <template name="profileContactName">
-  {{#if edit}}
-    {{>formContactName contactName=contactName}}
-  {{else}}
-    <div class="input-group">
-      <span class="input-group-addon">{{ contactName }}</span>
-      <div class="input-group-btn">
-        <button data-action="edit" class="btn btn-default">
-          Изменить
-        </button>
-      </div>
-    </div>
-  {{/if}}
-</template>
-
-<template name="formContactName">
-  <form class="form-horizontal">
-    <fieldset>
-      <div class="form-group">
-        <div class="input-group">
-          <input class="form-control" value="{{contactName}}" name="contact">
-          <div class="input-group-btn">
-            <button data-action="save"   type="submit" class="btn btn-success">Сохранить</button>
-            <button data-action="cancel" type="button" class="btn btn-warning">Отменить</button>
-          </div>
-        </div>
-      </div>
-    </fieldset>
-  </form>
+  {{>wInput context=context name="contact"}}
 </template>
 
 <template name="profileOverview">
@@ -202,40 +175,7 @@
 </template>
 
 <template name="profileWebsite">
-  {{#if edit}}
-    {{>formWebsite}}
-  {{else}}
-    <div class="input-group">
-      <span class="input-group-addon">
-        {{#if website}}
-          <a href="{{ website }}" target="_blank">{{ website }}</a>
-        {{else}}
-          Вебсайт не указан
-        {{/if}}
-      </span>
-      <div class="input-group-btn">
-        <button data-action="edit" class="btn btn-default">
-          Изменить
-        </button>
-      </div>
-    </div>
-  {{/if}}
-</template>
-
-<template name="formWebsite">
-  <form id="website" class="form-horizontal">
-    <fieldset>
-      <div class="form-group">
-        <div class="input-group">
-          <input class="form-control" value="{{currentWebsite}}" name="website">
-          <div class="input-group-btn">
-            <button data-action="save"   type="submit" class="btn btn-success">Сохранить</button>
-            <button data-action="cancel" type="button" class="btn btn-warning">Отменить</button>
-          </div>
-        </div>
-      </div>
-    </fieldset>
-  </form>
+  {{>wInput context=context name="website"}}
 </template>
 
 <template name="profileContactsAndQR">

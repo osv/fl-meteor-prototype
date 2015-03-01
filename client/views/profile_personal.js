@@ -237,70 +237,36 @@ Template.modalChangePassword.events({
 
  **************************************************** */
 
-var editContactName = new ReactiveVar(false);
-
 Template.profileContactName.helpers({
-  edit: function() {
-    return editContactName.get();
-  },
-  contactName: function(){
-    return Meteor.user().profile.completeName;
-  }
-});
+  context: function() {
+    return {
 
-Template.profileContactName.events({
-  'click [data-action="edit"]': function(e, t) {
-    editContactName.set(true);
-    Meteor.defer(function() { t.$('input').focus(); });
-  },
-});
+      getter: function() { 
+        return Meteor.user().profile.completeName; },
 
-Template.formContactName.rendered = function() {
-  this.$('form').formValidation({
-    fields: {
-      contact: {
-        validators: {
-          notEmpty: {
-            message: 'Не оставляйте контактное лицо пустым'
-          },
-          stringLength: {
-            max: 58,
-            min: 2,
-            message: 'Допустимо 58 символов'
+      setter: function(fullName) {
+        Meteor.call('change user name', fullName, function(err){
+          if (err)
+            Messages.info(err.reason);
+          else {
+            Messages.info('Контактное имя изменено');
+            buildQRCode();
           }
+        });
+      },
+     
+      validator: {
+        notEmpty: {
+          message: 'Не оставляйте контактное лицо пустым'
+        },
+        stringLength: {
+          max: 58,
+          min: 2,
+          message: 'Допустимо 58 символов'
         }
-      }
-    }
-  }).on('success.form.fv', function(e) {
-    e.preventDefault();
-  });
-};
-
-Template.formContactName.events({
-  'click [data-action="save"], submit form': function(e, t){
-    e.preventDefault();
-
-    t.$('form').data('formValidation').validate();
-    if (!t.$('form').data('formValidation').isValid())
-      return false;
-
-    var fullName = t.find('[name="contact"]').value;
-
-    editContactName.set(false);
-
-    Meteor.call('change user name', fullName, function(err){
-      if (err)
-        Messages.info(err.reason);
-      else {
-        Messages.info('Контактное имя изменено');
-        buildQRCode();
-      }
-    });
-    return false;
-  },
-  'click [data-action="cancel"]': function(){
-    editContactName.set(false);
-  },
+      },
+    };
+  }
 });
 
 
@@ -438,91 +404,55 @@ Template.formDescribe.events({
 
  **************************************************** */
 
-var editWebsite = new ReactiveVar(false);
-
 Template.profileWebsite.helpers({
-  edit: function() {
-    return editWebsite.get();
-  },
-  website: function(){
-    return Meteor.user().profile.website;
-  }
-});
+  context: function() {
+    return {
 
-Template.profileWebsite.events({
-  'click [data-action="edit"]': function(e, t) {
-    editWebsite.set(true);
-    Meteor.defer(function() { t.$('input').focus(); });
-  },
-});
+      getter: function() { 
+        return Meteor.user().profile.website; },
 
-Template.formWebsite.helpers({
-  currentWebsite: function(){
-    return Meteor.user().profile.website;
-  }
-});
-
-Template.formWebsite.rendered = function() {
-  this.$('form').formValidation({
-    fields: {
-      website: {
-        validators: {
-          uri: {
-            message: 'Веб сайт не валидный',
-            transformer: function($field, validator) {
-              // Get the field value
-              var value = $field.val();
-              // Check if it doesn't start with http:// or https://
-              if (value && value.substr(0, 7) !== 'http://' && value.substr(0, 8) !== 'https://') {
-                // then prefix with http://
-                value = 'http://' + value;
-              }
-              // Return new value
-              return value;
-            }
-          },
-          stringLength: {
-            max: 64,
-            message: "Длина URL не должна быть более 72 символов",
-          },
+      setter: function(webpage) {
+        // добавим http:// если нет
+        if (webpage && webpage.substr(0, 7) !== 'http://' && webpage.substr(0, 8) !== 'https://') {
+          webpage = 'http://' + webpage;
         }
+
+        Meteor.call('change user website', webpage, 
+                    function(err) {
+                      if (err)
+                        Messages.info(err.reason);
+                      else {
+                        Messages.info('Website изменен');
+                        buildQRCode();
+                      }
+                    });
+      },
+
+      undef: "Веб сайт не указан",
+      undefIcon: 'fa fa-exclamation',
+
+      validator: {
+        uri: {
+          message: 'Веб сайт не валидный',
+          transformer: function($field, validator) {
+            // Get the field value
+            var value = $field.val();
+            // Check if it doesn't start with http:// or https://
+            if (value && value.substr(0, 7) !== 'http://' && value.substr(0, 8) !== 'https://') {
+              // then prefix with http://
+              value = 'http://' + value;
+            }
+            // Return new value
+            return value;
+          }
+        },
+        stringLength: {
+          max: 64,
+          message: "Длина URL не должна быть более 72 символов",
+        },
       }
-    }
-  }).on('success.form.fv', function(e) {
-    e.preventDefault();
-  });
-};
-
-Template.formWebsite.events({
-  'click [data-action="save"], submit form': function(e, t){
-    e.preventDefault();
-
-    t.$('form').data('formValidation').validate();
-    if (!t.$('form').data('formValidation').isValid())
-      return false;
-
-    var website = t.find('[name="website"]').value;
-    // Check if it doesn't start with http:// or https://
-    if (website && website.substr(0, 7) !== 'http://' && website.substr(0, 8) !== 'https://') {
-      // then prefix with http://
-      website = 'http://' + website;
-    }
-
-    editWebsite.set(false);
-
-    Meteor.call('change user website', website, function(err){
-      if (err)
-        Messages.info(err.reason);
-      else {
-        Messages.info('Website изменен');
-        buildQRCode();
-      }
-    });
-    return false;
-  },
-  'click [data-action="cancel"]': function(){
-    editWebsite.set(false);
-  },
+    };
+  }
 });
 
 /* ****************************************************
