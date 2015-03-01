@@ -75,37 +75,7 @@
 </template>
 
 <template name="portfolioTitle">
-  {{#if edit}}
-    <form class="form-horizontal">
-      <fieldset>
-        <div class="form-group">
-          <div class="input-group">
-            <input class="form-control" value="{{ title }}">
-            <div class="input-group-btn">
-              <button data-action="save"   type="submit" class="btn btn-success">Сохранить</button>
-              <button data-action="cancel" type="button" class="btn btn-warning">Отменить</button>
-            </div>
-          </div>
-        </div>
-      </fieldset>
-    </form>
-  {{else}}
-    <div class="input-group">
-      {{#if title}}
-        <span class="input-group-addon">{{ title }}</span>
-      {{else}}
-        <span class="input-group-addon">
-          <i class="fa fa-exclamation-triangle"></i>
-          Заголовок не задан
-        </span>
-      {{/if}}
-      <div class="input-group-btn">
-        <button data-action="edit" class="btn btn-default">
-          Изменить
-        </button>
-      </div>
-    </div>
-  {{/if}}
+  {{>wInput context=context}}
 </template>
 
 <template name="portfolioDescribe">

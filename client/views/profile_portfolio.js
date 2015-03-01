@@ -51,32 +51,24 @@ Template.portfolioInput.rendered = function () {
   Заголовок
 */
 
-var editTitle = new ReactiveVar(false);
-
 Template.portfolioTitle.helpers({
-  edit: function() { return editTitle.get(); },
-});
-
-Template.portfolioTitle.events({
-  'click [data-action="edit"]': function(e, t) {
-    editTitle.set(true);
-    Meteor.defer(function() { t.$('input').focus(); });
-  },
-  'click [data-action="cancel"]': function() {
-    editTitle.set(false);
-  },
-  'submit form': function(e, t){
-    e.preventDefault();
-    Meteor.call('portfolio-title', this._id, t.find('input').value, 
-                function(err) {
-                  editTitle.set(false);
-                  if (err) {
-                    Messages.info(err.reason);
-                  }
-                });    
-    return false;
+  context: function() {
+    var self = this;
+    return {
+      getter: function() { return self.title; },
+      setter: function(value) {
+        console.log('setter', value);
+        Meteor.call('portfolio-title', self._id, value, 
+                    function(err) {
+                      if (err) {
+                        Messages.info(err.reason);
+                      }
+                    });
+      },
+      undef: 'Заголовок не задан',
+      undefIcon: 'fa fa-exclamation-triangle',
+    };
   }
-
 });
 
 /*
@@ -182,6 +174,7 @@ Template.portfolioPhoto.events({
   'drop #dropzone': function(e, t) {
     e.preventDefault();
     e.stopPropagation();
+    t.$('#dropzone').removeClass('drag-over');
     uploadFiles(e.originalEvent.dataTransfer.files, this._id);
   },        
   'change [type="file"]': function(event, template) {
