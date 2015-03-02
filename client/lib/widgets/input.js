@@ -17,6 +17,8 @@
 
  autocomplete, placeholder - опционально
 
+ addonIcon - иконка при редактировании
+
  context - обект
 
  * context.getter, context.setter 
@@ -24,7 +26,7 @@
  * undefIcon - иконка если getter отдаст false
  * validator - валидаторы formvalidator 
 
- Наппример для выше примера:
+ Например для выше примера:
 
  js:
 
@@ -99,11 +101,14 @@ Template.wInput.helpers({
   },
   
   'edit': function() { 
+    // создадим new ReactiveVar() если нет в data, ее мы передадим шаблону формы
     if (!this.reactiveVar) {
       console.log('wInput, created reactive var');
       this.reactiveVar = ReactiveVar(false);
     }
     return this.reactiveVar.get(); },
+
+  // передаем реактивную переменную нашему шаблону
   'reactiveVar': function() { return this.reactiveVar; }
 });
 
