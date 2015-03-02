@@ -1,0 +1,20 @@
+<template name="adminNavigation">
+  <ul class="nav nav-tabs">
+    {{>adminNavigationItems}}
+  </ul>
+</template>
+
+<template name="adminNavigationItems">
+  <li class="{{ifActiveRouteRE "users"}}">
+    <a href="/users">
+      <i class="fa fa-users fa-fw"></i>
+      Пользователи
+    </a>
+  </li>
+  <li class="{{ifActiveRouteRE "events"}}">
+    <a href="/events">
+      <i class="fa fa-crosshairs fa-fw"></i>
+      Сис. события
+    </a>
+  </li>
+</template>

@@ -59,19 +59,13 @@
       <i class="fa fa-gavel"></i>
       Админ <span class="caret"></span>
     </a>
+    {{! смотри в admin_shared.html покачто там шаблон
+
+      TODO: перенести в отдельный контроллер админку, когда будет свой pagionation
+
+      }}
     <ul class="dropdown-menu">
-      <li class="{{ifActiveRouteRE "users"}}">
-        <a href="/users">
-          <i class="fa fa-users fa-fw"></i>
-          Пользователи
-        </a>
-      </li>
-      <li class="{{ifActiveRouteRE "events"}}">
-        <a href="/events">
-          <i class="fa fa-crosshairs fa-fw"></i>
-          Сис. события
-        </a>
-      </li>
+      {{>adminNavigationItems}}
     </ul>
   </li>
 </template>
