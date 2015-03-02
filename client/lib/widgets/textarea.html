@@ -1,0 +1,44 @@
+<template name="wTextArea">
+  {{#if edit}}
+    {{>wFormTextArea reactiveVar=reactiveVar
+      context=context
+      name=name placeholder=placeholder rows=rows addonIcon=addonIcon}}
+  {{else}}
+    <p>     
+      {{#if curvalue}}
+        <div class="well">
+          {{#if isMarkdown}}
+            {{#markdown}}{{curvalue}}{{/markdown}}
+          {{else}}
+            {{curvalue}}
+          {{/if}}
+        </div>
+      {{else}}
+        <div class="alert {{alert}}" role="alert">
+          {{#if undefIcon}}
+            <i class="{{undefIcon}}"></i>
+          {{/if}}
+          {{ msgundef }}
+        </div>
+      {{/if}}
+    </p>
+    <button data-action="edit" class="btn btn-default">
+      Редактировать
+    </button>
+  {{/if}}
+</template>
+
+<template name="wFormTextArea">
+  <form id="website" class="form-horizontal">
+    <fieldset>
+      <div class="form-group">
+        <textarea placeholder="{{placeholder}}"
+                  name="{{name}}" class="form-control" rows="{{rows}}">{{curvalue}}</textarea>
+      </div>
+      <div class="form-group">
+        <button data-action="save"   type="submit" class="btn btn-success">Сохранить</button>
+        <button data-action="cancel" type="button" class="btn btn-warning">Отменить</button>
+      </div>
+    </fieldset>
+  </form>
+</template>
