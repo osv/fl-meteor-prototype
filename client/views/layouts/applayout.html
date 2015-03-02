@@ -36,14 +36,15 @@
           <li class="{{ifActiveRoute "/profile/messages"}}" data-toggle="tooltip" title="Мастера в вашем регионе">
             <a href="/masters">Мастера</a>
           </li>
+          <li class="{{ifActiveRoute "/profile/messages"}}" data-toggle="tooltip" title="Сообщения вам">
+            <a href="/profile/messages">Сообщений<span class="badge">0</span></a>
+          </li>
+        </ul>
+	<ul class="nav navbar-nav navbar-right">
           {{#if isAdmin}}
             {{>adminNavItems}}
           {{/if}}
-        <li class="{{ifActiveRoute "/profile/messages"}}" data-toggle="tooltip" title="Сообщения вам">
-          <a href="/profile/messages">Сообщений<span class="badge">0</span></a>
-        </li>
-        </ul>
-	<ul class="nav navbar-nav navbar-right">
+
           {{! смотри в accounts.html}}
           {{ > loginButton}}
 	</ul>
@@ -53,11 +54,25 @@
 </template>
 
 <template name="adminNavItems">
-  <li class="{{ifActiveRouteRE "users"}}" data-toggle="tooltip" title="Администрирование пользователей в системе">
-    <a href="/users">Пользователи</a>
-  </li>
-  <li class="{{ifActiveRouteRE "events"}}" data-toggle="tooltip" title="Разные системные события">
-    <a href="/events">Events</a>
+  <li class="dropdown">
+    <a href="#" class="dropdown-toggle" data-toggle="dropdown" data-tooltip="yes" title="Администрирование">
+      <i class="fa fa-gavel"></i>
+      Админ <span class="caret"></span>
+    </a>
+    <ul class="dropdown-menu">
+      <li class="{{ifActiveRouteRE "users"}}">
+        <a href="/users">
+          <i class="fa fa-users fa-fw"></i>
+          Пользователи
+        </a>
+      </li>
+      <li class="{{ifActiveRouteRE "events"}}">
+        <a href="/events">
+          <i class="fa fa-crosshairs fa-fw"></i>
+          Сис. события
+        </a>
+      </li>
+    </ul>
   </li>
 </template>
 

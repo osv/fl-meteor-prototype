@@ -3,5 +3,5 @@ Template.appMenu.rendered=function() {
 };
 
 Template.adminNavItems.rendered=function() {
-  this.$('[data-toggle="tooltip"]').tooltip({placement: "bottom"});
+  this.$('[data-tooltip="yes"]').tooltip({placement: "bottom"});
 };
