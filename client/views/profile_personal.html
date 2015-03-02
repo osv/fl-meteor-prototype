@@ -106,72 +106,11 @@
 </template>
 
 <template name="profileOverview">
-  {{#if edit}}
-    {{>formOverview}}
-  {{else}}
-    <p>
-      {{#if overview}}
-        <div class="well">
-          {{ overview }}
-        </div>
-      {{else}}
-        <div class="alert alert-warning" role="alert">
-          <i class="fa fa-exclamation-triangle"></i>
-          Краткое описание не заполнено
-        </div>
-      {{/if}}
-    </p>
-    <button data-action="edit" class="btn btn-default">
-      Редактировать
-    </button>
-  {{/if}}
-</template>
-
-<template name="formOverview">
-  <form class="form-horizontal">
-    <div class="form-group">
-      <textarea placeholder="Например: Производим качественный и быстрый ремонт санузла. Большой опыт работ. Поможем с доставкой материалов"
-                name="overview" class="form-control" rows="5">{{overview}}</textarea>
-    </div>
-    <div class="form-group">
-      <button data-action="save"   type="submit" class="btn btn-success">Сохранить</button>
-      <button data-action="cancel" type="button" class="btn btn-warning">Отменить</button>
-    </div>
-  </form>
+  {{>wTextArea context=context name="overview" rows="5"}}
 </template>
 
 <template name="profileDescribe">
-  {{#if edit}}
-    {{>formDescribe}}
-  {{else}}
-    <p>
-      {{#if describe}}
-        <div class="well">
-          {{#markdown}}{{ describe }}{{/markdown}}
-        </div>
-      {{else}}
-        <div class="alert alert-warning" role="alert">
-          <i class="fa fa-exclamation-triangle"></i>
-          Подробное описание не заполнено 
-        </div>
-      {{/if}}
-    </p>
-    <button data-action="edit" class="btn btn-default">
-      Редактировать
-    </button>
-  {{/if}}
-</template>
-
-<template name="formDescribe">
-  <form class="form-horizontal">
-    <div class="form-group">
-      <textarea name="describe" class="form-control" rows="10">{{describe}}</textarea>
-    </div>
-    <div class="form-group">
-      <button data-action="save"   type="submit" class="btn btn-success">Сохранить</button>
-      <button data-action="cancel" type="button" class="btn btn-warning">Отменить</button>
-    </div>
-  </form>
+  {{>wTextArea  context=context name="describe" rows="10"}}
 </template>
 
 <template name="profileWebsite">

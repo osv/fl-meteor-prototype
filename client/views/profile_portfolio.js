@@ -75,30 +75,25 @@ Template.portfolioTitle.helpers({
   Описание профиля
 */
 
-var editDescribe = ReactiveVar(false);
-
 Template.portfolioDescribe.helpers({
-  edit: function() { return editDescribe.get(); }  
-});
-
-Template.portfolioDescribe.events({
-  'dblclick p, click [data-action="edit"]': function(e, t) {
-    editDescribe.set(true);
-    Meteor.defer(function() { t.$('textarea').focus(); });
-  },
-  'click [data-action="cancel"]': function() {
-    editDescribe.set(false);
-  },
-  'submit form': function(e, t){
-    e.preventDefault();
-    Meteor.call('portfolio-describe', this._id, t.find('textarea').value, 
-                function(err) {
-                  editDescribe.set(false);
-                  if (err) {
-                    Messages.info(err.reason);
-                  }
-                });    
-    return false;
+  context: function() {
+    var self = this;
+    return {
+      getter: function() { return self.desc; },
+      setter: function(value) {
+        console.log('setter', value);
+        Meteor.call('portfolio-describe', self._id, value, 
+                    function(err) {
+                      if (err) {
+                        Messages.info(err.reason);
+                      }
+                    });
+      },
+      undef: 'Работа не описана',
+      undefIcon: 'fa fa-exclamation-triangle',
+      alert: 'alert-warning',
+      markdown: true,
+    };
   }
 });
 

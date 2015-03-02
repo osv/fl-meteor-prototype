@@ -276,71 +276,35 @@ Template.profileContactName.helpers({
 
  **************************************************** */
 
-var editOverview = new ReactiveVar(false);
-
 Template.profileOverview.helpers({
-  edit: function() {
-    return editOverview.get();
-  },
-  overview: function(){
-    return Meteor.user().profile.dShort;
-  }
-});
+  context: function() {
+    return {
+      getter: function() {return Meteor.user().profile.dShort;},
 
-Template.profileOverview.events({
-  'click [data-action="edit"], dblclick p': function(e, t) {
-    editOverview.set(true);
-    Meteor.defer(function() { t.$('textarea').focus(); });
-  },
-});
-// form
-Template.formOverview.rendered = function(){
-  this.$('form').formValidation({
-    fields: {
-      overview: {
-        validators: {
-          stringLength: {
-            min: 0,
-            max: 214,
-            message: 'В кратком описании допустимо 214 символов'
+      setter: function(workDescribe) {
+        Meteor.call('change user describe short', workDescribe, function(err){
+          if (err)
+            Messages.info(err.reason);
+          else {
+            Messages.info('Изменено краткое описание деятельности');
           }
+        });
+      },
+
+      validator: {
+        stringLength: {
+          min: 0,
+          max: 214,
+          message: 'В кратком описании допустимо 214 символов'
         }
-      }
-    }
-  }).on('success.form.fv', function(e) {
-    e.preventDefault();
-  });
-};
+      },
 
-Template.formOverview.helpers({
-  overview: function(){
-    return Meteor.user().profile.dShort;
-  }
-});
+      placeholder: "Например: Производим качественный и быстрый ремонт санузла. Большой опыт работ. Поможем с доставкой материалов",
 
-Template.formOverview.events({
-  'click [data-action="save"]': function(e, t){
-    e.preventDefault();
-
-    t.$('form').data('formValidation').validate();
-    if (!t.$('form').data('formValidation').isValid())
-      return false;
-
-    var workDescribe = t.find('[name="overview"]').value;
-
-    editOverview.set(false);
-
-    Meteor.call('change user describe short', workDescribe, function(err){
-      if (err)
-        Messages.info(err.reason);
-      else {
-        Messages.info('Изменено краткое описание деятельности');
-      }
-    });
-    return false;
-  },
-  'click [data-action="cancel"]': function(){
-    editOverview.set(false);
+      undefIcon: "fa fa-exclamation-triangle",
+      undef: "Краткое описание не заполнено",
+      alert: "alert-warning",
+    };
   },
 });
 
@@ -351,51 +315,27 @@ Template.formOverview.events({
 
  **************************************************** */
 
-var editWorkDescribe = new ReactiveVar(false);
-
 Template.profileDescribe.helpers({
-  edit: function() {
-    return editWorkDescribe.get();
-  },
-  describe: function(){
-    return Meteor.user().profile.dLong;
+  context: function() {
+    return {
+      getter: function() { return Meteor.user().profile.dLong; },
+
+      setter: function(workDescribe) {
+        Meteor.call('change user describe long', workDescribe, function(err){
+          if (err)
+            Messages.info(err.reason);
+          else {
+            Messages.info('Изменено описание деятельности');
+          }
+        });
+      },
+
+      undefIcon: "fa fa-exclamation-triangle",
+      undef: "Краткое описание не заполнено",
+      alert: "alert-warning",
+      markdown: true,
+    };
   }
-});
-
-Template.profileDescribe.events({
-  'click [data-action="edit"], dblclick p': function(e, t) {
-    editWorkDescribe.set(true);
-    Meteor.defer(function() { t.$('textarea').focus(); });
-  },
-});
-
-//form
-Template.formDescribe.helpers({
-  describe: function(){
-    return Meteor.user().profile.dLong;
-  }
-});
-
-Template.formDescribe.events({
-  'click [data-action="save"]': function(e, t){
-    e.preventDefault();
-
-    var workDescribe = t.find('[name="describe"]').value;
-
-    editWorkDescribe.set(false);
-
-    Meteor.call('change user describe long', workDescribe, function(err){
-      if (err)
-        Messages.info(err.reason);
-      else {
-        Messages.info('Изменено описание деятельности');
-      }
-    });
-    return false;
-  },
-  'click [data-action="cancel"]': function(){
-    editWorkDescribe.set(false);
-  },
 });
 
 /* ****************************************************
