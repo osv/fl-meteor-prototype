@@ -167,10 +167,10 @@ Template.modalChangePassword.rendered = function(){
     feedbackIcons: bsValidator.feedbackIcons,
     fields: {
       oldPwd: {
-        message: 'старый пароль',
+        message: 'Старый пароль',
         validators: {
           notEmpty: {
-            message: 'Пароль не должен быть пустым'
+            message: 'Пароль не может быть пустым'
           }
         }
       },
@@ -183,7 +183,7 @@ Template.modalChangePassword.rendered = function(){
           stringLength: {
             min: 6,
             max: 128,
-            message: 'Пароль должен содержать минимум 6 символов'
+            message: 'Пароль должен содержать не менее 6 символов'
           },
           regexp: {
             regexp: /^[a-zA-Z0-9+_,./-]{6,}$/,
@@ -198,7 +198,7 @@ Template.modalChangePassword.rendered = function(){
           },
           identical: {
             field: 'newPwd1',
-            message: 'Повторите пароль что ввели выше'
+            message: 'Повторите введенный выше пароль'
           }
         }
       }
@@ -362,18 +362,18 @@ Template.profileWebsite.helpers({
                       if (err)
                         Messages.info(err.reason);
                       else {
-                        Messages.info('Website изменен');
+                        Messages.info('Веб-сайт изменен');
                         buildQRCode();
                       }
                     });
       },
 
-      undef: "Веб сайт не указан",
+      undef: "Веб-сайт не указан",
       undefIcon: 'fa fa-exclamation',
 
       validator: {
         uri: {
-          message: 'Веб сайт не валидный',
+          message: 'Адрес веб-сайта указан не верно',
           transformer: function($field, validator) {
             // Get the field value
             var value = $field.val();
@@ -388,7 +388,7 @@ Template.profileWebsite.helpers({
         },
         stringLength: {
           max: 64,
-          message: "Длина URL не должна быть более 72 символов",
+          message: "Длина URL не должна превышать 72 символов",
         },
       }
     };
@@ -435,7 +435,7 @@ var contactsTypes = {
     placeholder: 'Скайп ID',
     validators: {
       notEmpty: {
-        message: "Введите skype идентификатор"
+        message: "Введите Skype идентификатор"
       },
       regexp: {
         // http://stackoverflow.com/questions/12746862/regular-expressions-for-skype-name-in-php
@@ -625,7 +625,7 @@ Template.profileAvatar.events({
         if (err) {
           Messages.info(err.reason);
         } else {
-          Messages.info('Фото удалено');
+          Messages.info('Фотография удалена');
         }
       });
   },

@@ -6,10 +6,10 @@
   <div class="row">
     <div>
       {{>profileInput label="Телефон (вход)" t="profileLoginPhone"
-        popover="Этот телефон используется для входа на сайт, другие не видят его если не указан как контактной."
+        popover="Этот телефон используется только для входа на сайт и не виден другим пользователям."
         }}
       {{>profileInput label="Пароль" t="profileChangePassword"
-        popover="Ваш первый пароль был отправлен SMS на ваш телефон. Вы можете сменить его здесь."
+        popover="Если вы забыли пароль и удалили SMS с данными для входа, вы можете сменить пароль здесь."
         }}
     </div>
   </div>
@@ -28,10 +28,10 @@
           popover="Краткое описание. Именно это увидят пользователи в каталоге исполнителей"
           }}
         {{>profileInput label="Подробное описание деятельности" t="profileDescribe"
-          popover="Подробно опишите какие работы вы выполняете."
+          popover="Подробно опишите перечень выполняемых работ."
           }}
       {{/if}}
-      {{>profileInput label="Вебсайт" t="profileWebsite"
+      {{>profileInput label="Веб-сайт" t="profileWebsite"
         popover="Если у вас есть веб сайт укажите его"
         }}
       {{>profileInput label="Контакты" t="profileContactsAndQR"

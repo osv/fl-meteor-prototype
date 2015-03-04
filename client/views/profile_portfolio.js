@@ -31,7 +31,7 @@ Template.profilePortfolio.events({
         Messages.info(err.reason);
       } else {
         Router.go('/profile');
-        Messages.info('Портфолио теперь доступно другим');
+        Messages.info('Теперь другие пользователи могут просматривать ваше портфолио');
       }
     });
   }
@@ -65,7 +65,7 @@ Template.portfolioTitle.helpers({
                       }
                     });
       },
-      undef: 'Заголовок не задан',
+      undef: 'Укажите название работы',
       undefIcon: 'fa fa-exclamation-triangle',
     };
   }
