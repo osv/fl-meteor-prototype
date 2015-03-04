@@ -8,4 +8,15 @@ Template.home.rendered = function(){
     correctLevel : QRCode.CorrectLevel.M,
   });
   qrcode.makeCode(Meteor.absoluteUrl());
+
+  // демка селекторов
+  this.$("#demo-city-select").select2({
+    dataAdapter: S2Adaptors.cities,
+    placeholder: "Город, Область, Страна"
+  });
+  this.$("#demo-region-select").select2({
+    dataAdapter: S2Adaptors.regions,
+    placeholder: "Область, Страна"
+  });
+
 };
