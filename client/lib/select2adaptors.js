@@ -26,6 +26,10 @@ Meteor.startup(function(){
     fetchRegions.__super__.constructor.call(this, $element, options);
   }
 
+  function fetchAnyPlace($element, options) {
+    fetchAnyPlace.__super__.constructor.call(this, $element, options);
+  }
+
   $.fn.select2.amd.require(
     ['select2/data/array', 'select2/utils'],
     function (ArrayData, Utils) {
@@ -63,10 +67,28 @@ Meteor.startup(function(){
         this._qT = Meteor.setTimeout(request, 250);
       };
 
+      // any place
+      Utils.Extend(fetchAnyPlace, ArrayData);
+
+      fetchAnyPlace.prototype.query = function (params, callback) {
+
+        function request () {
+          Meteor.call('get-places', params.term, function(err, results) {
+            callback({results: results});
+          });
+        }
+
+        if (this._qT) {
+          Meteor.clearTimeout(this._qT);
+        }
+        this._qT = Meteor.setTimeout(request, 250);
+      };
+
     });
 
   S2Adaptors = { 
     cities: fetchCities,
-    regions: fetchRegions
+    regions: fetchRegions,
+    anyplace: fetchAnyPlace
   };
 });
