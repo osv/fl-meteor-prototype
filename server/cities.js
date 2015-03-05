@@ -23,6 +23,11 @@ Meteor.methods({
 
 // helpers
 
+// 
+function sanitizeId(id) {
+  return id.replace(" ", "_");
+}
+
 // не изменять без миграции базы!
 var transliterate = (
   function() {
@@ -113,8 +118,8 @@ _.each([ { filename: 'cities-ru.org', // файл в "private/" каталоге
 
                     var transCity = transliterate( city ).toLowerCase(),
                         transRegion = transliterate( region ).toLowerCase(),
-                        regionId = it.country_iso + '/' + transRegion + '/',
-                        cityId = regionId + transCity;
+                        regionId = sanitizeId( it.country_iso + '/' + transRegion + '/' ),
+                        cityId = sanitizeId( regionId + transCity );
 
                     // +город
                     cities [cityId] = { text: city + ', ' + region + (it.country !== "" ? ", " + it.country : ""),
