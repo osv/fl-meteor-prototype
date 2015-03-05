@@ -9,10 +9,17 @@
 
  Поиск поддерживает транслитерацию, ошибочную расскладку клавиатуры: "москва", "moskva", "vjcrdf"
 
- Методы: get-cities, get-regions
+ Методы: get-cities, get-regions, get-places (города, регионы, страны)
 
+ Meteor.call('get-places', 'мо'); // -> москва, ...
 
 */
+
+Meteor.methods({
+  'get-cities': function(term, limit) {  return methodSearch (citiesSearch,    term, limit); },
+  'get-regions': function(term, limit) { return methodSearch (regionsSearch,   term, limit); },
+  'get-places': function(term, limit) {  return methodSearch (allPlacesSearch, term, limit); }
+});
 
 // helpers
 
@@ -65,24 +72,27 @@ var translateMissKbd = (
 */
 var cities = {},
     regions = {},
-    citiesSearch = [],          // отсортированы по популяции
-    regionsSearch = [];         // отсортированы по популяции
+    allPlaces = {},
+    allPlacesSearch = [],       // отсортированы по популяции все города, регионы, страны
+    citiesSearch = [],          // отсортированы по популяции города
+    regionsSearch = [];         // отсортированы по популяции регионы
 
-_.each([ { filename: 'cities-ru.org', // файл в private каталоге
-           country: 'Россия',
-           country_iso: 'ru'          // iso - использоваться будет в id
+_.each([ { filename: 'cities-ru.org', // файл в "private/" каталоге
+           country: 'Россия',         // будет добавлено к названию локации, например "Казань, Татарста, Россия"
+           country_iso: 'ru',         // iso - используется в id, первый член айди, как в "ru/tatarstan/kazan"
          },
          { filename: 'cities-ua.org',
            country: 'Україна',
-           country_iso: 'ua'
+           country_iso: 'ua',
          },
          { filename: 'cities-qirim.org',
            country: '',
-           country_iso: 'qrm'
+           country_iso: 'qrm',
          }
 
        ], function(it) {
          var fileData = Assets.getText(it.filename);
+         var countryPopulation = 0;
          _.each(fileData.split("\n"),
                 function (line){
                   var data = line.split("|");
@@ -99,6 +109,7 @@ _.each([ { filename: 'cities-ru.org', // файл в private каталоге
                       throw new Error("Population not defined for '" + city +"'. Check file private/" + it.filename);
 
                     population = parseInt(population);
+                    countryPopulation += population;
 
                     var transCity = transliterate( city ).toLowerCase(),
                         transRegion = transliterate( region ).toLowerCase(),
@@ -121,6 +132,19 @@ _.each([ { filename: 'cities-ru.org', // файл в private каталоге
                                                  };
                   }
                 });
+
+         // добавляем страну в наш список allPlace*
+         // если мы определили страну
+         if (it.country) {
+           var countryId = it.country_iso + '/', // like 'ru/'
+               place = { tr: transliterate( it.country ).toLowerCase(), // 'Россия'
+                         text: it.country,
+                         population: countryPopulation };
+           allPlaces [ countryId ] = place;
+           place.id = countryId;
+           allPlacesSearch.push(place);
+         }
+
        });
 
 for (var id in regions) {
@@ -145,16 +169,33 @@ for (id in cities) {
 
 citiesSearch = _.sortBy(citiesSearch, function(it) { return -it.population;});
 
-function searchCity(term, limit) {
+// Добавим города и регионы в allPlaces и allPlacesSearch
+_.extend (allPlaces, cities, regions);
+allPlacesSearch = citiesSearch.concat(regionsSearch, allPlacesSearch);
+
+function search(dataArray, term, limit) {
   var trans = transliterate(term),
       num = 0,
       i = 0,
       result = [];
 
-  for (; i< citiesSearch.length; i++) {
-    if (citiesSearch[i].tr.indexOf ( trans ) === 0) {
-      result.push({id: citiesSearch[i].id,
-                   text: citiesSearch[i].text});
+  // терм пустой, вернем первые с массива
+  if (!trans.length) {
+    for (; i< Math.min(dataArray.length, limit); i++)
+      result.push({id: dataArray[i].id,
+                   text: dataArray[i].text});
+    return result;
+  }
+
+  for (; i< dataArray.length; i++) {
+    // проверка первой буквы - дает прирост в скорости поиска на 40%,
+    // конечно подходит для не большых массивов
+    // TODO: если масив большой, следует перейти на binary tree
+    if (dataArray[i].tr.charAt(0) !== trans.charAt(0))
+      continue;
+    if (dataArray[i].tr.indexOf ( trans ) === 0) {
+      result.push({id: dataArray[i].id,
+                   text: dataArray[i].text});
 
       num ++;
       if (num >= limit)          // лимит
@@ -164,27 +205,7 @@ function searchCity(term, limit) {
   return result;
 }
 
-function searchRegion(term, limit) {
-  var trans = transliterate(term),
-      i = 0,
-      num = 0,
-      result = [];
-
-  for( ; i < regionsSearch.length; i++) {
-    if (regionsSearch[i].tr.indexOf ( trans ) === 0) {
-      result.push({id: regionsSearch[i].id,
-                   text: regionsSearch[i].text});
-
-      num ++;
-      if (num >= limit)
-        return result;
-    }
-  }
-  return result;
-}
-
-Meteor.methods({
-  'get-cities': function(term, limit) {
+function methodSearch(data, term, limit) {
     var result = [];
 
     if (!term)
@@ -192,41 +213,19 @@ Meteor.methods({
 
     term = term.toLowerCase().trim();
 
-    limit |= 6;
-    if (limit > 100)
+    limit |= 6;                 // поумолчанию лимит 6
+    if (limit > 100)            // и не больше 100
       limit = 100;
 
-    result = searchCity(term, limit);
+    result = search(data, term, limit);
 
     // Если не достаточно нашли результатов
     // а также если похоже на то что ошиблись расскладкой,
     // тогда повторим, но исправив поисковый терм translateMissKbd
     if ( result.length < limit && term.match(/^[a-z.`;',[\]\\]+$/) ) {
       result = result.concat(
-        searchCity( translateMissKbd(term), limit - result.length ) );
+        search(data, translateMissKbd(term), limit - result.length ) );
     }
 
     return result;
-  },
-  'get-regions': function(term, limit) {
-    var result = [];
-
-    if (!term)
-      term = '';
-
-    term = term.toLowerCase().trim();
-
-    limit |= 6;
-    if (limit > 100)
-      limit = 100;
-
-    result = searchRegion(term, limit);
-
-    if ( result.length < limit && term.match(/^[a-z.`;',[\]\\]+$/) ) {
-      result = result.concat(
-        searchRegion( translateMissKbd(term), limit - result.length ) );
-    }
-
-    return result;
-  }
-});
+}
