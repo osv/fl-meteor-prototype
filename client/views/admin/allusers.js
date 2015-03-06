@@ -99,12 +99,12 @@ Template.formNewUserByAdmin.rendered = function(){
       name: {
         validators: {
           notEmpty: {
-            message: "Имя не должно быть пустым"
+            message: "Введите имя пользователя"
           },
           stringLength: {
             min: 2,
             max: 50,
-            message: "Не поленись набрать хотя б 2 символа",
+            message: "Имя слишком короткое",
           },
         }
       },
@@ -121,7 +121,7 @@ Template.formNewUserByAdmin.rendered = function(){
       status: {
         validators: {
           notEmpty: {
-            message: "Вы должны выбрать вашу роль"
+            message: "Выберите тип профиля"
           }
         }}
     }}).on('success.form.fv', function(e) {

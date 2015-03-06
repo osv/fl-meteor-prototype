@@ -5,7 +5,7 @@
   <legend>Регистрационные данные</legend>
   <div class="row">
     <div>
-      {{>profileInput label="Телефон (вход)" t="profileLoginPhone"
+      {{>profileInput label="Телефон (логин)" t="profileLoginPhone"
         popover="Этот телефон используется только для входа на сайт и не виден другим пользователям."
         }}
       {{>profileInput label="Пароль" t="profileChangePassword"
@@ -17,7 +17,7 @@
 
   <div class="row">
     <div>
-      {{>profileInput label="Контактное лицо" t="profileContactName"
+      {{>profileInput label="Имя" t="profileContactName"
         popover="Вы можете оставить только инициалы, но людям приятно знать с кем имеют честь разговаривать."
         }}
 
@@ -32,10 +32,10 @@
           }}
       {{/if}}
       {{>profileInput label="Веб-сайт" t="profileWebsite"
-        popover="Если у вас есть веб сайт укажите его"
+        popover="Если у вас есть веб-сайт, введите его адрес"
         }}
       {{>profileInput label="Контакты" t="profileContactsAndQR"
-        popover="Контакты по которым с вами могут связаться."
+        popover="Контакты, по которым с вами могут связаться."
       }}
     </div>
   </div>

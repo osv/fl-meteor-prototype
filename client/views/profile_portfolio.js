@@ -39,7 +39,7 @@ Template.profilePortfolio.events({
 
 /*
 
- Вспомагательный шаблон
+ Вспомогательный шаблон
 
 */
 
