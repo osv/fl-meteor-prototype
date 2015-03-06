@@ -83,6 +83,15 @@ Schema.User = new SimpleSchema({
     type: [Schema.Portfolio],
     optional: true
   },
+  legalStat: {                  // ИП, частно лицо, и тд. Смотри id в LegalStatuses файла config.js
+    type: String,
+    allowedValues: _.pluckChildrenId(LegalStatuses),
+    optional: true
+  },
+  legalName: {                  // имя индивидуального предпринимателя, компании.
+    type: String,
+    optional: true
+  },
   services: {
     type: Object,
     optional: true,

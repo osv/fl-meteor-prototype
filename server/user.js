@@ -22,6 +22,8 @@ Meteor.publish('currentUser', function() {
   var user = Meteor.users.find({_id: this.userId},
                                {fields: {
                                  gal: true, // портфолио
+                                 legalStat: true,
+                                 legalName: true,
                                  isMaster: true,
                                  isAdmin: true,
                                  phone: true}});
