@@ -1,0 +1,19 @@
+<template name="wSelector">
+  <form class="form-horizontal">
+    <fieldset>
+      {{selected}}
+      <div class="form-group">
+        <div class="input-group">
+          {{#if addonIcon}}
+            <span class="input-group-addon"><i class="fa {{addonIcon}} fa-fw"></i></span>
+          {{/if}}
+          <select id="demo-city-select" class="form-control select2"></select>
+          <div class="input-group-btn">
+            <button data-action="save"   type="submit" class="btn btn-success">Сохранить</button>
+            <button data-action="cancel" type="button" class="btn btn-warning">Отменить</button>
+          </div>
+        </div>
+      </div>
+    </fieldset>
+  </form>
+</template>
