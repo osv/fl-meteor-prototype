@@ -174,6 +174,14 @@ Meteor.methods({
 
     Meteor.users.update(this.userId, {$pull: {"profile.contacts": {type: type, contact: contact}}});
   },
+  'set user legal status': function(legalStatus) {
+    check(legalStatus, String);
+
+    if (!this.userId)
+      throw new Meteor.Error(401, 'User not logged in');
+
+    Meteor.users.update(this.userId, {$set: {legalStat: legalStatus}});
+  },
 
   /*
 
