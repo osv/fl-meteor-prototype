@@ -155,12 +155,12 @@ Template.portfolioPhoto.events({
   'dragover #dropzone': function(e, t) {
     e.preventDefault();
     e.stopPropagation();
-    t.$('#dropzone').addClass('drag-over');
+    t.$('#dropzone').addClass('s-drag-over');
   },
   'dragleave #dropzone': function(e, t) {
     e.preventDefault();
     e.stopPropagation();
-    t.$('#dropzone').removeClass('drag-over');
+    t.$('#dropzone').removeClass('s-drag-over');
   },
   'dragenter #dropzone': function(e, t) {
     e.preventDefault();
@@ -169,7 +169,7 @@ Template.portfolioPhoto.events({
   'drop #dropzone': function(e, t) {
     e.preventDefault();
     e.stopPropagation();
-    t.$('#dropzone').removeClass('drag-over');
+    t.$('#dropzone').removeClass('s-drag-over');
     uploadFiles(e.originalEvent.dataTransfer.files, this._id);
   },        
   'change [type="file"]': function(event, template) {
@@ -241,8 +241,8 @@ Template.portfolioPreview.events({
                 boundx,
                 boundy,
                 $preview = t.$('#jcrop-preview-pane'),
-                $pcnt = t.$('#jcrop-preview-pane .portfolio-preview-container'),
-                $pimg = t.$('#jcrop-preview-pane .portfolio-preview-container img'),
+                $pcnt = t.$('#jcrop-preview-pane .jc-portfolio-preview-container'),
+                $pimg = t.$('#jcrop-preview-pane .jc-portfolio-preview-container img'),
 
                 xsize = $pcnt.width(),
                 ysize = $pcnt.height(),

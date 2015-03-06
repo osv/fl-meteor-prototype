@@ -1,5 +1,5 @@
 <template name="profilePortfolio">
-  <div class="row voffset2">
+  <div class="row s-voffset">
     <div class="col-md-5">
     <i class="fa fa-chevron-left"></i><a href="/profile">Назад к профилю</a>
     </div>
@@ -7,7 +7,7 @@
   <h1>Портфолио</h1>
   <div class="row">
     <div class="col-md-12">
-      <div class="col-md-offset-3 col-sm-offset-3 voffset2">
+      <div class="col-md-offset-3 col-sm-offset-3 s-voffset">
         <div class="input-group">
           {{#if showPublishBtn}}
             <button data-action="publish" class="btn btn-lg btn-success">Опубликовать</button>
@@ -53,7 +53,7 @@
         @popover - текст подсказки
 
         }}
-  <div class="row voffset2">
+  <div class="row s-voffset">
     <div class="col-md-3 col-sm-3">
       <p class="text-right">
         <label>
@@ -86,7 +86,7 @@
   {{#if preview}}
     <img class="img-thumbnail" src="{{portfolioUrlImgPreview preview}}">
   {{/if}}
-  <div class="input-group voffset2">
+  <div class="input-group s-voffset">
     <span class="btn btn-file btn-default">
       Сменить <input type="file" multiple> 
     </span>
@@ -109,7 +109,7 @@
               </div>
               <div class="row">
                 <div id="jcrop-preview-pane">
-                  <div class="portfolio-preview-container">
+                  <div class="jc-portfolio-preview-container">
                     <img id="preview" class="jcrop-preview" src="{{portfolioForCrop cropId}}">
                   </div>
                 </div>
@@ -139,7 +139,7 @@
       </div>
     </div>
   {{else}}
-    <div id="dropzone" class="dropzone">
+    <div id="dropzone" class="s-dropzone">
       <div class="container">
         Перетащите сюда файлы или нажмите
         <span class="btn btn-file btn-primary">
@@ -157,7 +157,7 @@
 </template>
 
 <template name="portfolioPhotoItem">
-    <div class="col-sm-12 col-md-6 portfolioTileEdit">
+    <div class="col-sm-12 col-md-6 s-portfolioTileEdit">
       <a href="{{portfolioURLorig i}}" target="_blank">
         <img class="img-thumbnail" src="{{portfolioURLsmall i}}">
       </a>

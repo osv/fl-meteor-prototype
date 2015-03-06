@@ -10,7 +10,7 @@
 
 // дропзона в портфолио
 // используются стиль примерно как jumbotron
-.dropzone {
+.s-dropzone {
     padding: @jumbotron-padding (@jumbotron-padding / 2);
     margin-bottom: @jumbotron-padding;
     color: @jumbotron-color;
@@ -19,7 +19,7 @@
     font-size: ceil((@font-size-base * 1.5));
     height: 300px;
 
-    .container &,
+    .container &,               // не s-container, так как бустрап контейнер используется
     .container-fluid & {
         border-radius: @border-radius-large; // Only round corners at higher resolutions if contained in a container
     }
@@ -28,20 +28,20 @@
         max-width: 100%;
     }
 
-    &.drag-over {
+    &.s-drag-over {
         border:5px dashed green;
     }
 }
 
 // тайл список проектов-портфолио
-.portfolioTile {
+.s-portfolioTile {
     width: 200px;
     height: 180px;
     margin: 4px 20px 4px 4px;
 }
 
 // тайл картинок в проекте
-.portfolioTileEdit {
+.s-portfolioTileEdit {
     width: 320px;
     height: 220px;
     margin: 4px;

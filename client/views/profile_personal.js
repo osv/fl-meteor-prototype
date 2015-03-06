@@ -684,8 +684,8 @@ Template.modalAvatarCrop.rendered = function() {
       boundy,
 
       $preview = t.$('#jcrop-preview-pane'),
-      $pcnt = t.$('#jcrop-preview-pane .avatar-container'),
-      $pimg = t.$('#jcrop-preview-pane .avatar-container img'),
+      $pcnt = t.$('#jcrop-preview-pane .jc-avatar-container'),
+      $pimg = t.$('#jcrop-preview-pane .jc-avatar-container img'),
 
       xsize = $pcnt.width(),
       ysize = $pcnt.height();
