@@ -269,6 +269,31 @@ Template.profileContactName.helpers({
   }
 });
 
+/* ****************************************************
+
+ Форма работы, компания, ЧП
+
+ **************************************************** */
+
+Template.profileLegalStatus.helpers({
+  context: function() {
+    return {
+      data: LegalStatuses,      // смотри в config.js
+      msgundef: "Форма работы не указана",
+      undefIcon: "fa fa-exclamation",
+      getter: function() { return Meteor.user().legalStat; },
+      setter: function(legalStatus) {
+        Meteor.call('set user legal status', legalStatus, function(err){
+          if (err)
+            Messages.info(err.reason);
+          else
+            Messages.info("Форма работы изменена");
+        });
+      }
+    };
+  }
+});
+
 
 /* ****************************************************
 

@@ -24,6 +24,9 @@
       {{>profileInput label="Фотография" t="profileAvatar"}}
 
       {{#if isMaster}}
+        {{>profileInput label="Форма работы" t="profileLegalStatus"
+          popover="Вы выступаете как частное лицо или компания?"
+          }}
         {{>profileInput label="Описание деятельности" t="profileOverview"
           popover="Краткое описание. Именно это увидят пользователи в каталоге исполнителей"
           }}
@@ -103,6 +106,10 @@
 
 <template name="profileContactName">
   {{>wInput context=context name="contact"}}
+</template>
+
+<template name="profileLegalStatus">
+  {{>wSelect context=context}}
 </template>
 
 <template name="profileOverview">
