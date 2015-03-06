@@ -1,7 +1,30 @@
-<template name="wSelector">
+<template name="wSelect">
+  {{#if edit}}
+    {{>wFormSelect context=context }}
+  {{else}}
+    <div class="input-group">
+      <span class="input-group-addon">
+        {{#if curvalue}}
+          {{curvalue}}
+        {{else}}
+          {{#if undefIcon}}
+            <i class="{{undefIcon}}"></i>
+          {{/if}}
+          {{ msgundef }}
+        {{/if}}
+      </span>
+      <div class="input-group-btn">
+        <button data-action="edit" class="btn btn-default">
+          Изменить
+        </button>
+      </div>
+    </div>
+  {{/if}}
+</template>
+
+<template name="wFormSelect">
   <form class="form-horizontal">
     <fieldset>
-      {{selected}}
       <div class="form-group">
         <div class="input-group">
           {{#if addonIcon}}
