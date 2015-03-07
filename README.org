@@ -45,6 +45,14 @@
 
   Админ будет создан с номером телефона =380123456789= и паролем =admin=.
 
+** Девелопмент
+
+   На windows, с Vagrant запускай скрипт:
+
+#+begin_example
+./start-vagrant.sh
+#+end_example
+
 ** Продакшн
 
 Нужно установить SMSC_AUTH (cmsc.ru логин и пароль) и MAIL_URL переменные:
