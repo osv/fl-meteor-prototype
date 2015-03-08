@@ -18,7 +18,22 @@
 Meteor.methods({
   'get-cities': function(term, limit) {  return methodSearch (citiesSearch,    term, limit); },
   'get-regions': function(term, limit) { return methodSearch (regionsSearch,   term, limit); },
-  'get-places': function(term, limit) {  return methodSearch (allPlacesSearch, term, limit); }
+  'get-places': function(term, limit) {  return methodSearch (allPlacesSearch, term, limit); },
+  // возвращает название из id
+  'places-from-Ids': function(ids) {
+    if(_.isString(ids))
+      ids = [ids];
+    else if (!_.isArray(ids))
+      throw new Meteor.Error(403, 'ids must be string or array');
+
+    return _.map(ids, function(id) {
+      return (allPlaces[id]) ?
+        { id: id,
+          text: allPlaces[id].text,
+          population: allPlaces[id].population }
+      : { id: id};
+    });
+  },
 });
 
 // helpers
