@@ -29,6 +29,10 @@ Template.loginButton.helpers({
   dropDownMenus: function(){
     return Accounts.dropDownMenus;
   },
+  me: function(){
+    var user = Meteor.user();
+    return Meteor.user();
+  },
   displayName: function(){
     var user = Meteor.user();
     return (user.profile && user.profile.completeName) || (user.profile && user.phone);
