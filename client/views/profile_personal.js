@@ -422,6 +422,77 @@ Template.profileWebsite.helpers({
 
 /* ****************************************************
 
+ Места работы
+
+ **************************************************** */
+
+Template.profileWorkPlaces.created = function() {
+  // true - показываем форму добавление места
+  this.addPlace = ReactiveVar();
+
+  // вернем из айдишников  городов сюда данные о  городе (название нас
+  // интересует) методом.
+  this.places = new ReactiveVar([]); 
+};
+
+Template.profileWorkPlaces.helpers({
+  havePlaces: function() {
+    /* 
+     делаем трюк, получаем реактивные данные о местах (айди мест)
+     Посылаем запрос о данных о мест(текст название места из айди)
+     и устанавливаем реактивную переменную places.
+     */
+    var workPlaces = Meteor.user().wrkPlaces,
+        self = Template.instance();
+    Meteor.call('places-from-Ids', workPlaces, function(err, placesFromIds) {
+      if (!err) {
+        self.places.set(placesFromIds);
+      }
+    });
+
+    return workPlaces.length; 
+  },
+
+  places: function() { return Template.instance().places.get(); },
+
+  newForm: function() { return Template.instance().addPlace.get(); },
+
+  placeselect: function() {
+    var addPlace = Template.instance().addPlace;
+    return {
+      data: S2Adaptors.anyplace,
+      cancel: function() { addPlace.set(false); },
+      setter: function(place) {
+        if (place) {
+          addPlace.set(false);
+          Meteor.call('add work place', place, function(err) {
+            if (err)
+              Messages.info(err.reason);
+          });
+        }
+      }
+    };
+  }
+});
+
+Template.profileWorkPlaces.events({
+  'click [data-action="addPlace"]': function() {
+    Template.instance().addPlace.set(true);
+  }
+});
+
+Template.profileWorkPlaceRow.events({
+  'click [data-action="rm"]': function() {
+    if (confirm('Удалить из списка "' + this.text + '"?'))
+      Meteor.call('rm work place', this.id, function(err) {
+        if (err)
+          Messages.info(err.reason);
+      });
+  },
+});
+
+/* ****************************************************
+
  Дополнительные контакты
 
  **************************************************** */
