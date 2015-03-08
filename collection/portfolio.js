@@ -49,7 +49,15 @@ portfolioSchema.Portfolio = new SimpleSchema({
   img: {
     type: [portfolioSchema.Images],
     optional: true
-  }
+  },
+  cost: {                       // цена/Средняя цена работы
+    type: String,
+    optional: true,
+  },
+  time: {                       // Сроки и объем
+    type: String,
+    optional: true,
+  }  
 });
 
 Portfolio = new Meteor.Collection('portfolio');

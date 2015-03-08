@@ -27,6 +27,14 @@
         context=this
         popover="Здесь можно оставить подробности о работе."
       }}
+      {{>portfolioInput label="Сроки и объем" t="portfolioTime"
+        context=this
+        popover="Вы можете указать строк и обьем работы."
+      }}
+      {{>portfolioInput label="Цена" t="portfolioCost"
+        context=this
+        popover="Средняя цена проделаной работы."
+      }}
       {{#if preview}}
       {{! Этот елемент не показываем, чтобы не перегружать интерфейс
          и чтобы не запрокрастинировал юзер,
@@ -80,6 +88,14 @@
 
 <template name="portfolioDescribe">
   {{>wTextArea context=context name="describe" rows="15"}}
+</template>
+
+<template name="portfolioTime">
+  {{>wInput context=context name="time"}}
+</template>
+
+<template name="portfolioCost">
+  {{>wInput context=context name="cost"}}
 </template>
 
 <template name="portfolioPreview">

@@ -97,6 +97,59 @@ Template.portfolioDescribe.helpers({
   }
 });
 
+
+/*
+
+ Время проделаной работы
+
+*/
+
+Template.portfolioTime.helpers({
+  context: function() {
+    var self = this;
+    return {
+      getter: function() { return self.time;},
+      setter: function(value) {
+        console.log('setter', value);
+        Meteor.call('portfolio-time', self._id, value, 
+                    function(err) {
+                      if (err) {
+                        Messages.info(err.reason);
+                      }
+                    });
+      },
+      placeholder: 'Например: 14 дней, 30 кв. м',
+      undef: '-',
+    };
+  }
+});
+
+/*
+
+ Стоимость проделаной работы
+
+*/
+
+Template.portfolioCost.helpers({
+  context: function() {
+    var self = this;
+    return {
+      getter: function() { return self.cost;},
+      setter: function(value) {
+        console.log('setter', value);
+        Meteor.call('portfolio-cost', self._id, value, 
+                    function(err) {
+                      if (err) {
+                        Messages.info(err.reason);
+                      }
+                    });
+      },
+      placeholder: 'Например: 5000руб. за кв. м',
+      undef: '-',
+    };
+  }
+});
+
 /*
 
  Загрузка фото

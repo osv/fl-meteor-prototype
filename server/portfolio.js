@@ -43,6 +43,28 @@ Meteor.methods({
                       userId: this.userId},
                      {$set: {desc: describe}});
   },
+  'portfolio-time': function(portfolioId, time) {
+    check(portfolioId, String);
+    check(time, String);
+
+    if (!this.userId)
+      throw new Meteor.Error(401, 'User not logged in');
+
+    Portfolio.update({_id: portfolioId,
+                      userId: this.userId},
+                     {$set: {time: time}});
+  },
+  'portfolio-cost': function(portfolioId, cost) {
+    check(portfolioId, String);
+    check(cost, String);
+
+    if (!this.userId)
+      throw new Meteor.Error(401, 'User not logged in');
+
+    if (Portfolio.update({_id: portfolioId,
+                      userId: this.userId},
+                     {$set: {cost: cost}}));
+  },
   'portfolio-publish': function(portfolioId) {
     check(portfolioId, String);
 
