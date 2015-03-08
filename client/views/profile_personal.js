@@ -603,65 +603,56 @@ Template.profileContactRow.events({
 });
 
 //form
-Template.formNewContact.rendered = function(){
-  this.$('form').formValidation({
-    fields: {
-      contact: {
-        validators: contactsTypes[ newContact.get() ].validators
-      },
-    }
-  }).on('success.form.fv', function(e) {
-    e.preventDefault();
-  });
-
-  // bootstrap form phone helper
-  var $phone = this.$('.bfh-phone');
-  if ($phone)
-    $phone.bfhphone($phone.data());
-};
 
 Template.formNewContact.helpers({
-  placeholder: function() { return contactsTypes[ newContact.get() ].placeholder; },
-  icon:        function() { return contactsTypes[ newContact.get() ].i; },
-  isPhone:     function() { return newContact.get() === 'phone' || newContact.get() === 'fax'; },
-  defaultValue:function() {
-    // дефолтный телефон для контакта - телефон входа
-    if (newContact.get() === 'phone') {
-      return Meteor.user().phone;
-    }
-    return '';
-  }
-});
+  newcontact: function() {
+    var type = newContact.get();
+    return {
+      getter: function() {
+        if (newContact.get() === 'phone') {
+          return Meteor.user().phone;
+        } else
+          return '';        
+      },
 
-Template.formNewContact.events({
-  'click [data-action="cancel"]': function(){
-    newContact.set(false);
-  },
-  'submit form': function(e, t){
-    e.preventDefault();
+      name: type,
 
-    t.$('form').data('formValidation').validate();
-    if (!t.$('form').data('formValidation').isValid())
-      return false;
+      placeholder: contactsTypes[ type ].placeholder,
 
-    var contact = t.find('[name="contact"]').value,
-        type = newContact.get();
+      addonIcon: contactsTypes[ type ].i,
 
-    if (type === 'phone' || type === 'fax')
-      contact = cleanPhoneNumber(contact);
+      validator: contactsTypes[ type ].validators,
 
-    newContact.set();
+      rendered: function(t) {
+        // bootstrap form phone helper if phone
+        if (type === 'phone' || type === 'fax') {
+          t.$('input').bfhphone({format: "+d (ddd) ddd-dd-ddd"});
+        }
+      },
 
-    Meteor.call('user add contact', type, contact, function(err){
-      if (err)
-        Messages.info(err.reason);
-      else {
-        Messages.info('Контакт добавлен ' + contact);
-        buildQRCode();
+      setter: function(contact) {
+        var type = newContact.get();
+
+        if (type === 'phone' || type === 'fax')
+          contact = cleanPhoneNumber(contact);
+
+        newContact.set();
+
+        Meteor.call('user add contact', type, contact, function(err){
+          if (err)
+            Messages.info(err.reason);
+          else {
+            Messages.info('Контакт добавлен ' + contact);
+            buildQRCode();
+          }
+        });
+      },
+
+      cancel: function() {
+        newContact.set(false);
       }
-    });
-    return false;
-  },
+    };
+  }
 });
 
 /* ****************************************************

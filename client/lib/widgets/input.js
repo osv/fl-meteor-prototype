@@ -77,6 +77,45 @@
   }
 });
 
+ Можно использовать только форму с кнопками сохранить - отменить
+
+ html:
+ {{>wFormInput context=inputcontext
+               placeholder="abc deef"
+               addonIcon="fa-phone"
+               name="abc"
+       }}
+
+ js:
+ Template.FooBar.helpers({
+ inputcontext: function() {
+   return: {
+     name: 'contact',
+
+     cancel: function() {Messages.info('cancelled')},
+
+     setter: function(value) {Messages.info('set')},
+
+     getter: 'foo bar',
+
+     // хук на рендер <input>
+     rendered: function(t) { t.find('input); },
+
+     placeholder: 'abc def',
+
+     addonIcon: 'fa-phone',
+
+     validator: {
+          notEmpty: {
+            message: 'Поле не может быть пустым'
+          }
+      }
+   }
+
+ }
+
+ });
+
 */
 
 function get(v) {
@@ -87,34 +126,53 @@ function get(v) {
   else return null;
 }
 
+Template.wInput.created = function() {
+  this.reactiveVar = new ReactiveVar(); // edit
+};
+
 Template.wInput.helpers({
+  context: function() {
+    var context = this.context,
+        reactiveVar = Template.instance().reactiveVar;
+    return {
+      placeholder: this.placeholder || get(context.placeholder),
+      addonIcon: this.addonIcon || get(context.addonIcon),
+      getter: context.getter,
+      validator: context.validator,
+      name: this.name || get(context.name),
+      setter: function(value){
+        reactiveVar.set(false);
+        if (context.setter) {
+          context.setter(value);
+        }
+      },
+      cancel: function() { reactiveVar.set(false); },
+      rendered: context.rendered,
+    };
+  },
+
 
   'curvalue': function() { return get(this.context.getter);},
 
-  'msgundef': function() { return get(this.context.undef);},
+  'name': function() { return this.name || get(this.context.name);},
 
-  'undefIcon': function() { return get(this.context.undefIcon);},
+  'msgundef': function() { return this.msgundef || get(this.context.undef);},
+
+  'undefIcon': function() { return this.undefIcon || get(this.context.undefIcon);},
+
+  'autocomplete': function() { return this.autocomplete || get(this.context.autocomplete);},
 
   'isWebPage': function() {
     var v = get(this.context.getter);
     return (v && v.match(/^http/)) ? true : false;
   },
   
-  'edit': function() { 
-    // создадим new ReactiveVar() если нет в data, ее мы передадим шаблону формы
-    if (!this.reactiveVar) {
-      console.log('wInput, created reactive var');
-      this.reactiveVar = ReactiveVar(false);
-    }
-    return this.reactiveVar.get(); },
-
-  // передаем реактивную переменную нашему шаблону
-  'reactiveVar': function() { return this.reactiveVar; }
+  edit: function() {return Template.instance().reactiveVar.get(); },
 });
 
 Template.wInput.events({
   'click [data-action="edit"]': function(e, t) {
-    this.reactiveVar.set(true);
+    t.reactiveVar.set(true);
     Meteor.defer(function() { t.$('input').focus(); });
   }
 });
@@ -122,21 +180,29 @@ Template.wInput.events({
 // form
 
 Template.wFormInput.helpers({
-  'curvalue': function() { return get(this.context.getter);},
+  curvalue: function() { return get(this.context.getter);},
+  placeholder: function() { return this.placeholder || get(this.context.placeholder);},
+  addonIcon: function() { return this.addonIcon || get(this.context.addonIcon);},
+  autocomplete: function() { return this.autocomplete || get(this.context.autocomplete);},
+  name: function() { return this.name || get(this.context.name);},
 });
 
 Template.wFormInput.rendered = function () {
   var context = this.data.context;
-  if (_.isFunction(context.rendered)) {
-    context.rendered(this);
-  }
+
+  // инициализация валидатора если есть он
   if (_.isObject(context.validator)) {
     var fields = {};
-    fields[this.data.name] = {validators: context.validator};
+    fields[ this.data.name || context.name ] = {validators: context.validator};
     this.$('form').formValidation( {fields: fields} ).on('success.form.fv', function(e) {
       e.preventDefault();
     });
-  }  
+  }
+
+  // дополнительный хук на rendered
+  if (_.isFunction(context.rendered)) {
+    context.rendered(this);
+  }
 };
 
 Template.wFormInput.events({
@@ -151,18 +217,16 @@ Template.wFormInput.events({
     }
 
     var value = t.find('input').value;
-
-    if (context.transform) {
+    if (_.isFunction(context.transform)) {
       value = context.transform(value);
     }
-
-    Template.currentData().reactiveVar.set(false);
 
     if (_.isFunction(context.setter))
       context.setter(value);
   },
   'click [data-action="cancel"]': function(){
-    console.log(this);
-    this.reactiveVar.set(false);
+    var context = Template.currentData().context;
+    if (_.isFunction(context.cancel))
+      context.cancel();
   },
 });
