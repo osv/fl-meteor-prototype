@@ -30,7 +30,6 @@ Template.loginButton.helpers({
     return Accounts.dropDownMenus;
   },
   me: function(){
-    var user = Meteor.user();
     return Meteor.user();
   },
   displayName: function(){

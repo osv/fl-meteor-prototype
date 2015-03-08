@@ -14,6 +14,9 @@ Package.onUse(function(api) {
   api.use('check');
   api.use(['sacha:spin', 'templating'], 'client');
 
+  // нужен нам {{avatar}}, он в пакете mol-uploads
+  api.use('mol-uploads', 'client');
+
   // api.use('ddp', ['client', 'server']);
   api.addFiles('./server/sms_server.js', 'server');
   api.addFiles('./client/account/accounts.html', 'client');
