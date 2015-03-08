@@ -66,7 +66,7 @@ Template.wSelect.helpers({
     var context = this.context;
     if (_.isArray(context.data) && context.getter) {
       var v = _.findDeep(context.data, {id: get(context.getter)});
-      v ? v.text : false;
+      return v ? v.text : false;
     }
     else
       return false;
