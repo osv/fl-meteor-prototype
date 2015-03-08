@@ -240,6 +240,7 @@ Template.modalChangePassword.events({
 Template.profileContactName.helpers({
   context: function() {
     return {
+      placeholder: "Смирнов Александр", 
 
       getter: function() { 
         return Meteor.user().profile.completeName; },
@@ -281,6 +282,7 @@ Template.profileLegalStatus.helpers({
       data: LegalStatuses,      // смотри в config.js
       msgundef: "Форма работы не указана",
       undefIcon: "fa fa-exclamation",
+      placeholder: "Частное лицо или компания",
       getter: function() { return Meteor.user().legalStat; },
       setter: function(legalStatus) {
         Meteor.call('set user legal status', legalStatus, function(err){
@@ -356,7 +358,7 @@ Template.profileDescribe.helpers({
       },
 
       undefIcon: "fa fa-exclamation-triangle",
-      undef: "Краткое описание не заполнено",
+      undef: "Подробное описание не заполнено",
       alert: "alert-warning",
       markdown: true,
     };
@@ -395,6 +397,7 @@ Template.profileWebsite.helpers({
 
       undef: "Веб-сайт не указан",
       undefIcon: 'fa fa-exclamation',
+      placeholder: "http://example.com",
 
       validator: {
         uri: {
@@ -460,6 +463,7 @@ Template.profileWorkPlaces.helpers({
   placeselect: function() {
     var addPlace = Template.instance().addPlace;
     return {
+      placeholder: 'Начните набирать город, регион или страну',
       data: S2Adaptors.anyplace,
       cancel: function() { addPlace.set(false); },
       setter: function(place) {

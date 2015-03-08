@@ -112,7 +112,7 @@
 </template>
 
 <template name="profileLegalStatus">
-  {{>wSelect context=context placeholder="Частное лицо или компания"}}
+  {{>wSelect context=context}}
 </template>
 
 <template name="profileOverview">
@@ -149,7 +149,7 @@
     </div>
   {{/if}}
   {{#if newForm}}
-    {{>wFormSelect context=placeselect placeholder="Город, регион или страна."}}
+    {{>wFormSelect context=placeselect}}
   {{else}}
     <button type="button" class="btn btn-primary" data-action="addPlace">
       <i class="fa fa-plus-circle"></i>
