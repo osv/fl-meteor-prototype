@@ -88,7 +88,7 @@ Template.wSelect.helpers({
       data: context.data,
       getter: context.getter,
       placeholder: this.placeholder || get(context.placeholder),
-      addonIcon: this.addonIcon || get(context.placeholder),
+      addonIcon: this.addonIcon || get(context.addonIcon),
       setter: function(value){
         reactiveVar.set(false);
         if (context.setter) {
