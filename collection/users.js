@@ -92,6 +92,10 @@ Schema.User = new SimpleSchema({
     type: String,
     optional: true
   },
+  wrkPlaces: {                     // места в которых работает мастер
+    type: [String],                // значение - id городов, стран, регионов
+    optional: true
+  },
   services: {
     type: Object,
     optional: true,

@@ -24,6 +24,7 @@ Meteor.publish('currentUser', function() {
                                  gal: true, // портфолио
                                  legalStat: true,
                                  legalName: true,
+                                 wrkPlaces: true,
                                  isMaster: true,
                                  isAdmin: true,
                                  phone: true}});
@@ -182,7 +183,22 @@ Meteor.methods({
 
     Meteor.users.update(this.userId, {$set: {legalStat: legalStatus}});
   },
+  'add work place': function(place) {
+    check(place, String);
 
+    if (!this.userId)
+      throw new Meteor.Error(401, 'User not logged in');
+
+    Meteor.users.update(this.userId, {$addToSet: {wrkPlaces: place}});
+  },
+  'rm work place': function(place) {
+    check(place, String);
+
+    if (!this.userId)
+      throw new Meteor.Error(401, 'User not logged in');
+
+    Meteor.users.update(this.userId, {$pull: {wrkPlaces: place}});
+  },
   /*
 
    Создание юзера админом.
