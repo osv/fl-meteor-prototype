@@ -13,7 +13,8 @@ Router.configure({
      а нам нужно шоп и другие поля, например isAdmin и т.д.
      */
     return Meteor.subscribe("currentUser");
-  }
+  },
+  loadingTemplate: 'loading'
 });
 
 // Custom options
