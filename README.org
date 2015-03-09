@@ -3,7 +3,7 @@
     - [ ] добавить в исключение роуты загрузка которых и так быстрая
   - [ ] alethes:pages -- pagination на bootstrap.
 
-* Что реализовать [1/6]
+* Что реализовать [1/7]
   - [X] Авторизация по смс.
   - [-] [6/9] Профиль юзера.
     - [X] Роли юзера (админ, клиент, исполнитель, также клиент может быть исполнителем)
@@ -58,10 +58,32 @@
 
 ** Девелопмент
 
-   На windows, с Vagrant запускай скрипт:
+*** Windows/Vagrant
+
+    Пример Vagrant файла здесь: https://github.com/osv/win-vagrant-meteor.git
+    Для старта внутри вагранта есть скрипт =start-vagrant.sh=
+
+    То есть если этот каталог находится в =shared/stroim= следует сделать:
 
 #+begin_example
+vagrant up
+vagrant ssh
+cd ~/shared/stroim
 ./start-vagrant.sh
+#+end_example
+ 
+*** Экспорт/импорт
+
+    Для экспорта-импорта есть следующие скрипты:
+
+    Экспорт:
+#+begin_example
+./tool-dump.bash ~/shared/my-new-dump.tar.gz
+#+end_example
+
+    Импорт:
+#+begin_example
+./tool-restore.bash ~/shared/my-new-dump.tar.gz
 #+end_example
 
 ** Продакшн
