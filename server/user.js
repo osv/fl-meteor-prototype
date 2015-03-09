@@ -304,3 +304,9 @@ Meteor.startup(function() {
     console.warn('I create admin user for you: %s\n     пароль: admin', MASTERPHONE);
   }
 });
+
+// пакет facts, для фильтрации прав доступа к {{> serverFacts}}
+// facts используется в роуте /
+Facts.setUserIdFilter(function (userId) {
+  return isAdminById(userId);
+});

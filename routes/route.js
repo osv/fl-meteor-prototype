@@ -80,6 +80,11 @@ Meteor.startup(function () {
     }
   });
 
+  Router.route('/admin_info', {
+    name: 'AdminInfo',
+    controller: 'ApplicationController'
+  });
+
   // all users for admins
   Paginations.usersPages = new Meteor.Pagination(Meteor.users, {
     auth: Meteor.isClient ? function(){} : function(skip, subscription) {
