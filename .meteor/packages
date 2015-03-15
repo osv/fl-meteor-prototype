@@ -39,6 +39,7 @@ zimme:iron-router-auth
 # collection facility
 aldeed:collection2
 matb33:collection-hooks
+percolate:migrations
 
 mol-smslogin
 mol-messages
