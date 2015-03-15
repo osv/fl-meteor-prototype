@@ -31,6 +31,55 @@ Meteor.publish('currentUser', function() {
   return user;
 });
 
+/*
+
+ Recalucalte score points for @user. We use this points for sorting them in catalogs
+
+ Все равны, но коекто равнее.
+
+ По какимто ж критериям нужно сортировать юзеров, например на странице
+ "мастера" мы выборку сделали по  г. Москва. Дополнительное поле score
+ в юзере  указывает на сколько  заполнен профиль и тд.   Для концепции
+ "про"  - просто  добавляем  +10500  к score,  и  они будут  автоматом
+ первыми. При этом потребуется простой индекс в базе.
+
+ формула:
+
+ min(10, 2 * колич.галерей) +
+ min(5, размер описание профиля / 100) +
+ 2 если размер краткого описание > 20 символ +
+ 1 если вебсайт указан + 
+ 10 если есть контакты +
+ 5 если есть аватар +
+ 2 если указан частное лицо или тд.
+
+ */
+recalculateUserScore = function(user) {
+  if (_.isString(user))
+    user = Meteor.users.find(user);
+  else if (typeof user === 'undefined') 
+    user = Meteor.user();
+
+  if (!user)
+    return false;
+
+  var score = 
+        Math.min(10, (user.gal ? 2 * user.gal.length : 0)) +
+        Math.min(5, (user.profile && user.profile.dLong) ? (user.profile.dLong.length / 100) : 0) +
+        ((user.profile && user.profile.dShort && // если краткое описание больше 10 символово.
+          user.profile.dShort.length > 20) ?       2  : 0) +
+        ((user.profile && user.profile.website)  ? 1  : 0) +
+        ((user.profile && user.profile.contacts &&
+          user.profile.contacts.length) ?          10 : 0) +
+        ((user.profile && user.profile.avatar)   ? 5  : 0) +
+        ((user.legalStat)                        ? 2  : 0);
+  /* TODO: нужно отзывы также будет сюда добавить */
+  /* TODO: isPro если он "про" то добавить 105000 */
+
+  Meteor.users.update(user._id, {$set: {score: score}});
+  return true;
+};
+
 Meteor.methods({
   // token -  опционально, если undefined, тогда  отправляем SMS, если
   // же есть, тогда проверяем и меняем номер телефона юзера this.userId
