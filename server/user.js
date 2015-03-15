@@ -76,7 +76,7 @@ recalculateUserScore = function(user) {
   /* TODO: нужно отзывы также будет сюда добавить */
   /* TODO: isPro если он "про" то добавить 105000 */
 
-  Meteor.users.update(user._id, {$set: {score: score}});
+  Meteor.users.update(user._id, {$set: {score: parseInt(score)}});
   return true;
 };
 
