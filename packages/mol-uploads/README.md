@@ -100,52 +100,46 @@ meteor.call('avatar-remove')
 И хотя есть роутинг для статики, но лучше использовать nginx чтобы не дергать метеор:
 
 ```
-http {
- 
-  ## Snip Standard nginx config ##
+server {
+     listen       8081;
+     server_name  localhost;
 
-
-  map $http_upgrade $connection_upgrade {
-      default   upgrade;
-      ''        close;
-  }
-  upstream meteor {
-    server 127.0.0.1:3000;
-  }
-
-
-  server {
-    listen 8080;
-
-
-    server_name localhost;
-
-
-    location ~ "^/i/" {
-      root /path/to/uploads;
-      access_log off;
-
-      # кеш
-      expires 5d;
-      access_log off;
-      add_header Pragma public;
-      add_header Cache-Control "public, must-revalidate, proxy-revalidate";
-    }
-    
-    # this is for any sockets
-    location /sockjs/ {
-      proxy_pass http://meteor;
-      proxy_http_version 1.1;
-      proxy_set_header Upgrade $http_upgrade;
-      proxy_set_header Connection $connection_upgrade;
-    }
-    
     location / {
-      proxy_pass http://meteor;
-      # dont know if this is missing some stuff
+        root /webapp/moldavan/public/;
+        passenger_enabled on;
+        passenger_sticky_sessions on;
+        passenger_env_var  MONGO_URL mongodb://localhost:27017/moldavan;
+        passenger_env_var  ROOT_URL http://www.foo.com;
+        passenger_env_var  UPLOADDIR /webapp/moldavan/uploads/;
+        # Set these ONLY if your app is a Meteor bundle!
+        passenger_app_type node;
+        passenger_startup_file main.js;
+
+        gzip            on;
+        gzip_min_length 1000;
+
+        # ошибки, в продакш нужно отключить!
+        passenger_friendly_error_pages on;
+
+        passenger_min_instances 2;
+        passenger_nodejs /usr/bin/node;
+
+        # passenger_env_var _PASSENGER_NODE_CONTROL_SERVER 1;
     }
-  }
+
+    location /i/ {
+        autoindex on;
+        charset utf-8;
+        allow all;
+        expires 5d;
+        access_log off;
+        add_header Pragma public;
+        add_header Cache-Control "public, must-revalidate, proxy-revalidate";
+        alias /webapp/moldavan/uploads/;
+    }
+
 }
+
 ```
 
 ## Безопасность
