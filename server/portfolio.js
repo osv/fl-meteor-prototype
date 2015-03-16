@@ -82,11 +82,13 @@ Meteor.methods({
     
     Portfolio.update({_id: portfolioId, userId: this.userId}, {$set: {done: true}});
     // добавим к юзеру информацию о портфолио
-    Meteor.users.update(this.userId,
+    if (Meteor.users.update(this.userId,
                         {$addToSet:
                          {gal: {id: portfolioId,
                                 preview: portfolio.preview,
-                                title: portfolio.title }}});
+                                title: portfolio.title }}})) {
+      recalculateUserScore(this.userId);
+    }
   },
   'portfolio-delete': function(portfolioId) {
     check(portfolioId, String);
@@ -102,7 +104,7 @@ Meteor.methods({
 
     Portfolio.remove({_id: portfolioId, userId: this.userId});
     Meteor.users.update(this.userId, {$pull: {gal: {id: portfolioId}}});
-
+    recalculateUserScore(this.userId);
     logEvent({type: Events.EV_PROFILE, userId: this.userId, name: "Remove portfolio", desc: 'id: '+ portfolioId});
   }
 });

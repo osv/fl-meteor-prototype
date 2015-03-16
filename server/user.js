@@ -177,9 +177,11 @@ Meteor.methods({
     if (!this.userId)
       throw new Meteor.Error(401, 'User not logged in');
 
-    Meteor.users.update(this.userId, {$set: {"profile.dLong": workDescribe}});
-    logEvent({type: Events.EV_PROFILE, name: "Changed describe", userId: this.userId,
-              desc: "Work long describe: " + workDescribe + " to " + workDescribe});
+    if (Meteor.users.update(this.userId, {$set: {"profile.dLong": workDescribe}})) {
+      recalculateUserScore(this.userId);
+      logEvent({type: Events.EV_PROFILE, name: "Changed describe", userId: this.userId,
+                desc: "Work long describe: " + workDescribe + " to " + workDescribe});
+    }
   },
   'change user describe short': function(workDescribe) {
     check(workDescribe, String);
@@ -187,9 +189,11 @@ Meteor.methods({
     if (!this.userId)
       throw new Meteor.Error(401, 'User not logged in');
 
-    Meteor.users.update(this.userId, {$set: {"profile.dShort": workDescribe}});
-    logEvent({type: Events.EV_PROFILE, name: "Changed preview", userId: this.userId,
+    if (Meteor.users.update(this.userId, {$set: {"profile.dShort": workDescribe}})) {
+      recalculateUserScore(this.userId);
+      logEvent({type: Events.EV_PROFILE, name: "Changed preview", userId: this.userId,
               desc: "Work short describe: " + workDescribe + " to " + workDescribe});
+    }
   },
   'change user website': function(website) {
     check(website, String);
@@ -197,9 +201,11 @@ Meteor.methods({
     if (!this.userId)
       throw new Meteor.Error(401, 'User not logged in');
 
-    Meteor.users.update(this.userId, {$set: {"profile.website": website}});
-    logEvent({type: Events.EV_PROFILE, name: "Changed website", userId: this.userId,
-              desc: website});
+    if (Meteor.users.update(this.userId, {$set: {"profile.website": website}})) {
+      recalculateUserScore(this.userId);
+      logEvent({type: Events.EV_PROFILE, name: "Changed website", userId: this.userId,
+                desc: website});
+    }
   },
   'user add contact': function(type, contact) {
     check(type, String);
@@ -213,7 +219,9 @@ Meteor.methods({
 
     //var contacts = Meteor.users.findOne(this.userId, {fields: {'profile.contacts': 1}});
 
-    Meteor.users.update(this.userId, {$addToSet: {"profile.contacts": {type: type, contact: contact}}});
+    if (Meteor.users.update(this.userId, {$addToSet: {"profile.contacts": {type: type, contact: contact}}})) {
+      recalculateUserScore(this.userId);
+    }
   },
   'user rm contact': function(type, contact) {
     check(type, String);
@@ -222,7 +230,9 @@ Meteor.methods({
     if (!this.userId)
       throw new Meteor.Error(401, 'User not logged in');
 
-    Meteor.users.update(this.userId, {$pull: {"profile.contacts": {type: type, contact: contact}}});
+    if (Meteor.users.update(this.userId, {$pull: {"profile.contacts": {type: type, contact: contact}}})) {
+      recalculateUserScore(this.userId);
+    }
   },
   'set user legal status': function(legalStatus) {
     check(legalStatus, String);
@@ -230,7 +240,9 @@ Meteor.methods({
     if (!this.userId)
       throw new Meteor.Error(401, 'User not logged in');
 
-    Meteor.users.update(this.userId, {$set: {legalStat: legalStatus}});
+    if (Meteor.users.update(this.userId, {$set: {legalStat: legalStatus}})) {
+      recalculateUserScore(this.userId);
+    }
   },
   'add work place': function(place) {
     check(place, String);
@@ -238,7 +250,9 @@ Meteor.methods({
     if (!this.userId)
       throw new Meteor.Error(401, 'User not logged in');
 
-    Meteor.users.update(this.userId, {$addToSet: {wrkPlaces: place}});
+    if (Meteor.users.update(this.userId, {$addToSet: {wrkPlaces: place}})) {
+      recalculateUserScore(this.userId);
+    }
   },
   'rm work place': function(place) {
     check(place, String);
@@ -246,7 +260,9 @@ Meteor.methods({
     if (!this.userId)
       throw new Meteor.Error(401, 'User not logged in');
 
-    Meteor.users.update(this.userId, {$pull: {wrkPlaces: place}});
+    if (Meteor.users.update(this.userId, {$pull: {wrkPlaces: place}})) {
+      recalculateUserScore(this.userId);
+    }
   },
   /*
 
