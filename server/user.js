@@ -56,7 +56,7 @@ Meteor.publish('currentUser', function() {
  */
 recalculateUserScore = function(user) {
   if (_.isString(user))
-    user = Meteor.users.find(user);
+    user = Meteor.users.findOne(user);
   else if (typeof user === 'undefined') 
     user = Meteor.user();
 
