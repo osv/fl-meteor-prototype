@@ -28,11 +28,14 @@ Schema.Portfolio = new SimpleSchema({
 Schema.UserProfile = new SimpleSchema({
   completeName: {
     type: String,
-    optional: true
+    optional: true,
+    min: 2,
+    max: 58,
   },
   dShort: {                     // описан работ мастера краткое
     type: String,
-    optional: true
+    optional: true,
+    max: 214,
   },
   dLong: {                      // описан работ мастера ПОДРОБНОЕ
     type: String,
@@ -40,7 +43,8 @@ Schema.UserProfile = new SimpleSchema({
   },
   website: {
     type: String,
-    optional: true
+    optional: true,
+    max: 64,                    // не позволим длинные ссылки
   },
   contacts: {
     type: [Schema.Contacts],
