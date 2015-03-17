@@ -54,6 +54,10 @@ portfolioSchema.Portfolio = new SimpleSchema({
     type: String,
     optional: true,
   },
+  cat: {                        // категория
+    type: String,
+    optional: true
+  },
   time: {                       // Сроки и объем
     type: String,
     optional: true,

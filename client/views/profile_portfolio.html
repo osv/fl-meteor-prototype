@@ -35,6 +35,10 @@
         context=this
         popover="Средняя цена проделаной работы."
       }}
+      {{>portfolioInput label="Категория" t="portfolioCat"
+        context=this
+        popover="К какой категории следует отнести это портфолио"
+      }}
       {{#if preview}}
       {{! Этот елемент не показываем, чтобы не перегружать интерфейс
          и чтобы не запрокрастинировал юзер,
@@ -96,6 +100,10 @@
 
 <template name="portfolioCost">
   {{>wInput context=context name="cost"}}
+</template>
+
+<template name="portfolioCat">
+  {{>wSelect context=context}}
 </template>
 
 <template name="portfolioPreview">

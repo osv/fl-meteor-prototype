@@ -65,6 +65,17 @@ Meteor.methods({
                       userId: this.userId},
                      {$set: {cost: cost}}));
   },
+  'portfolio-cat': function(portfolioId, cat) {
+    check(portfolioId, String);
+    check(cat, String);
+
+    if (!this.userId)
+      throw new Meteor.Error(401, 'User not logged in');
+
+    if (Portfolio.update({_id: portfolioId,
+                      userId: this.userId},
+                     {$set: {cat: cat}}));
+  },
   'portfolio-publish': function(portfolioId) {
     check(portfolioId, String);
 

@@ -150,6 +150,35 @@ Template.portfolioCost.helpers({
   }
 });
 
+
+/*
+
+ Категория работы
+
+*/
+
+Template.portfolioCat.helpers({
+  context: function() {
+    var self = this;
+    return {
+      data: col2sel(Categories.find().fetch(), 'p', 'n', '_id'),
+
+      getter: function() { return self.cat; },
+
+      setter: function(selected) { 
+        Meteor.call('portfolio-cat', self._id, selected,
+                    function(err) {
+                      if (err) {
+                        Messages.info(err.reason);
+                      }
+                    });
+      },
+
+      placeholder: 'Например: Поклейка обоев'   // другой способ установить плейсхолдер для select2
+    };
+  }
+});
+
 /*
 
  Загрузка фото
