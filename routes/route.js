@@ -7,12 +7,9 @@ Router.configure({
   },
   progressSpinner : false,      // смотри multiply:iron-router-progress
   waitOn: function() {
-    /* 
-     Всегда подписываемся на текущего юзера.
-     К содалению пакет accounts-base публикует токо [username profile]
-     а нам нужно шоп и другие поля, например isAdmin и т.д.
-     */
-    return Meteor.subscribe("currentUser");
+    return [Meteor.subscribe("currentUser"),   // подписка на текучего юзера
+            Meteor.subscribe("cats"),          // категории
+           ];
   },
   loadingTemplate: 'loading'
 });
@@ -83,6 +80,12 @@ Meteor.startup(function () {
   Router.route('/admin_info', {
     name: 'AdminInfo',
     controller: 'ApplicationController'
+  });
+
+  // редактирование категорий
+  Router.route('/adminCat', {
+    name: 'adminCategories',
+    controller: 'ApplicationController',
   });
 
   // all users for admins

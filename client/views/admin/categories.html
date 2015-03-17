@@ -1,0 +1,103 @@
+<template name="adminCategories">
+  {{>adminNavigation}}
+
+  <h2> Категории</h2>
+
+  <p>
+    Категории, тематика или можно назвать еще разделы в системе, они используются, например, в поиске фрилансеров.
+  </p>
+
+  <ul>
+    {{#with rootCategory }}
+      {{> catTreeNodeTemplate}}
+    {{/with }}
+  </ul>
+</template>
+
+
+<template name="catTreeNodeTemplate" >
+  <li id="{{_id}}" title="{{n}}">
+    {{> catItem name=n id=_id p=p rm=rm}}
+    {{#if hasChildren}}
+      <ul>
+        {{#each children}}
+          {{> catTreeNodeTemplate}}
+        {{/each}}
+      </ul>
+    {{/if}}
+  </li>
+</template>
+
+<template name="catItem">
+  {{#if edit}}
+    <form class="form-horizontal">
+      <div class="form-group">
+        <div class="input-group">
+          <input class="form-control" value="{{name}}" name="newName" type="text"
+                 placeholder="Имя новой категории">
+          <div class="input-group-btn">
+            <button data-action="save"   type="submit" class="btn btn-success">Сохранить</button>
+            <button data-action="cancel" type="button" class="btn btn-warning">Отменить</button>
+          </div>
+        </div>
+      </div>
+    </form>
+  {{else}}
+
+    {{! Рисуем название категории 
+       
+       Если эта категория удалена, нарисуем подругому ее}}
+    {{#if rm}}
+      <del>
+        {{name}}
+      </del>
+      (Удалено)
+    {{else}}
+      <span data-action="edit">
+        {{name}}
+      </span>
+    {{/if}}
+
+    {{#if new}}
+
+      <ul>
+        <form class="form-horizontal">
+          <div class="form-group">
+            <div class="input-group">
+              <span class="input-group-addon">
+                Подкатегория
+              </span>
+              <input class="form-control" name="category" type="text"
+                     placeholder="Имя новой категории">
+              <div class="input-group-btn">
+                <button data-action="saveNew"   type="submit" class="btn btn-success">Сохранить</button>
+                <button data-action="cancelNew" type="button" class="btn btn-warning">Отменить</button>
+              </div>
+            </div>
+          </div>
+        </form>
+      </ul>  
+    {{else}} 
+
+      {{! ниже кнопки разные}}
+      {{#if id}}
+        <button data-action="edit" title="Редактировать" class="btn btn-link">
+          <i class="fa fa-pencil"></i>
+        </button>
+        {{#if rm}}
+          <button {{disabledRestore}} data-action="restore" title="Востановить" class="btn btn-link">
+            <i class="fa fa-share"></i>
+          </button>
+        {{else}}
+          <button data-action="remove" title="Удалить (скрыть от юзера)" class="btn btn-link">
+            <i class="fa fa-trash-o"></i>
+          </button>
+        {{/if}}
+
+      {{/if}}
+      <button data-action="new" title="Создать под категорию" class="btn btn-link">
+        <i class="fa fa-plus"></i>
+      </button> 
+    {{/if}}
+  {{/if}}
+</template>
