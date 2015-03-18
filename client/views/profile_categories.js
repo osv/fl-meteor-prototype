@@ -16,7 +16,8 @@ Template.profileCatTreeNode.helpers({
 Template.profileCatItem.helpers({
   set: function() {
     return _.contains(Meteor.user().cats, this.ctx._id);
-  }
+  },
+  hasChildren: function() { return Categories.find({p: this.ctx._id}).count() > 0; },
 });
 
 Template.profileCatItem.events({

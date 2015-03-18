@@ -1,0 +1,42 @@
+@import "./lib/custom.bootstrap.import.less";
+
+/*
+  миксинг
+  */
+.animation(@animation) {
+  -webkit-animation: @animation;
+       -o-animation: @animation;
+          animation: @animation;
+}
+
+/*
+
+  Анимация когда выбран какойто елемент.
+
+  Так для пробы.
+
+*/
+.ani-choised {
+    .animation(choised linear .5s);
+}
+
+// ключи анимации для разных вендоров
+@-webkit-keyframes choised {.choised-keys;}
+@-o-keyframes choised {.choised-keys;}
+@keyframes choised {.choised-keys;}
+
+// собственно сами ключи для .ani-choised
+.choised-keys() {
+    0% {
+        background: #7f7;
+    }
+    50% {
+        background: @body-bg;
+    }
+    51% {
+        background: #7f7;
+    }
+    100% {
+        background: @body-bg;
+    }
+}

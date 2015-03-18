@@ -32,20 +32,27 @@
 </template>
 
 <template name="profileCatItem">
-  {{#if set}}
-
-    {{ctx.n}} (Оказываю)
-
-    <button data-action="unset" title="Удалить из выбраных" class="btn btn-xs btn-link">
-      <i class="fa fa-trash-o"></i>
-    </button>
+  {{#if hasChildren}}
+    <strong>
+      {{ctx.n}}
+    </strong>
   {{else}}
+    {{#if set}}
 
-    {{ctx.n}}
+      <span class="ani-choised">
+        {{ctx.n}} (Оказываю)
+      </span>
+      <button data-action="unset" title="Удалить из выбраных" class="btn btn-xs btn-link">
+        <i class="fa fa-trash-o"></i>
+      </button>
+    {{else}}
 
-    <button data-action="set" class="btn btn-xs btn-link">
-      <i class="fa fa-plus"></i>
-      Выбрать
-    </button>
+      {{ctx.n}}
+
+      <button data-action="set" class="btn btn-xs btn-link">
+        <i class="fa fa-plus"></i>
+        Выбрать
+      </button>
+    {{/if}}
   {{/if}}
 </template>
