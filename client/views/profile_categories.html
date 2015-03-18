@@ -1,0 +1,51 @@
+<template name="profileCategories">
+
+  <h1>Каталог услуг</h1>
+
+  <p>
+    Выберите те услуги которые вы оказываете.
+  </p>
+
+
+  <ul>
+    {{#each rootCategories }}
+      {{> profileCatTreeNode}}
+    {{/each }}
+  </ul>
+
+</template>
+
+
+<template name="profileCatTreeNode" >
+  <li id="{{_id}}" title="{{n}}">
+
+    {{>profileCatItem ctx=this}}
+
+    {{#if hasChildren}}
+      <ul>
+        {{#each children}}
+          {{> profileCatTreeNode}}
+        {{/each}}
+      </ul>
+    {{/if}}
+  </li>
+</template>
+
+<template name="profileCatItem">
+  {{#if set}}
+
+    {{ctx.n}} (Оказываю)
+
+    <button data-action="unset" title="Удалить из выбраных" class="btn btn-xs btn-link">
+      <i class="fa fa-trash-o"></i>
+    </button>
+  {{else}}
+
+    {{ctx.n}}
+
+    <button data-action="set" class="btn btn-xs btn-link">
+      <i class="fa fa-plus"></i>
+      Выбрать
+    </button>
+  {{/if}}
+</template>

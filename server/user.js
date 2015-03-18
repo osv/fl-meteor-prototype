@@ -33,6 +33,7 @@ Meteor.publish('currentUser', function() {
                                  legalStat: true,
                                  legalName: true,
                                  wrkPlaces: true,
+                                 cats: true,
                                  isMaster: true,
                                  isAdmin: true,
                                  phone: true}});

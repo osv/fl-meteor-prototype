@@ -61,6 +61,11 @@ Meteor.startup(function () {
     controller: 'CabinetController'
   });
 
+  Router.route('/profile/cats', {
+    name: 'profileCategories',
+    controller: 'CabinetController'
+  });
+
   Router.route('/profile/personal', {
     name: 'profilePersonal',
     controller: 'CabinetController'

@@ -108,7 +108,11 @@ Schema.User = new SimpleSchema({
     type: Number,
     optional: true
   },
-  services: {
+  cats: {                       // id категории, услуги которые оказывает мастер
+    type: [String],
+    optional: true,
+  },
+  services: {                   // служебное поле, используется внутри метеора
     type: Object,
     optional: true,
     blackbox: true
@@ -124,6 +128,18 @@ Schema.User = new SimpleSchema({
 });
 
 Meteor.users.attachSchema(Schema.User);
+
+Meteor.users.deny({
+  update: function(userId, post, fieldNames) {
+    return (_.without(fieldNames, 'cats').length > 0);
+  }
+});
+
+Meteor.users.allow({
+  update: function(userId, doc){
+    return userId == doc._id;
+  },
+});
 
 /*
  Role base permisssion
