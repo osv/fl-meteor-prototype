@@ -29,7 +29,7 @@ Categories.deny({
 });
 
 Categories.allow({
-  insert: isAdminById,
+  insert: isAdminById,          // только админ может править категории
   update: isAdminById,
 });
 

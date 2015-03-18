@@ -25,7 +25,7 @@ Template.catItem.helpers({
   new: function() { return Template.instance().new.get();  },
   disabledRestore: function() {
     // если отцовская категория не удалена, то мы можем востановить и эту
-    var cat = Categories.findOne(this.p);
+    var cat = Categories.findOne(this.ctx.p);
     return (cat && cat.rm) ? 'disabled' : '';
   }
 });
@@ -33,7 +33,7 @@ Template.catItem.helpers({
 Template.catItem.events({
   // удаление/востановление
   'click [data-action="remove"]': function (e, t) {
-    var id = Template.currentData().id;
+    var id = t.data.ctx._id;
 
     if ( Categories.find( {p: id, rm: {$ne: true } } ).count() > 0 ) {
       alert("Вы должны сперва удалить все категории что ниже этой.");
@@ -42,7 +42,7 @@ Template.catItem.events({
     Categories.update(id, {$set: {rm: true}});
   },
   'click [data-action="restore"]': function (e, t) {
-    var id = Template.currentData().id;
+    var id = t.data.ctx._id;
 
     Categories.update(id, {$set: {rm: false}});
   },
@@ -50,6 +50,7 @@ Template.catItem.events({
   // редактирование текущей категории
   'click [data-action="edit"]': function(e, t) {
     t.edit.set(true);
+    Meteor.defer(function() { t.find('input').focus(); });
   },
   'click [data-action="cancel"]': function (e, t) {
     t.edit.set(false);
@@ -57,7 +58,7 @@ Template.catItem.events({
   'click [data-action="save"], submit form': function (e, t) {
     e.preventDefault();
     var newName = t.find('input[name="newName"]').value,
-        id = Template.currentData().id;
+        id = t.data.ctx._id;
 
     Categories.update(id, {$set: {n: newName}});
     t.edit.set(false);
@@ -66,6 +67,7 @@ Template.catItem.events({
   // создание новой подкатегории
   'click [data-action="new"]': function(e, t) {
     t.new.set(true);
+    Meteor.defer(function() { t.find('input').focus(); });
   },
   'click [data-action="cancelNew"]': function (e, t) {
     t.new.set(false);
@@ -73,7 +75,7 @@ Template.catItem.events({
   'click [data-action="saveNew"], submit form': function (e, t) {
     e.preventDefault();
     var name = t.find('input[name="category"]').value,
-        parentId = Template.currentData().id;
+        parentId = t.data.ctx._id;
     
     // сохраняем новую категорию
     Categories.insert({p: parentId, // отцовский айди

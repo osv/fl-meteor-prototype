@@ -17,7 +17,9 @@
 
 <template name="catTreeNodeTemplate" >
   <li id="{{_id}}" title="{{n}}">
-    {{> catItem name=n id=_id p=p rm=rm}}
+
+    {{> catItem ctx=this }}
+
     {{#if hasChildren}}
       <ul>
         {{#each children}}
@@ -29,11 +31,12 @@
 </template>
 
 <template name="catItem">
+  {{! ctx - это елемент из колекции Categories }}
   {{#if edit}}
     <form class="form-horizontal">
       <div class="form-group">
         <div class="input-group">
-          <input class="form-control" value="{{name}}" name="newName" type="text"
+          <input class="form-control" value="{{ctx.n}}" name="newName" type="text"
                  placeholder="Имя новой категории">
           <div class="input-group-btn">
             <button data-action="save"   type="submit" class="btn btn-success">Сохранить</button>
@@ -47,14 +50,14 @@
     {{! Рисуем название категории 
        
        Если эта категория удалена, нарисуем подругому ее}}
-    {{#if rm}}
+    {{#if ctx.rm}}
       <del>
-        {{name}}
+        {{ctx.n}}
       </del>
       (Удалено)
     {{else}}
       <span data-action="edit">
-        {{name}}
+        {{ctx.n}}
       </span>
     {{/if}}
 
@@ -80,11 +83,11 @@
     {{else}} 
 
       {{! ниже кнопки разные}}
-      {{#if id}}
+      {{#if ctx._id}}
         <button data-action="edit" title="Редактировать" class="btn btn-link">
           <i class="fa fa-pencil"></i>
         </button>
-        {{#if rm}}
+        {{#if ctx.rm}}
           <button {{disabledRestore}} data-action="restore" title="Востановить" class="btn btn-link">
             <i class="fa fa-share"></i>
           </button>
@@ -95,7 +98,7 @@
         {{/if}}
 
       {{/if}}
-      {{#unless rm}}
+      {{#unless ctx.rm}}
       <button data-action="new" title="Создать под категорию" class="btn btn-link">
         <i class="fa fa-plus"></i>
       </button>
