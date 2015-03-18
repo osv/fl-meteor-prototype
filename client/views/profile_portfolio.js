@@ -161,7 +161,7 @@ Template.portfolioCat.helpers({
   context: function() {
     var self = this;
     return {
-      data: col2sel(Categories.find().fetch(), 'p', 'n', '_id'),
+      data: col2sel(Categories.find().fetch(), 'p', 'n', '_id', 'rm'),
 
       getter: function() { return self.cat; },
 
