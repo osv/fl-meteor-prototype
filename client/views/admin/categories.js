@@ -23,6 +23,7 @@ Template.catItem.created = function(){
 Template.catItem.helpers({
   edit: function() { return Template.instance().edit.get();  },
   new: function() { return Template.instance().new.get();  },
+  hasChildren: function() { return Categories.find({p: this.ctx._id}).count() > 0; },
   disabledRestore: function() {
     // если отцовская категория не удалена, то мы можем востановить и эту
     var cat = Categories.findOne(this.ctx.p);

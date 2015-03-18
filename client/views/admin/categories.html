@@ -48,18 +48,16 @@
   {{else}}
 
     {{! Рисуем название категории 
-       
        Если эта категория удалена, нарисуем подругому ее}}
-    {{#if ctx.rm}}
-      <del>
-        {{ctx.n}}
-      </del>
-      (Удалено)
-    {{else}}
-      <span data-action="edit">
-        {{ctx.n}}
-      </span>
-    {{/if}}
+    <span data-action="edit">
+      {{#if hasChildren}}
+        <strong>
+          {{>catItemName name=ctx.n rm=ctx.rm}}
+        </strong>
+      {{else}}
+        {{>catItemName name=ctx.n rm=ctx.rm}}
+      {{/if}}
+    </span>
 
     {{#if new}}
 
@@ -105,4 +103,15 @@
       {{/unless}}
     {{/if}}
   {{/if}}
+</template>
+
+<template name="catItemName">
+    {{#if rm}}
+      <del>
+        {{name}}
+      </del>
+      (Удалено)
+    {{else}}
+        {{name}}
+    {{/if}}
 </template>
