@@ -125,7 +125,6 @@ Schema.User = new SimpleSchema({
 
 Meteor.users.attachSchema(Schema.User);
 
-Meteor.users._ensureIndex({wrkPlaces: 1, score: -1});
 /*
  Role base permisssion
  */
