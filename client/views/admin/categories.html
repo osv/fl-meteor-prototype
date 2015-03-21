@@ -16,8 +16,7 @@
 
 
 <template name="catTreeNodeTemplate" >
-  <li id="{{_id}}" title="{{n}}">
-
+  <li>
     {{> catItem ctx=this }}
 
     {{#if hasChildren}}
@@ -94,7 +93,17 @@
             <i class="fa fa-trash-o"></i>
           </button>
         {{/if}}
-
+        {{#if editPrice}}
+          <button data-action="hidePrice" title="Скрыть цены" class="btn btn-link">
+            <i class="fa fa-angle-up"></i>
+            <i class="fa fa-usd"></i>({{prices}})
+          </button>
+        {{else}}
+          <button data-action="showPrice" title="Показать цены" class="btn btn-link">
+            <i class="fa fa-angle-down"></i>
+            <i class="fa fa-usd"></i>({{prices}})
+          </button>
+        {{/if}}
       {{/if}}
       {{#unless ctx.rm}}
       <button data-action="new" title="Создать под категорию" class="btn btn-link">

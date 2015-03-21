@@ -18,12 +18,18 @@ Template.catTreeNodeTemplate.helpers({
 Template.catItem.created = function(){
   this.new = new ReactiveVar(); // форма новой подкатегории если true
   this.edit = new ReactiveVar();
+  this.editPrice = new ReactiveVar();
 };
 
 Template.catItem.helpers({
   edit: function() { return Template.instance().edit.get();  },
   new: function() { return Template.instance().new.get();  },
+  editPrice: function() { return Template.instance().editPrice.get();  },
+
+  prices: function() { return PriceTmp.find({cat: this.ctx._id}).count(); },
+
   hasChildren: function() { return Categories.find({p: this.ctx._id, rm: {$ne: true}}).count() > 0; },
+
   disabledRestore: function() {
     // если отцовская категория не удалена, то мы можем востановить и эту
     var cat = Categories.findOne(this.ctx.p);
@@ -83,5 +89,13 @@ Template.catItem.events({
                        n: name,     // название категории
                       });
     t.new.set(false);              // все, выключаем форму редактирования
+  },
+
+  // показать скрыть цены
+  'click [data-action="showPrice"]': function(e, t) {
+    t.editPrice.set(true);
+  },
+  'click [data-action="hidePrice"]': function(e, t) {
+    t.editPrice.set(false);
   },
 });
