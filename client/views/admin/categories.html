@@ -112,6 +112,11 @@
       {{/unless}}
     {{/if}}
   {{/if}}
+  {{#if ctx._id}}
+    {{#if editPrice}}
+      {{>catPriceEditor category=ctx._id}}        
+    {{/if}}
+  {{/if}}
 </template>
 
 <template name="catItemName">

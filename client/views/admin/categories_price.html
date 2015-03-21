@@ -1,0 +1,183 @@
+
+<template name="catPriceEditor">
+  <div class="row">
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th class="col-md-9">
+            Название услуги
+            {{#unless new}}
+              <button data-action="newPrice" class="btn btn-sm btn-primary">
+                Добавить новую позицию 
+                <i class="fa fa-plus"></i>
+              </button>
+            {{/unless}}
+          </th>
+          <th class="col-md-2">Обьем</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        {{#if new}}
+          <tr>
+            <td>
+              {{>catPriceInput name="newPrice"}}
+            </td>
+            <td>
+              {{>catPriceVolSelect name="newVol"}}
+            </td>
+            <td>
+              {{>catPriceBtns actSave="saveNewPrice" actCancel="cancelNewPrice"}}
+            </td>
+          </tr>
+        {{/if}}
+        {{#each prices}}
+          {{>catPriceItem}}
+        {{/each}}
+      </tbody>
+    </table>
+  </div>
+</template>
+
+<template name="catPriceItem">
+  <tr class="ani-choised">
+    {{#if edit}}
+      <td>
+        {{>catPriceInput name="price" value=n}}
+      </td>
+      <td>
+        {{>catPriceVolSelect name="volume" value=v}}
+      </td>
+      <td>
+        {{>catPriceBtns actSave="savePr" actCancel="cancelPr"}}
+      </td>
+    {{else}}
+      <td data-action="editPr">
+        {{#if rm}}
+          <del>{{n}}</del>
+          (Удален)
+          <button data-action="restorePrice" title="Востановить" class="btn btn-link">
+            <i class="fa fa-share"></i>
+          </button>
+        {{else}}
+          {{n}}
+          {{#if canDelete}}
+            <button data-action="rmPrice" title="Удалить" class="btn btn-link">
+              <i class="fa fa-trash-o"></i>
+            </button>
+          {{/if}}
+        {{/if}}
+      </td>
+      <td data-action="editPr">{{v}}</td>
+      <td>
+        <button data-toggle="priceDet" title="Детеальный прайс этой позиции" type="button" class="btn btn-sm btn-default">
+          {{#if showDetails}}
+            <i class="fa fa-angle-double-down"></i>
+          {{else}}
+            <i class="fa fa-angle-double-up"></i>
+          {{/if}}
+          Детали
+          {{#if detailsCount}}
+            <span class="badge">
+              {{detailsCount}}
+            </span>
+          {{/if}}
+        </button>     
+      </td>
+    {{/if}}
+  </tr>
+  {{#if showDetails}}
+    <tr>
+      <td colspan="3">
+        <table class="table table-bordered table-striped">
+          <thead>
+            <tr>
+              <th class="col-md-9">
+                Детальный список услуг
+                {{#unless newDetail}}
+                  <button data-action="newDetPrice" class="btn btn-sm btn-primary">
+                    Добавить
+                    <i class="fa fa-plus"></i>
+                  </button>
+                {{/unless}}
+              </th>
+              <th class="col-md-2">Обьем</th>
+            </tr>
+          </thead>
+          <tbody>
+            {{#if newDetail}}
+              <tr>
+                <td>
+                  <div class="input-group">
+                    {{>catPriceInput name="newDetPrice"}}
+                    {{>catPriceBtns actSave="saveNewDetPrice" actCancel="cancelNewDetPrice"}}
+                  </div>
+                </td>
+                <td>
+                  {{>catPriceVolSelect name="newDetVol"}}
+                </td>
+              </tr>               
+            {{/if}}
+            {{#each details}}
+              {{>catPriceDetItem}}
+            {{/each}}
+          </tbody>
+        </table>
+      </td>
+    </tr>
+  {{/if}}
+</template>
+
+<template name="catPriceDetItem">
+  <tr class="ani-choised">
+    {{#if edit}}
+      <td>
+        <div class="input-group">        
+          {{>catPriceInput name="price" value=n}}
+          {{>catPriceBtns actSave="savePrDet" actCancel="cancelPrDet"}}
+        </div>
+      </td>
+      <td>
+        {{>catPriceVolSelect name="volume" value=v}}
+      </td>
+    {{else}}
+      <td data-action="editPrDet">
+        {{#if rm}}
+          <del>{{n}}</del>
+          (Удален)
+          {{#if canRestore}}
+            <button data-action="restorePriceDet" title="Востановить" class="btn btn-link">
+              <i class="fa fa-share"></i>
+            </button>
+          {{/if}}
+        {{else}}
+          {{n}}
+          <button data-action="rmPriceDet" title="Удалить" class="btn btn-link">
+            <i class="fa fa-trash-o"></i>
+          </button>
+        {{/if}}
+      </td>
+      <td data-action="editPrDet">{{v}}</td>
+    {{/if}}
+  </tr>
+</template>
+
+<template name="catPriceInput">
+  <input class="form-control col-md-12" type="text"
+         name="{{name}}" value="{{value}}" placeholder="Например: Поклейка обоев">
+</template>
+
+<template name="catPriceVolSelect">
+  <select  name="{{name}}" class="col-md-12"></select>
+</template>
+
+<template name="catPriceBtns">
+  <div class="input-group-btn">
+    <button data-action="{{actSave}}" type="submit" class="btn btn-default">
+      <i class="fa fa-check text-success"></i>
+    </button>
+    <button data-action="{{actCancel}}" type="button" class="btn btn-default">
+      <i class="fa fa-times text-warning"></i>
+    </button>
+  </div>
+</template>
