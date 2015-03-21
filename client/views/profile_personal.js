@@ -279,7 +279,7 @@ Template.profileContactName.helpers({
 Template.profileLegalStatus.helpers({
   context: function() {
     return {
-      data: LegalStatuses,      // смотри в config.js
+      data: CFG.LegalStatuses,      // смотри в config.js
       msgundef: "Форма работы не указана",
       undefIcon: "fa fa-exclamation",
       placeholder: "Частное лицо или компания",
