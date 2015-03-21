@@ -91,6 +91,9 @@ Meteor.startup(function () {
   Router.route('/adminCat', {
     name: 'adminCategories',
     controller: 'ApplicationController',
+    waitOn: function() {
+      return Meteor.subscribe('priceTmpAll');
+    }
   });
 
   // all users for admins
