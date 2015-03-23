@@ -29,6 +29,5 @@ Categories.deny({
 });
 
 Categories.allow({
-//  insert: isAdminById,          // только админ может править категории
   update: isAdminById,
 });

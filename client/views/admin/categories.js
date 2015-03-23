@@ -103,9 +103,10 @@ Template.catItem.events({
         parentId = t.data.ctx._id;
     
     // сохраняем новую категорию
-    Categories.insert({p: parentId, // отцовский айди
-                       n: name,     // название категории
-                      });
+    Meteor.call('insert-cat', name, parentId, function(err) {
+      if (err)
+        Messages.info(err.reason);
+    });
     t.new.set(false);              // все, выключаем форму редактирования
   },
 

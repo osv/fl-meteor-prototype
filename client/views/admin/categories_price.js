@@ -21,8 +21,12 @@ Template.catPriceEditor.events({
     e.preventDefault();
     t.new.set(false);
     var name = t.find('input[name="newPrice"]').value,
-        volume = t.find('select[name="newVol"]').value;
-    PriceTmp.insert({cat: t.data.category, n: name, v: volume});
+        volume = t.find('select[name="newVol"]').value,
+        category = t.data.category;
+    Meteor.call('insert-priceTmp', name, category, volume, function (err){
+      if (err)
+        Messages.info(err.reason);
+    });
   },
   'click [data-action="cancelNewPrice"]': function (e, t) {
     t.new.set(false);
@@ -97,8 +101,14 @@ Template.catPriceItem.events({
     e.preventDefault();
     t.newDetail.set(false);
     var name = t.find('input[name="newDetPrice"]').value,
-        volume = t.find('select[name="newDetVol"]').value;
-    PriceTmp.insert({cat: t.data.cat, n: name, v: volume, p: t.data._id});
+        volume = t.find('select[name="newDetVol"]').value,
+        category = t.data.cat,
+        parent = t.data._id;
+    
+    Meteor.call('insert-priceTmp', name, category, volume, parent, function (err){
+      if (err)
+        Messages.info(err.reason);
+    });
   },
   'click [data-action="cancelNewDetPrice"]': function (e, t) {
     t.newDetail.set(false);

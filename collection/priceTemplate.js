@@ -36,13 +36,5 @@ PriceTmp.deny({
 });
 
 PriceTmp.allow({
-//  insert: isAdminById,          // только админ может править категории
   update: isAdminById,
 });
-
-// PriceTmp.before.insert(function (userId, doc){
-//   if (Meteor.isServer) {
-//     doc._id = '' + incrementCounter('counters', 'pricetmpl'); // konecty:mongo-counterv
-//   }
-// });
-

@@ -21,6 +21,45 @@ function priceId() {
   return '' + incrementCounter('counters', 'pricetmp');
 }
 
+var admin_err_msg = 'You are not admin';
+
+// Вставку в базу делаем методом, так как нам нужно свой _id.
+// и чтобы можно было импорт сделать
+Meteor.methods({
+  'insert-cat': function(category, parentCategory) {
+    check (category, String);
+
+    if (!isAdmin())
+      throw new Meteor.Error(401, admin_err_msg);
+
+    var id = categoryId();
+
+    return Categories.insert({p: parentCategory, // отцовский айди
+                              n: category,       // название категории
+                              _id: id
+                             });
+  },
+
+  'insert-priceTmp': function(price, category, volume, parentPrice) {
+    check (price, String);
+    check (category, String);
+    check (volume, String);
+
+    if (!isAdmin())
+      throw new Meteor.Error(401, admin_err_msg);
+
+    var id = categoryId();
+
+    return PriceTmp.insert({p: parentPrice, // отцовский айди
+                            n: price,       // название категории
+                            v: volume,
+                            cat: category,
+                            _id: id
+                           });
+  },
+});
+
+
 function traversePrices(lines, category) {
 
 }
@@ -92,7 +131,7 @@ Meteor.methods({
     check(text, String);
 
     if (!isAdmin())
-      throw new Meteor.Error(401, 'You are not admin');
+      throw new Meteor.Error(401, admin_err_msg);
 
     if (!CFG.INIT_MODE)
       throw new Meteor.Error(500, 'Init mode not enabled in config.js');
