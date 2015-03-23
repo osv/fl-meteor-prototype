@@ -29,12 +29,6 @@ Categories.deny({
 });
 
 Categories.allow({
-  insert: isAdminById,          // только админ может править категории
+//  insert: isAdminById,          // только админ может править категории
   update: isAdminById,
-});
-
-Categories.before.insert(function (userId, cat){
-  if (Meteor.isServer) {
-    cat._id = '' + incrementCounter('counters', 'category'); // konecty:mongo-counterv
-  }
 });
