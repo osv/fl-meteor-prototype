@@ -12,6 +12,39 @@
       {{> catTreeNodeTemplate}}
     {{/with }}
   </ul>
+  {{#if isInitMode}}
+    <div class="row">
+      <h3>Импорт</h3>
+      {{#if bulkUpload}}
+        {{>spinner}}
+      {{else}}
+        <p>
+          Текст для импорта примерно ниже, пробелы не важны, вложенность категорий - по "*",
+          "-" - цены, "+" детальные цены. Ниже пример. Смотри также в CATEGORIES.org.
+          <pre>
+* Отделочные работы
+** Изготовление и монтаж лепнины
+  - Демонтаж лепнины | м2
+  - Монтаж лепнины из полиуретана | м/п
+    + Монтаж лепных карнизов и молдингов | м/п
+    + Монтаж лепных входных групп | шт.
+** Малярные, штукатурные работы
+  - Демонтажные работы | м2
+    + Демонтаж штукатурки с потолка | м2
+    + Демонтаж штукатурки со стен | м2
+          </pre>
+        </p>
+        <div class="form-group">
+          <textarea class="form-control" name="import" rows="15"></textarea>
+        </div>
+        <div class="form-group">
+          <button data-action="import" class="btn btn-default">
+            Import
+          </button>
+        </div>
+      {{/if}}
+    </div>
+  {{/if}}
 </template>
 
 

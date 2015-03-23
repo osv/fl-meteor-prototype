@@ -1,6 +1,26 @@
+Template.adminCategories.created = function () {
+  this.bulkUploading = ReactiveVar();
+};
+
 Template.adminCategories.helpers({
   rootCategory: function() {
     return {n: "Категории в системе"};
+  },
+  bulkUpload: function() { 
+    return Template.instance().bulkUploading.get(); }
+});
+
+Template.adminCategories.events({
+  'click [data-action="import"]': function(e, t) {
+    var textarea = t.find('[name="import"]');
+    t.bulkUploading.set(true);
+    Meteor.call('import-cats', textarea.value, function(err){
+      t.bulkUploading.set(false);
+      if (err)
+        Messages.info(err.reason);
+      else
+        textarea.value = '';
+    });
   }
 });
 
@@ -8,9 +28,7 @@ Template.catTreeNodeTemplate.helpers({
 
   hasChildren: function() { return Categories.find({p: this._id}).count() > 0; },
 
-  children: function() { 
-    console.log(Categories.find({p: this._id}).fetch());
-    return Categories.find({p: this._id}); },
+  children: function() { return Categories.find({p: this._id}); },
 
 });
 
