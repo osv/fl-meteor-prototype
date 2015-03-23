@@ -29,3 +29,7 @@ UI.registerHelper('isMaster', function() {
 UI.registerHelper('isCustomer', function() {
   return isCustomer(Meteor.user());
 });
+
+UI.registerHelper('isInitMode', function() {
+  return CFG.INIT_MODE;
+});
