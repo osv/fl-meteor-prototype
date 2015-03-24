@@ -177,6 +177,9 @@ Template.catItem.events({
   'click [data-action="edit"]': function(e, t) {
     t.edit.set(true);
   },
+  'dblclick [data-action="dEdit"]': function(e, t) {
+    t.edit.set(true);
+  },
 
   // создание новой подкатегории
   'click [data-action="new"]': function(e, t) {

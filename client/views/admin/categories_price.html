@@ -1,41 +1,46 @@
 
 <template name="catPriceEditor">
   <div class="row">
-    <table class="table table-striped">
-      <thead>
-        <tr>
-          <th class="col-md-9">
-            Шаблон цен услуг
-            {{#unless new}}
-              <button data-action="newPrice" class="btn btn-sm btn-primary">
-                Добавить новую позицию 
-                <i class="fa fa-plus"></i>
-              </button>
-            {{/unless}}
-          </th>
-          <th class="col-md-2">Обьем</th>
-          <th></th>
-        </tr>
-      </thead>
-      <tbody>
-        {{#if new}}
+    <div class="panel panel-primary">
+      <div class="panel-heading">
+        Список цен
+      </div>
+      <table class="table table-striped">
+        <thead>
           <tr>
-            <td>
-              {{>catPriceInput name="newPrice"}}
-            </td>
-            <td>
-              {{>catPriceVolSelect name="newVol"}}
-            </td>
-            <td>
-              {{>catPriceBtns actSave="saveNewPrice" actCancel="cancelNewPrice"}}
-            </td>
+            <th class="col-md-9">
+              Шаблон цен услуг
+              {{#unless new}}
+                <button data-action="newPrice" class="btn btn-sm btn-default">
+                  Добавить новую позицию 
+                  <i class="fa fa-plus"></i>
+                </button>
+              {{/unless}}
+            </th>
+            <th class="col-md-2">Обьем</th>
+            <th></th>
           </tr>
-        {{/if}}
-        {{#each prices}}
-          {{>catPriceItem}}
-        {{/each}}
-      </tbody>
-    </table>
+        </thead>
+        <tbody>
+          {{#if new}}
+            <tr>
+              <td>
+                {{>catPriceInput name="newPrice"}}
+              </td>
+              <td>
+                {{>catPriceVolSelect name="newVol"}}
+              </td>
+              <td>
+                {{>catPriceBtns actSave="saveNewPrice" actCancel="cancelNewPrice"}}
+              </td>
+            </tr>
+          {{/if}}
+          {{#each prices}}
+            {{>catPriceItem}}
+          {{/each}}
+        </tbody>
+      </table>
+    </div>
   </div>
 </template>
 
@@ -93,7 +98,7 @@
               <th class="col-md-9">
                 Детальный список
                 {{#unless newDetail}}
-                  <button data-action="newDetPrice" class="btn btn-sm btn-primary">
+                  <button data-action="newDetPrice" class="btn btn-sm btn-default">
                     Добавить
                     <i class="fa fa-plus"></i>
                   </button>
