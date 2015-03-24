@@ -21,18 +21,19 @@
 
     {{>profileCatItem ctx=this}}
 
-    {{#if hasChildren}}
+    {{! если нет p - значит это рут итем}}
+    {{#unless p}}
       <ul>
         {{#each children}}
           {{> profileCatTreeNode}}
         {{/each}}
       </ul>
-    {{/if}}
+    {{/unless}}
   </li>
 </template>
 
 <template name="profileCatItem">
-  {{#if hasChildren}}
+  {{#unless ctx.p}}
     <strong>
       {{ctx.n}}
     </strong>
@@ -54,5 +55,5 @@
         Выбрать
       </button>
     {{/if}}
-  {{/if}}
+  {{/unless}}
 </template>

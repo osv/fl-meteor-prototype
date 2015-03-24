@@ -1,30 +1,18 @@
-// helper
-// Возвращает селектор для колекции где отцовский елемент - @parentId
-// пропускает удаленные
-function parentCatsQuery(parentId) {
-  return {p: parentId, rm: {$ne: true}};
-}
-
 Template.profileCategories.helpers({
   rootCategories: function() {
     // рут категории те которые не имеют отцов
-    return Categories.find(parentCatsQuery({$exists: false}));
+    return Categories.find({p: {$exists: false}, rm: {$ne: true}}, {sort: {n: 1}});
   }
 });
 
 Template.profileCatTreeNode.helpers({
-
-  hasChildren: function() { return Categories.find(parentCatsQuery(this._id)).count() > 0; },
-
-  children: function() { return Categories.find(parentCatsQuery(this._id)); },
-
+  children: function() { return Categories.find({p: this._id, rm: {$ne: true}}, {sort: {n: 1}}); },
 });
 
 Template.profileCatItem.helpers({
   set: function() {
     return _.contains(Meteor.user().cats, this.ctx._id);
   },
-  hasChildren: function() { return Categories.find(parentCatsQuery(this.ctx._id)).count() > 0; },
 });
 
 Template.profileCatItem.events({

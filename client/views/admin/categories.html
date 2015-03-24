@@ -7,10 +7,19 @@
     Категории, тематика или можно назвать еще разделы в системе, они используются, например, в поиске фрилансеров.
   </p>
 
+  {{#if new}}
+    {{>wFormInput context=contextNew
+    }}
+  {{else}}
+    <button data-action="newRoot" class="btn btn-primary">
+      <i class="fa fa-plus"></i>
+      Создать раздел
+    </button>
+  {{/if}}
   <ul>
-    {{#with rootCategory }}
+    {{#each rootCategories }}
       {{> catTreeNodeTemplate}}
-    {{/with }}
+    {{/each }}
   </ul>
   {{#if isInitMode}}
     <div class="row">
@@ -52,63 +61,38 @@
   <li>
     {{> catItem ctx=this }}
 
-    {{#if hasChildren}}
+    {{#unless p}}
       <ul>
         {{#each children}}
           {{> catTreeNodeTemplate}}
         {{/each}}
       </ul>
-    {{/if}}
+    {{/unless}}
   </li>
 </template>
 
 <template name="catItem">
   {{! ctx - это елемент из колекции Categories }}
   {{#if edit}}
-    <form class="form-horizontal">
-      <div class="form-group">
-        <div class="input-group">
-          <input class="form-control" value="{{ctx.n}}" name="newName" type="text"
-                 placeholder="Имя новой категории">
-          <div class="input-group-btn">
-            <button data-action="save"   type="submit" class="btn btn-success">Сохранить</button>
-            <button data-action="cancel" type="button" class="btn btn-warning">Отменить</button>
-          </div>
-        </div>
-      </div>
-    </form>
+    {{>wFormInput context=contextEdit}}
   {{else}}
 
     {{! Рисуем название категории 
        Если эта категория удалена, нарисуем подругому ее}}
     <span data-action="edit">
-      {{#if hasChildren}}
+      {{#unless ctx.p}}
         <strong>
           {{>catItemName name=ctx.n rm=ctx.rm}}
         </strong>
       {{else}}
         {{>catItemName name=ctx.n rm=ctx.rm}}
-      {{/if}}
+      {{/unless}}
     </span>
 
     {{#if new}}
 
       <ul>
-        <form class="form-horizontal">
-          <div class="form-group">
-            <div class="input-group">
-              <span class="input-group-addon">
-                Подкатегория
-              </span>
-              <input class="form-control" name="category" type="text"
-                     placeholder="Имя новой категории">
-              <div class="input-group-btn">
-                <button data-action="saveNew"   type="submit" class="btn btn-success">Сохранить</button>
-                <button data-action="cancelNew" type="button" class="btn btn-warning">Отменить</button>
-              </div>
-            </div>
-          </div>
-        </form>
+        {{>wFormInput context=contextNew}}
       </ul>  
     {{else}} 
 
@@ -126,23 +110,27 @@
             <i class="fa fa-trash-o"></i>
           </button>
         {{/if}}
-        {{#if editPrice}}
-          <button data-action="hidePrice" title="Скрыть цены" class="btn btn-link">
-            <i class="fa fa-angle-up"></i>
-            <i class="fa fa-usd"></i>({{prices}})
-          </button>
+        {{! редактирование прайса только если подкатегория}}
+        {{#if ctx.p}}
+          {{#if editPrice}}
+            <button data-action="hidePrice" title="Скрыть цены" class="btn btn-link">
+              <i class="fa fa-angle-down"></i>
+              <i class="fa fa-usd"></i>
+            </button>
+          {{else}}
+            <button data-action="showPrice" title="Показать цены" class="btn btn-link">
+              <i class="fa fa-angle-up"></i>
+              <i class="fa fa-usd"></i>
+            </button>
+          {{/if}}
         {{else}}
-          <button data-action="showPrice" title="Показать цены" class="btn btn-link">
-            <i class="fa fa-angle-down"></i>
-            <i class="fa fa-usd"></i>({{prices}})
-          </button>
+          {{#unless ctx.rm}}
+            <button data-action="new" title="Создать под категорию" class="btn btn-link">
+              <i class="fa fa-plus"></i>
+            </button>
+          {{/unless}}
         {{/if}}
       {{/if}}
-      {{#unless ctx.rm}}
-      <button data-action="new" title="Создать под категорию" class="btn btn-link">
-        <i class="fa fa-plus"></i>
-      </button>
-      {{/unless}}
     {{/if}}
   {{/if}}
   {{#if ctx._id}}

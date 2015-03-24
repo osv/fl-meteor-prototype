@@ -1,13 +1,50 @@
 Template.adminCategories.created = function () {
   this.bulkUploading = ReactiveVar();
+  this.new = ReactiveVar();
 };
 
 Template.adminCategories.helpers({
-  rootCategory: function() {
-    return {n: "Категории в системе"};
+  rootCategories: function() {
+    // рут категории те которые не имеют отцов
+    return Categories.find({p: {$exists: false}});
   },
+
   bulkUpload: function() { 
-    return Template.instance().bulkUploading.get(); }
+    return Template.instance().bulkUploading.get(); },
+
+  new: function() { return Template.instance().new.get(); },
+  contextNew: function() {
+    var rNew = Template.instance().new;
+    return {
+      name: 'category',
+
+      cancel: function() {rNew.set(false);},
+
+      setter: function(value) {
+        rNew.set(false);
+        Meteor.call('insert-cat', value, function(err) {
+          if (err)
+            Messages.info(err.reason);
+        });
+      },
+
+      rendered: function(t) { t.find('input'); },
+
+      placeholder: 'Например: Архитектура и проектирование',
+
+      validator: {
+        stringLength: {
+          min: 6,
+          max: 64,
+          message: 'Допустимо 6-64 символов'
+        },
+        notEmpty: {
+          message: "Не должно быть пустым"
+        },
+      }
+    };
+  }
+
 });
 
 Template.adminCategories.events({
@@ -21,15 +58,14 @@ Template.adminCategories.events({
       else
         textarea.value = '';
     });
+  },
+  'click [data-action="newRoot"]': function(e, t) {
+    t.new.set(true);
   }
 });
 
 Template.catTreeNodeTemplate.helpers({
-
-  hasChildren: function() { return Categories.find({p: this._id}).count() > 0; },
-
   children: function() { return Categories.find({p: this._id}); },
-
 });
 
 
@@ -46,12 +82,77 @@ Template.catItem.helpers({
 
   prices: function() { return PriceTmp.find({cat: this.ctx._id}).count(); },
 
-  hasChildren: function() { return Categories.find({p: this.ctx._id, rm: {$ne: true}}).count() > 0; },
-
   disabledRestore: function() {
     // если отцовская категория не удалена, то мы можем востановить и эту
     var cat = Categories.findOne(this.ctx.p);
     return (cat && cat.rm) ? 'disabled' : '';
+  },
+
+  contextEdit: function() {
+    var rEdit = Template.instance().edit,
+        id = this.ctx._id,
+        curCat = this.ctx.n;
+    
+    return {
+      name: 'category',
+
+      cancel: function() {rEdit.set(false);},
+
+      getter: curCat,
+
+      setter: function(value) {
+        rEdit.set(false);
+        Categories.update(id, {$set: {n: value}});
+      },
+
+      rendered: function(t) { t.find('input'); },
+
+      placeholder: 'Например: Архитектура и проектирование',
+
+      validator: {
+        stringLength: {
+          min: 6,
+          max: 64,
+          message: 'Допустимо 6-64 символов'
+        },
+        notEmpty: {
+          message: "Не должно быть пустым"
+        },
+      }
+    };
+  },
+  contextNew: function() {
+    var rNew = Template.instance().new,
+        id = this.ctx._id;
+    
+    return {
+      name: 'category',
+
+      cancel: function() {rNew.set(false);},
+
+      setter: function(value) {
+        rNew.set(false);
+        Meteor.call('insert-cat', value, id, function(err) {
+          if (err)
+            Messages.info(err.reason);
+        });
+      },
+
+      rendered: function(t) { t.find('input'); },
+
+      placeholder: 'Например: Замена унитаза',
+
+      validator: {
+        stringLength: {
+          min: 6,
+          max: 64,
+          message: 'Допустимо 6-64 символов'
+        },
+        notEmpty: {
+          message: "Не должно быть пустым"
+        },
+      }
+    };
   }
 });
 
@@ -75,39 +176,11 @@ Template.catItem.events({
   // редактирование текущей категории
   'click [data-action="edit"]': function(e, t) {
     t.edit.set(true);
-    Meteor.defer(function() { t.find('input').focus(); });
-  },
-  'click [data-action="cancel"]': function (e, t) {
-    t.edit.set(false);
-  },
-  'click [data-action="save"], submit form': function (e, t) {
-    e.preventDefault();
-    var newName = t.find('input[name="newName"]').value,
-        id = t.data.ctx._id;
-
-    Categories.update(id, {$set: {n: newName}});
-    t.edit.set(false);
   },
 
   // создание новой подкатегории
   'click [data-action="new"]': function(e, t) {
     t.new.set(true);
-    Meteor.defer(function() { t.find('input').focus(); });
-  },
-  'click [data-action="cancelNew"]': function (e, t) {
-    t.new.set(false);
-  },
-  'click [data-action="saveNew"], submit form': function (e, t) {
-    e.preventDefault();
-    var name = t.find('input[name="category"]').value,
-        parentId = t.data.ctx._id;
-    
-    // сохраняем новую категорию
-    Meteor.call('insert-cat', name, parentId, function(err) {
-      if (err)
-        Messages.info(err.reason);
-    });
-    t.new.set(false);              // все, выключаем форму редактирования
   },
 
   // показать скрыть цены
@@ -117,4 +190,27 @@ Template.catItem.events({
   'click [data-action="hidePrice"]': function(e, t) {
     t.editPrice.set(false);
   },
+});
+
+
+Meteor.startup(function(){
+
+  var wrappedFind = Categories.find;
+
+  Categories.find = function () {
+    var cursor = wrappedFind.apply(this, arguments);
+//    console.log("find");
+    return cursor;
+  };
+});
+
+Meteor.startup(function(){
+
+  var wrappedFind = PriceTmp.find;
+
+  PriceTmp.find = function () {
+    var cursor = wrappedFind.apply(this, arguments);
+    console.log("findPrice");
+    return cursor;
+  };
 });

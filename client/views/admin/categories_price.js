@@ -35,8 +35,10 @@ Template.catPriceEditor.events({
 
 Template.catPriceItem.created = function() {
   this.edit = ReactiveVar();
-  this.showDetails = // показываем детали по умолчанию, если есть детали
-    ReactiveVar( PriceTmp.find({cat: this.data.cat, p: this.data._id}).count() > 0 );
+  // показываем детали по умолчанию, если есть детали
+  // Так как удалить нельзя, кешируем в this количество
+  this.detailsNum = PriceTmp.find({cat: this.data.cat, p: this.data._id}).count();  
+  this.showDetails = ReactiveVar(this.detailsNum > 0);
   this.newDetail = ReactiveVar();
 };
 
@@ -45,16 +47,11 @@ Template.catPriceItem.helpers({
   showDetails: function() { return Template.instance().showDetails.get(); },
 
   // елементы родителем которых является этот итем, тоесть детальный список
-  detailsCount: function() {
-    return PriceTmp.find({cat: this.cat, p: this._id}).count();
+  detailsCount: function(cursor) {
+    return Template.instance().detailsNum;
   },
   details: function() {
     return PriceTmp.find({cat: this.cat, p: this._id}, {sort: {n: 1}});
-  },
-
-  // можно ли удалить этот итем, в зависимости есть ли не удаленные дети
-  canDelete: function() {
-    return ! PriceTmp.find({p: this._id, rm: {$ne: true}}).count();
   },
 
   // редактирование новой детальной позиции?
@@ -79,6 +76,10 @@ Template.catPriceItem.events({
 
   // удаление/востановление
   'click [data-action="rmPrice"]': function(e, t) {
+    if (PriceTmp.find({p: this._id, rm: {$ne: true}}).count()) {
+      Messages.info('Необходимо удалить детальный список сперва');
+      return;
+    }
     PriceTmp.update(this._id, {$set: {rm: true}});
   },
   'click [data-action="restorePrice"]': function(e, t) {
@@ -121,10 +122,6 @@ Template.catPriceDetItem.created = function() {
 
 Template.catPriceDetItem.helpers({
   edit: function() { return Template.instance().edit.get(); },
-
-  canRestore: function() {
-    return ! PriceTmp.find({_id: this.p, rm: true}).count();}
-
 });
 
 Template.catPriceDetItem.events({
@@ -150,6 +147,10 @@ Template.catPriceDetItem.events({
     PriceTmp.update(this._id, {$set: {rm: true}});
   },
   'click [data-action="restorePriceDet"]': function(e, t) {
+    if (PriceTmp.find({_id: this.p, rm: true}).count()) {
+      Messages.info("Сперва востановите родительскую позицию");
+      return;
+    }
     PriceTmp.update(this._id, {$set: {rm: false}});
   },
 

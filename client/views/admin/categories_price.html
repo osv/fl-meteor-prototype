@@ -61,11 +61,9 @@
           </button>
         {{else}}
           {{n}}
-          {{#if canDelete}}
-            <button data-action="rmPrice" title="Удалить" class="btn btn-link">
-              <i class="fa fa-trash-o"></i>
-            </button>
-          {{/if}}
+          <button data-action="rmPrice" title="Удалить" class="btn btn-link">
+            <i class="fa fa-trash-o"></i>
+          </button>
         {{/if}}
       </td>
       <td data-action="editPr">{{v}}</td>
@@ -145,11 +143,9 @@
         {{#if rm}}
           <del>{{n}}</del>
           (Удален)
-          {{#if canRestore}}
-            <button data-action="restorePriceDet" title="Востановить" class="btn btn-link">
-              <i class="fa fa-share"></i>
-            </button>
-          {{/if}}
+          <button data-action="restorePriceDet" title="Востановить" class="btn btn-link">
+            <i class="fa fa-share"></i>
+          </button>
         {{else}}
           {{n}}
           <button data-action="rmPriceDet" title="Удалить" class="btn btn-link">
