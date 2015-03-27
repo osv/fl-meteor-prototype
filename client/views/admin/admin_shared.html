@@ -5,26 +5,26 @@
 </template>
 
 <template name="adminNavigationItems">
-  <li class="{{ifActiveRouteRE "users"}}">
-    <a href="/users">
+  <li class="{{ifActiveRouteAt "/admin/users"}}">
+    <a href="/admin/users">
       <i class="fa fa-users fa-fw"></i>
       Пользователи
     </a>
   </li>
-  <li class="{{ifActiveRouteRE "events"}}">
-    <a href="/events">
+  <li class="{{ifActiveRouteAt "/admin/events"}}">
+    <a href="/admin/events">
       <i class="fa fa-crosshairs fa-fw"></i>
       Сис. события
     </a>
   </li>
-  <li class="{{ifActiveRoute "/adminCat"}}">
-    <a href="/adminCat">
+  <li class="{{ifActiveRoute "/admin/cat"}}">
+    <a href="/admin/cat">
       <i class="fa fa-newspaper-o fa-fw"></i>
       Категории
     </a>
   </li>
-  <li class="{{ifActiveRoute "/admin_info"}}">
-    <a href="/admin_info">
+  <li class="{{ifActiveRoute "/admin/info"}}">
+    <a href="/admin/info">
       <i class="fa fa-cloud fa-fw"></i>
       Серв. информация
     </a>

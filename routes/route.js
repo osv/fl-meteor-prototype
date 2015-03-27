@@ -56,7 +56,7 @@ Meteor.startup(function () {
     controller: 'ApplicationController'
   });
 
-  Router.route('/profile', {
+  Router.route('/profile/portfolio', {
     name: 'profilePub',
     controller: 'CabinetController'
   });
@@ -82,13 +82,13 @@ Meteor.startup(function () {
     }
   });
 
-  Router.route('/admin_info', {
+  Router.route('/admin/info', {
     name: 'AdminInfo',
     controller: 'ApplicationController'
   });
 
   // редактирование категорий
-  Router.route('/adminCat', {
+  Router.route('/admin/cat', {
     name: 'adminCategories',
     controller: 'ApplicationController',
     waitOn: function() {
@@ -104,8 +104,8 @@ Meteor.startup(function () {
     perPage: 10,
     templateName: "usersAdmin",
     router: "iron-router",
-    homeRoute: "/users",
-    route: "/users/",
+    homeRoute: "/admin/users",
+    route: "/admin/users/",
     routerTemplate: "usersAdmin",
     routerLayout: "appLayout",
     itemTemplate: "userInfoForAdmin",
@@ -128,8 +128,8 @@ Meteor.startup(function () {
     perPage: 50,
     templateName: "events",
     router: "iron-router",
-    homeRoute: "/events",
-    route: "/events/",
+    homeRoute: "/admin/events",
+    route: "/admin/events/",
     routerTemplate: "events",
     routerLayout: "appLayout",
     itemTemplate: "eventItem",

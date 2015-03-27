@@ -19,7 +19,7 @@ Template.profilePortfolio.events({
                     if (err) {
                       Messages.info(err.reason);
                     } else {
-                      Router.go('/profile');
+                      Router.go('/profile/portfolio');
                       Messages.info('Портфолио удалено');
                     }
                   });
@@ -30,7 +30,7 @@ Template.profilePortfolio.events({
       if (err) {
         Messages.info(err.reason);
       } else {
-        Router.go('/profile');
+        Router.go('/profile/portfolio');
         Messages.info('Теперь другие пользователи могут просматривать ваше портфолио');
       }
     });
