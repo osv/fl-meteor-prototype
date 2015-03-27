@@ -46,7 +46,7 @@ mol-messages
 mol-uploads
 
 gadicohen:headers
-konecty:mongo-counter@0.0.2
+osv:mongo-counter
 
 zeroasterisk:throttle
 facts
