@@ -18,6 +18,15 @@ UI.registerHelper('ifActiveRouteRE', function (regexp) {
     return 'false';
 });
 
+// return 'active' если роут начинает с строки
+UI.registerHelper('ifActiveRouteAt', function (routeName) { 
+  if (Router.current() &&
+      Router.current().location.get().path.indexOf(routeName) === 0)
+    return 'active';
+  else
+    return 'false';
+});
+
 UI.registerHelper('isAdmin', function() {
   return isAdmin(Meteor.user());
 });
