@@ -73,8 +73,12 @@ Meteor.methods({
       throw new Meteor.Error(401, 'User not logged in');
 
     if (Portfolio.update({_id: portfolioId,
-                      userId: this.userId},
-                     {$set: {cat: cat}}));
+                          userId: this.userId},
+                         {$set: {cat: cat}}))
+      // обноаляем в профиле юзера портфолио кеш
+      Meteor.users.update({_id: this.userId, "gal.id": portfolioId},
+                          {$set: {"gal.$.cat": cat}});
+
   },
   'portfolio-publish': function(portfolioId) {
     check(portfolioId, String);
@@ -82,8 +86,7 @@ Meteor.methods({
     if (!this.userId)
       throw new Meteor.Error(401, 'User not logged in');
 
-    var portfolio = Portfolio.findOne({_id: portfolioId, userId: this.userId},
-                                     {fields: {preview: 1, title: 1, img: 1}});
+    var portfolio = Portfolio.findOne({_id: portfolioId, userId: this.userId});
 
     if (!portfolio)
       throw new Meteor.Error(400, 'There no such portfolio');
@@ -96,6 +99,7 @@ Meteor.methods({
     if (Meteor.users.update(this.userId,
                         {$addToSet:
                          {gal: {id: portfolioId,
+                                cat: portfolio.cat,
                                 preview: portfolio.preview,
                                 title: portfolio.title }}})) {
       recalculateUserScore(this.userId);

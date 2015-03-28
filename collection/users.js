@@ -21,6 +21,10 @@ Schema.Portfolio = new SimpleSchema({
   },
   title: {                      // тайстл
     type: String,
+    optional: true
+  },
+  cat: {
+    type: String,               // категория к которой принадлежит портфолио
     optional: true   
   }
 });
