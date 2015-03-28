@@ -24,12 +24,11 @@ Meteor.methods({
     if (!this.userId)
       throw new Meteor.Error(401, 'User not logged in');
 
-    Portfolio.update({_id: portfolioId,
-                      userId: this.userId},
-                     {$set: {title: title}});
-
-    Meteor.users.update({_id: this.userId, "gal.id": portfolioId},
-                        {$set: {"gal.$.title": title}});
+    if (Portfolio.update({_id: portfolioId,
+                         userId: this.userId},
+                        {$set: {title: title}}))
+      Meteor.users.update({_id: this.userId, "gal.id": portfolioId},
+                          {$set: {"gal.$.title": title}});
 
   },
   'portfolio-describe': function(portfolioId, describe) {
@@ -122,6 +121,9 @@ Meteor.methods({
     recalculateUserScore(this.userId);
     logEvent({type: Events.EV_PROFILE, userId: this.userId, name: "Remove portfolio", desc: 'id: '+ portfolioId});
   }
+
+  // меторд по смене превьюшки портфолио смотри в packages/mol-uploads
+
 });
 
 Meteor.publish('editMyPortfolio', function (pId) {
