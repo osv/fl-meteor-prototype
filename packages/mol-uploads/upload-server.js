@@ -326,9 +326,8 @@ Meteor.methods({
 
       imageUtil.resizeCropCenter(origfile, previewfile, 200, 150);
 
-      Portfolio.update(portfolioId, {$set: {preview: prevId}});
-
-      updateUserPortfolioPrev(this.userId, portfolioId, prevId);
+      if (Portfolio.update(portfolioId, {$set: {preview: prevId}}))
+        updateUserPortfolioPrev(this.userId, portfolioId, prevId);
     }
   },
   'portfolio-rm-image': function(portfolioId, imageId) {
@@ -438,9 +437,8 @@ Meteor.methods({
       try {fs.unlinkSync( previewPortfolioPath( portfolio.preview )); } catch(e) {}
     }
 
-    Portfolio.update(portfolioId, {$set: {preview: prevId}});
-
-    updateUserPortfolioPrev(this.userId, portfolioId, prevId);
+    if (Portfolio.update(portfolioId, {$set: {preview: prevId}}))
+      updateUserPortfolioPrev(this.userId, portfolioId, prevId);
 
     try {fs.unlinkSync( bigAvatarPath   ( pendingfile ) );} catch(e) {}
   }
