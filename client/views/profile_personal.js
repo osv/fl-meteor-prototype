@@ -345,7 +345,7 @@ Template.profileOverview.helpers({
 Template.profileDescribe.helpers({
   context: function() {
     return {
-      getter: function() { return Meteor.user().profile.dLong; },
+      getter: function() { return Meteor.user().dLong; },
 
       setter: function(workDescribe) {
         Meteor.call('change user describe long', workDescribe, function(err){

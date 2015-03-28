@@ -29,14 +29,8 @@ Accounts.resettedPasswordHook.push(function(user) {
 Meteor.publish('currentUser', function() {
   var user = Meteor.users.find({_id: this.userId},
                                {fields: {
-                                 gal: true, // портфолио
-                                 legalStat: true,
-                                 legalName: true,
-                                 wrkPlaces: true,
-                                 cats: true,
-                                 isMaster: true,
-                                 isAdmin: true,
-                                 phone: true}});
+                                 createdAt: false,
+                                 services: false}});
   return user;
 });
 
@@ -74,7 +68,7 @@ recalculateUserScore = function(user) {
 
   var score = 
         Math.min(10, (user.gal ? 2 * user.gal.length : 0)) +
-        Math.min(5, (user.profile && user.profile.dLong) ? (user.profile.dLong.length / 100) : 0) +
+        Math.min(5, (user.dLong) ? (user.dLong.length / 100) : 0) +
         ((user.profile && user.profile.dShort && // если краткое описание больше 10 символово.
           user.profile.dShort.length > 20) ?       2  : 0) +
         ((user.profile && user.profile.website)  ? 1  : 0) +
@@ -182,7 +176,7 @@ Meteor.methods({
     if (!this.userId)
       throw new Meteor.Error(401, 'User not logged in');
 
-    if (Meteor.users.update(this.userId, {$set: {"profile.dLong": workDescribe}})) {
+    if (Meteor.users.update(this.userId, {$set: {"dLong": workDescribe}})) {
       recalculateUserScore(this.userId);
       logEvent({type: Events.EV_PROFILE, name: "Changed describe", userId: this.userId,
                 desc: "Work long describe: " + workDescribe + " to " + workDescribe});

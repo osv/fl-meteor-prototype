@@ -41,10 +41,6 @@ Schema.UserProfile = new SimpleSchema({
     optional: true,
     max: 214,
   },
-  dLong: {                      // описан работ мастера ПОДРОБНОЕ
-    type: String,
-    optional: true
-  },
   website: {
     type: String,
     optional: true,
@@ -85,6 +81,12 @@ Schema.User = new SimpleSchema({
   },
   profile: {
     type: Schema.UserProfile,
+    optional: true
+  },
+  // это поле вынесено из profile.dLong, так как оно может занимать много байтиков
+  // а описание не нужно для предпросмотра юзера
+  dLong: {                      // описан работ мастера ПОДРОБНОЕ
+    type: String,
     optional: true
   },
   gal: {                        // портфолио
