@@ -82,6 +82,11 @@ Meteor.startup(function () {
     }
   });
 
+  Router.route('/admin/theme', {
+    name: 'AdminThemeTest',
+    controller: 'ApplicationController'
+  });
+
   Router.route('/admin/info', {
     name: 'AdminInfo',
     controller: 'ApplicationController'
