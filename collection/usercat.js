@@ -1,0 +1,108 @@
+/*
+ Эта вспомагательная колекция
+
+ Колекция категорий/разделов, городов где оказывают услугу, а также ценников на услуги.
+
+ Индекс  используется   сложный,  чтобы   удовлетворить  необходимость
+ фильтра юзеров по городу, разделам и сортировкой по очкам:
+
+ UserCats._ensureIndex({rm: 1, cat: 1, wrkPlaces: 1, score: -1});
+ 
+*/
+
+var Schema = {};
+
+Schema.Price = SimpleSchema({
+  "id": {                       // идентификатор шаблона цены
+    type: String,
+  },
+  "val": {                      // значение цены
+    type: Number
+  },
+  cur: {
+    type: String,
+    allowedValues: CFG.currency
+  }
+});
+
+// юзер может указать свою собственную позицию в прайсе
+// Указать название(поклейка обоева), цену, валюту, название обьема работ (тонны, услуга..)
+Schema.CustomPrice = SimpleSchema({
+  name: {                       // название услуги
+    type: String,
+  },
+  val: {                        // значение цены
+    type: Number
+  },
+  volume: {                     // обьем работ за ценц
+    type: Number
+  },
+  cur: {
+    type: String,
+    allowedValues: CFG.currency
+  },
+});
+
+Schema.Main = new SimpleSchema({
+  u: {                          // userId, кому принадлежит эта запись
+    type: String,
+  },
+
+  cat: {                        // категория
+    type: String,
+  },
+  pcat: {                       // slug, раздел к какой относится эта категория
+    type: String                // Нужно для фильтров по разделам
+  },
+
+  score: {
+    type: Number,
+    optional: true
+  },
+
+  desc: {                       // дополнительное описание работы, аналогично dLong
+    type: String,
+    optional: true
+  },
+
+  minSum: {                     // минимальная цена за которою стартует работать
+    type: String,
+    optional: true
+  },
+
+  rm: {                         // удален ли
+    type: Boolean,
+    optional: true
+  },
+
+  wrkPlaces: {                  // списки мест где оказывает услуги
+    type: [String]
+  },
+
+  prices: {                     // масив цен
+    type: [Schema.Price],
+    optional: true
+  },
+  cusPrices: {                  // юзерские ценники
+    type: [Schema.CustomPrice],
+    optional: true
+  }
+});
+
+// user categories
+UserCats = new Meteor.Collection('userCats');
+UserCats.attachSchema(Schema.Main);
+
+UserCats.deny({
+  update: function(userId, post, fieldNames) {
+    // след поля доступны только при создании записи или через метод
+    return _.intersection(fieldNames, ['_id', 'u', 'cat', 'pcat', 'rm']).length;
+  }
+});
+
+UserCats.allow({
+  update: function(userId, doc){
+    return userId == doc.u;     // только владельцам можно изменять;
+  },
+});
+

@@ -1,11 +1,3 @@
-/*
-
- Некоторые дополнительные индекса
-
-*/
-Meteor.users._ensureIndex({wrkPlaces: 1, score: -1});
-
-
 var MASTERPHONE = '380123456789'; // телефон-логин для адмира который будет создан
 
 // устанавливаем хуки от sms-login
@@ -32,6 +24,10 @@ Meteor.publish('currentUser', function() {
                                  createdAt: false,
                                  services: false}});
   return user;
+});
+
+Meteor.publish('UserCats', function() {
+  return UserCats.find({u: this.userId});
 });
 
 /*
@@ -78,6 +74,7 @@ recalculateUserScore = function(user) {
         ((user.legalStat)                        ? 2  : 0);
   /* TODO: нужно отзывы также будет сюда добавить */
   /* TODO: isPro если он "про" то добавить 105000 */
+  // TODO: обновить score в UserCats, а в Meteor.users випилить
 
   Meteor.users.update(user._id, {$set: {score: parseInt(score)}});
   return true;
@@ -250,6 +247,7 @@ Meteor.methods({
       throw new Meteor.Error(401, 'User not logged in');
 
     if (Meteor.users.update(this.userId, {$addToSet: {wrkPlaces: place}})) {
+      UserCats.update({u: this.userId}, {$addToSet: {wrkPlaces: place}}, {multi: true});
       recalculateUserScore(this.userId);
     }
   },
@@ -260,8 +258,40 @@ Meteor.methods({
       throw new Meteor.Error(401, 'User not logged in');
 
     if (Meteor.users.update(this.userId, {$pull: {wrkPlaces: place}})) {
+      UserCats.update({u: this.userId}, {$addToSet: {wrkPlaces: place}}, {multi: true});
       recalculateUserScore(this.userId);
     }
+  },
+  'add cat': function(catId) {
+    check(catId, String);
+
+    if (!this.userId)
+      throw new Meteor.Error(401, 'User not logged in');
+    
+    var category = Categories.findOne(catId);
+    if (!category || !category.p) // родительская категория должна быть
+      throw new Meteor.Error(400, 'Category not found');
+
+    var uc = UserCats.findOne({cat: catId}, {fields: {_id: 1}});
+    if (uc)
+      UserCats.update(uc._id, {$unset: {rm: ''}}); // снимаем признак удаленного
+    else {
+      var user = Meteor.users.findOne(this.userId, {fields: {wrkPlaces: 1}});
+      UserCats.insert({u: this.userId,
+                       cat: catId,
+                       pcat: category.p,
+                       wrkPlaces: user.wrkPlaces // копируем места где работает юзер
+                      });
+    }
+  },
+  'rm cat': function(catId) {
+
+    check(catId, String);
+
+    if (!this.userId)
+      throw new Meteor.Error(401, 'User not logged in');
+
+    UserCats.update({cat: catId}, {$set: {rm: true}});
   },
   /*
 

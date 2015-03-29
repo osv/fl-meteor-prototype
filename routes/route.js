@@ -63,6 +63,9 @@ Meteor.startup(function () {
 
   Router.route('/profile/cats', {
     name: 'profileCategories',
+    waitOn: function() {
+      return Meteor.subscribe('UserCats');
+    },
     controller: 'CabinetController'
   });
 
