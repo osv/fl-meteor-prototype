@@ -258,7 +258,7 @@ Meteor.methods({
       throw new Meteor.Error(401, 'User not logged in');
 
     if (Meteor.users.update(this.userId, {$pull: {wrkPlaces: place}})) {
-      UserCats.update({u: this.userId}, {$addToSet: {wrkPlaces: place}}, {multi: true});
+      UserCats.update({u: this.userId}, {$pull: {wrkPlaces: place}}, {multi: true});
       recalculateUserScore(this.userId);
     }
   },
