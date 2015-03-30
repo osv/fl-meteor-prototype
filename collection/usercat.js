@@ -76,7 +76,8 @@ Schema.Main = new SimpleSchema({
   },
 
   wrkPlaces: {                  // списки мест где оказывает услуги
-    type: [String]
+    type: [String],
+    optional: true
   },
 
   prices: {                     // масив цен
