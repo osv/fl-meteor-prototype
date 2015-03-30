@@ -4,6 +4,12 @@
 
   <p>
     Выберите те услуги которые вы оказываете.
+
+    <div class="checkbox">
+      <label>
+        <input name="showMine" {{showMine}} type="checkbox"> Показать только выбранное мной.
+      </label>
+    </div>
   </p>
 
   <ul>
@@ -16,19 +22,21 @@
 
 
 <template name="profileCatTreeNode" >
-  <li id="{{_id}}" title="{{n}}">
+  {{#if show}}
+    <li id="{{_id}}" title="{{n}}">
 
-    {{>profileCatItem ctx=this}}
+      {{>profileCatItem ctx=this}}
 
-    {{! если нет p - значит это рут итем}}
-    {{#unless p}}
-      <ul>
-        {{#each children}}
-          {{> profileCatTreeNode}}
-        {{/each}}
-      </ul>
-    {{/unless}}
-  </li>
+      {{! если нет p - значит это рут итем}}
+      {{#unless p}}
+        <ul>
+          {{#each children}}
+            {{> profileCatTreeNode}}
+          {{/each}}
+        </ul>
+      {{/unless}}
+    </li>
+  {{/if}}
 </template>
 
 <template name="profileCatItem">
