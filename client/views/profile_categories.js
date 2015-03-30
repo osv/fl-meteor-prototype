@@ -1,4 +1,4 @@
-var showSelectedByMeOnly = ReactiveVar(false);
+var showSelectedByMeOnly = ReactiveVar();
 
 Template.profileCategories.helpers({
   rootCategories: function() {
@@ -7,6 +7,12 @@ Template.profileCategories.helpers({
   },
   showMine: function() { return showSelectedByMeOnly.get() ? 'checked' : ''; }
 });
+
+Template.profileCategories.created = function() {
+  // установим галочку чтобы показать только мои выбранные если юзер выбрал больше одного
+  if (_.isUndefined(showSelectedByMeOnly.get()))
+    showSelectedByMeOnly.set(UserCats.find({u: Meteor.userId(), rm: {$ne: true}}).count() > 1);
+};
 
 Template.profileCategories.events({
   'change [name="showMine"]': function(e, t) {
