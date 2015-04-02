@@ -16,8 +16,7 @@ Template.profileCategories.created = function() {
 
 Template.profileCategories.events({
   'change [name="showMine"]': function(e, t) {
-    var checked = t.find('[name="showMine"]').checked;
-    showSelectedByMeOnly.set(checked);
+    showSelectedByMeOnly.set( e.currentTarget.checked );
   }
 });
 Template.profileCatTreeNode.helpers({
