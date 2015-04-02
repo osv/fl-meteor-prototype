@@ -379,6 +379,20 @@ Meteor.methods({
       logEvent({type: Events.EV_USERLOGIN, name: "Force logout", userId: this.userId,
                 desc: 'Пользователя '+ userId + ' принудительно разлогинили админом'});
 
+  },
+  /*
+   Misc
+
+   Разные дополнительные методы для юзера
+   */
+  // шаблоны цен.
+  'prices of cat': function(catId) {
+    check(catId, String);
+
+    if (!this.userId)
+      throw new Meteor.Error(401, 'User not logged in');
+
+    return PriceTmp.find({cat: catId}).fetch();
   }
 });
 
