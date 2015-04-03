@@ -1,3 +1,8 @@
+/*
+
+ Администрирование категорий и цен
+
+*/
 Meteor.publish('cats', function() {
   var options = {};
 
