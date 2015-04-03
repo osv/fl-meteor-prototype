@@ -267,12 +267,13 @@ Meteor.methods({
 
     if (!this.userId)
       throw new Meteor.Error(401, 'User not logged in');
-    
+
     var category = Categories.findOne(catId);
     if (!category || !category.p) // родительская категория должна быть
       throw new Meteor.Error(400, 'Category not found');
 
-    var uc = UserCats.findOne({cat: catId}, {fields: {_id: 1}});
+    // find old defined user cat for this user and category: catId
+    var uc = UserCats.findOne({u: this.userId, cat: catId}, {fields: {_id: 1}});
     if (uc)
       UserCats.update(uc._id, {$unset: {rm: ''}}); // снимаем признак удаленного
     else {

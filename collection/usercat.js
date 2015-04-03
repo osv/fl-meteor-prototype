@@ -12,11 +12,11 @@
 
 var Schema = {};
 
-Schema.Price = SimpleSchema({
-  "id": {                       // идентификатор шаблона цены
+Schema.Price = new SimpleSchema({
+  id: {                       // идентификатор шаблона цены
     type: String,
   },
-  "val": {                      // значение цены
+  val: {                      // значение цены
     type: Number
   },
   cur: {
@@ -27,7 +27,7 @@ Schema.Price = SimpleSchema({
 
 // юзер может указать свою собственную позицию в прайсе
 // Указать название(поклейка обоева), цену, валюту, название обьема работ (тонны, услуга..)
-Schema.CustomPrice = SimpleSchema({
+Schema.CustomPrice = new SimpleSchema({
   name: {                       // название услуги
     type: String,
   },
@@ -35,7 +35,7 @@ Schema.CustomPrice = SimpleSchema({
     type: Number
   },
   volume: {                     // обьем работ за ценц
-    type: Number
+    type: String
   },
   cur: {
     type: String,
@@ -62,12 +62,18 @@ Schema.Main = new SimpleSchema({
 
   desc: {                       // дополнительное описание работы, аналогично dLong
     type: String,
-    optional: true
+    optional: true,
+    max: 144
   },
 
   minSum: {                     // минимальная цена за которою стартует работать
-    type: String,
+    type: Number,
     optional: true
+  },
+  minCur: {                     // Валюта для минимальной цены заказа
+    type: String,
+    optional: true,
+    allowedValues: CFG.currency
   },
 
   rm: {                         // удален ли
