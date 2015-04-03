@@ -99,17 +99,3 @@ Schema.Main = new SimpleSchema({
 // user categories
 UserCats = new Meteor.Collection('userCats');
 UserCats.attachSchema(Schema.Main);
-
-UserCats.deny({
-  update: function(userId, post, fieldNames) {
-    // след поля доступны только при создании записи или через метод
-    return _.intersection(fieldNames, ['_id', 'u', 'cat', 'pcat', 'rm']).length;
-  }
-});
-
-UserCats.allow({
-  update: function(userId, doc){
-    return userId == doc.u;     // только владельцам можно изменять;
-  },
-});
-
