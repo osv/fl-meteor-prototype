@@ -45,26 +45,128 @@
       {{ctx.n}}
     </strong>
   {{else}}
-    {{#if set}}
+      {{#if isExpanded}}       
+        {{ctx.n}}
+        {{>profileCatItemEdit ctx=ctx curPrice=curPrice}}
+      {{else}}
+        {{#if set}}
 
-      <span class="ani-choised">
-        {{ctx.n}} (Оказываю)
-      </span>
-      <button data-action="unset" title="Удалить из выбраных" class="btn btn-xs btn-link">
-        <i class="fa fa-trash-o"></i>
-      </button>
-    {{else}}
+          <span class="ani-choised">
+            <a href="#" data-action="expandPrice">
+              {{ctx.n}}
+            </a>
+          </span>
+          <button data-action="unset" title="Удалить из выбраных" class="btn btn-xs btn-link">
+            <i class="fa fa-trash-o"></i>
+          </button>
+        {{else}}
 
-      {{ctx.n}}
+          {{ctx.n}}
 
-      <button data-action="set" class="btn btn-xs btn-link">
-        <i class="fa fa-plus"></i>
-        Выбрать
-      </button>
-    {{/if}}
+          <button data-action="set" class="btn btn-xs btn-link">
+            <i class="fa fa-plus"></i>
+            Выбрать
+          </button>
+        {{/if}}
+      {{/if}}
   {{/unless}}
   {{! индикатор смены состояния, покачто стандрат. спинер, может лучш будет длругой спинер}}
   {{#if isLoad}}
     {{>spinner}}
   {{/if}}
+</template>
+
+<template name="profileCatItemEdit">
+  <div class="row">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3>
+          Прайс и обьявление в каталоге
+        </h3>
+      </div>
+      <div class="panel-body">
+        <form>
+          <div class="row">
+            <div class="col-md-3">
+              Краткое описание услуги для данного раздела.
+            </div>
+            <div class="col-md-9">
+              <div class="form-group">
+                <textarea name="desc" class="form-control" placeholder="Например: Качественные сварочные работы любой сложности.">{{curDesc}}</textarea>
+              </div>
+            </div>
+          </div>
+          {{#if isLoad}}
+            {{>spinner}}
+          {{/if}}
+          <div class="row">
+            <div class="col-md-12 checkbox">
+              <label>
+                <input name="showDetail" type="checkbox">
+                Показать подробный прайс, добавить свои позиции в прайс.
+              </label>
+            </div>
+          </div>
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th class="col-md-8">Услуга</th><th class="col-md-2">Цена</th><th class="col-md-1">Валюта</th><th class="col-md-1"></th>
+              </tr>
+            </thead>
+            <tbody>
+              {{! прайс минимальной цены на раздел}}
+              {{> profilePriceLine priceTemplate=minPrice curPrice=curMinPrice}}
+
+              {{! елементы прайса}}
+              {{#each priceTempl}}
+                {{> profilePriceLine priceTemplate=this curPrice=../curPrice}}
+                {{! подробный прайс этого елемента прайса}}
+                {{#if detailPrice this._id}}
+                  {{#each detailPrice this._id}}
+                    {{> profilePriceLine priceTemplate=this curPrice=../../curPrice}}
+                  {{/each}}
+                {{/if}}
+              {{/each}}
+            </tbody>
+          </table>
+          <div class="col-md-offset-3 col-md-9 s-voffset">
+            <div class="form-group">
+              <button data-action="save" type="submit" class="btn btn-lg btn-primary">
+                Сохранить
+              </button>
+              <button data-action="cancel" type="button" class="btn btn-lg btn-link">
+                Отменить
+              </button>
+            </div>
+          </div>
+
+        </form>
+      </div>
+    </div>
+  </div>
+</template>
+
+<template name="profilePriceLine">
+  <tr>
+    <td>
+      {{#unless priceTemplate.p}}
+        <strong>{{priceTemplate.n}}</strong>
+      {{else}}
+        {{priceTemplate.n}}
+      {{/unless}}
+    </td>
+    <td>
+      <div class="form-group">
+        <input type="text" class="form-control" value="{{value}}" name="{{priceId}}">
+      </div>
+    </td>
+    <td>
+      <select class="col-md-12" name="cur_{{priceTemplate._id}}"></select>
+    </td>
+    <td>
+      {{#if priceTemplate.v}}
+        {{priceTemplate.v}}
+      {{/if}}
+    </td>
+  </tr>
 </template>

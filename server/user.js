@@ -273,7 +273,7 @@ Meteor.methods({
       throw new Meteor.Error(400, 'Category not found');
 
     // find old defined user cat for this user and category: catId
-    var uc = UserCats.findOne({u: this.userId, cat: catId}, {fields: {_id: 1}});
+    var uc = UserCats.findOne({cat: catId, u: this.userId}, {fields: {_id: 1}});
     if (uc)
       UserCats.update(uc._id, {$unset: {rm: ''}}); // снимаем признак удаленного
     else {
@@ -292,7 +292,33 @@ Meteor.methods({
     if (!this.userId)
       throw new Meteor.Error(401, 'User not logged in');
 
-    UserCats.update({cat: catId}, {$set: {rm: true}});
+    UserCats.update({cat: catId, u: this.userId}, {$set: {rm: true}});
+  },
+  'update cat': function(userCatId, minCur, minSum, desc, prices) {
+    check(userCatId, String);
+
+    if (!this.userId)
+      throw new Meteor.Error(401, 'User not logged in');
+
+    // эта userCat должен существовать, ранее создар с помощью метода 'add cat''
+    var currentPrice = UserCats.findOne({_id: userCatId, u: this.userId});
+    if (!currentPrice)
+      throw new Meteor.Error(401, 'User cat not found ' + userCatId);
+
+    var modifier = {$set: {}};
+
+    // don't update unchanged fields
+    if (minSum !== currentPrice.minSum)
+      modifier.$set.minSum = minSum;
+    if (minCur !== currentPrice.minCur)
+      modifier.$set.minCur = minCur;
+
+    if (desc !== currentPrice.desc)
+      modifier.$set.desc = desc;
+
+    modifier.$set.prices = prices;
+
+    UserCats.update(userCatId, modifier);
   },
   /*
 
