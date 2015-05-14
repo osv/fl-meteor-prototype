@@ -113,7 +113,7 @@ cd ~/shared/stroim
 
 #+begin_example
 HTTP_FORWARDED_COUNT=1
-SMSC_AUTH=ononos:mypassword \
+SMSC_AUTH=user:mypassword \
 MAIL_URL=smtp://olexandr.syd%40gmail.com:emailpasswordhere@smtp.gmail.com:465/ \
 meteor
 #+end_example
